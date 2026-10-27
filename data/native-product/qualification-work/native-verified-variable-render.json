@@ -1,0 +1,820 @@
+{
+  "id": 21760,
+  "productId": 21592,
+  "productType": "variable",
+  "productName": "Frisco Outdoor Heathered Nylon Collar",
+  "priceHtml": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\" translate=\"no\">&#36;</span>11.25</bdi></span>",
+  "existingUnchanged": true,
+  "observedAt": "2026-10-26T06:01:40.742Z",
+  "scope": "Actual target native PHP rendering with request-local query/filter and actual native assets; isolated browser document, not a published route",
+  "observations": [
+    {
+      "width": 1920,
+      "variation": {
+        "count": 2,
+        "selected": true,
+        "variationId": "21672",
+        "price": "",
+        "nativeVariations": [
+          {
+            "id": 21672,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21673,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21674,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21675,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Black"
+            }
+          },
+          {
+            "id": 21663,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21664,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21665,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21666,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21667,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21668,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21669,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21670,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21671,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Orange"
+            }
+          }
+        ],
+        "nextId": "21669",
+        "identityChanged": true
+      },
+      "galleryOpened": true,
+      "reviewRatingSelected": true,
+      "tabsChanged": true,
+      "quantityEditable": true,
+      "widgets": [
+        {
+          "type": "wd_single_product_gallery",
+          "text": "",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_title",
+          "text": "Frisco Outdoor Heathered Nylon Collar",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_short_description",
+          "text": "All components of the collar are tough, weather resistant, waterproof, long lasting, and versatile.",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_price",
+          "text": "$11.25",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_add_to_cart",
+          "text": "Size\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose an optionLargeMediumSmallXSmall\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\tColor\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose an optionBlueOpera MauveOrangeClear\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_meta",
+          "text": "SKU:\t\t\t\n\t\t\t27735\n\t\t\n\t\n\t\t\tCategory: Collars",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_content",
+          "text": "Great tasting natural* nutrition for a long, happy life. With a wagging tail and licks on your face, no one can say hello like your dog. Because every moment you spend together is ",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_additional_info_table",
+          "text": "SizeLarge, Medium, Small, XSmallColorBlack, Blue, Opera Mauve, Orange",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_tabs",
+          "text": "Description\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tAdditional information\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_reviews",
+          "text": "Reviews\t\t\t\t\n\n\t\t\t\t\t\t\t\n\n\t\t\t\t\t\n\n\t\t\n\t\t\t\t\t\t\tThere are no reviews yet.\n\t\t\t\t\t\n\n\t\t\n\t\n\n\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\tBe the first to review “Frisco Outdoor Heathered Nylon Collar” Cancel replyYour rating",
+          "visible": true
+        },
+        {
+          "type": "wd_wc_notices",
+          "text": "",
+          "visible": false
+        }
+      ],
+      "productIds": [
+        "21592",
+        "21592",
+        "21592"
+      ],
+      "images": [
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-1.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-2.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-3.jpg",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "variation": {
+        "count": 2,
+        "selected": true,
+        "variationId": "21672",
+        "price": "",
+        "nativeVariations": [
+          {
+            "id": 21672,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21673,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21674,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21675,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Black"
+            }
+          },
+          {
+            "id": 21663,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21664,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21665,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21666,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21667,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21668,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21669,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21670,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21671,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Orange"
+            }
+          }
+        ],
+        "nextId": "21669",
+        "identityChanged": true
+      },
+      "galleryOpened": true,
+      "reviewRatingSelected": true,
+      "tabsChanged": true,
+      "quantityEditable": true,
+      "widgets": [
+        {
+          "type": "wd_single_product_gallery",
+          "text": "",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_title",
+          "text": "Frisco Outdoor Heathered Nylon Collar",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_short_description",
+          "text": "All components of the collar are tough, weather resistant, waterproof, long lasting, and versatile.",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_price",
+          "text": "$11.25",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_add_to_cart",
+          "text": "Size\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose an optionLargeMediumSmallXSmall\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\tColor\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose an optionBlueOpera MauveOrangeClear\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_meta",
+          "text": "SKU:\t\t\t\n\t\t\t27735\n\t\t\n\t\n\t\t\tCategory: Collars",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_content",
+          "text": "Great tasting natural* nutrition for a long, happy life. With a wagging tail and licks on your face, no one can say hello like your dog. Because every moment you spend together is ",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_additional_info_table",
+          "text": "SizeLarge, Medium, Small, XSmallColorBlack, Blue, Opera Mauve, Orange",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_tabs",
+          "text": "Description\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tAdditional information\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_reviews",
+          "text": "Reviews\t\t\t\t\n\n\t\t\t\t\t\t\t\n\n\t\t\t\t\t\n\n\t\t\n\t\t\t\t\t\t\tThere are no reviews yet.\n\t\t\t\t\t\n\n\t\t\n\t\n\n\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\tBe the first to review “Frisco Outdoor Heathered Nylon Collar” Cancel replyYour rating",
+          "visible": true
+        },
+        {
+          "type": "wd_wc_notices",
+          "text": "",
+          "visible": false
+        }
+      ],
+      "productIds": [
+        "21592",
+        "21592",
+        "21592"
+      ],
+      "images": [
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-1.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-2.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-3.jpg",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "variation": {
+        "count": 2,
+        "selected": true,
+        "variationId": "21672",
+        "price": "",
+        "nativeVariations": [
+          {
+            "id": 21672,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21673,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21674,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21675,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Black"
+            }
+          },
+          {
+            "id": 21663,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21664,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21665,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21666,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21667,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21668,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21669,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21670,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21671,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Orange"
+            }
+          }
+        ],
+        "nextId": "21669",
+        "identityChanged": true
+      },
+      "galleryOpened": true,
+      "reviewRatingSelected": true,
+      "tabsChanged": true,
+      "quantityEditable": true,
+      "widgets": [
+        {
+          "type": "wd_single_product_gallery",
+          "text": "",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_title",
+          "text": "Frisco Outdoor Heathered Nylon Collar",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_short_description",
+          "text": "All components of the collar are tough, weather resistant, waterproof, long lasting, and versatile.",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_price",
+          "text": "$11.25",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_add_to_cart",
+          "text": "Size\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose an optionLargeMediumSmallXSmall\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\tColor\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose an optionBlueOpera MauveOrangeClear\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_meta",
+          "text": "SKU:\t\t\t\n\t\t\t27735\n\t\t\n\t\n\t\t\tCategory: Collars",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_content",
+          "text": "Great tasting natural* nutrition for a long, happy life. With a wagging tail and licks on your face, no one can say hello like your dog. Because every moment you spend together is ",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_additional_info_table",
+          "text": "SizeLarge, Medium, Small, XSmallColorBlack, Blue, Opera Mauve, Orange",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_tabs",
+          "text": "Description\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tAdditional information\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_reviews",
+          "text": "Reviews\t\t\t\t\n\n\t\t\t\t\t\t\t\n\n\t\t\t\t\t\n\n\t\t\n\t\t\t\t\t\t\tThere are no reviews yet.\n\t\t\t\t\t\n\n\t\t\n\t\n\n\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\tBe the first to review “Frisco Outdoor Heathered Nylon Collar” Cancel replyYour rating",
+          "visible": true
+        },
+        {
+          "type": "wd_wc_notices",
+          "text": "",
+          "visible": false
+        }
+      ],
+      "productIds": [
+        "21592",
+        "21592",
+        "21592"
+      ],
+      "images": [
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-1.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-2.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-3.jpg",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 430,
+      "variation": {
+        "count": 2,
+        "selected": true,
+        "variationId": "21672",
+        "price": "",
+        "nativeVariations": [
+          {
+            "id": 21672,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21673,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21674,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Large",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21675,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Black"
+            }
+          },
+          {
+            "id": 21663,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21664,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21665,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Medium",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21666,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21667,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21668,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "Small",
+              "attribute_color": "Orange"
+            }
+          },
+          {
+            "id": 21669,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Blue"
+            }
+          },
+          {
+            "id": 21670,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Opera Mauve"
+            }
+          },
+          {
+            "id": 21671,
+            "price": 11.25,
+            "attributes": {
+              "attribute_size": "XSmall",
+              "attribute_color": "Orange"
+            }
+          }
+        ],
+        "nextId": "21669",
+        "identityChanged": true
+      },
+      "galleryOpened": true,
+      "reviewRatingSelected": true,
+      "tabsChanged": true,
+      "quantityEditable": true,
+      "widgets": [
+        {
+          "type": "wd_single_product_gallery",
+          "text": "",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_title",
+          "text": "Frisco Outdoor Heathered Nylon Collar",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_short_description",
+          "text": "All components of the collar are tough, weather resistant, waterproof, long lasting, and versatile.",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_price",
+          "text": "$11.25",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_add_to_cart",
+          "text": "Size\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose an optionLargeMediumSmallXSmall\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\tColor\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose an optionBlueOpera MauveOrangeClear\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_meta",
+          "text": "SKU:\t\t\t\n\t\t\t27735\n\t\t\n\t\n\t\t\tCategory: Collars",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_content",
+          "text": "Great tasting natural* nutrition for a long, happy life. With a wagging tail and licks on your face, no one can say hello like your dog. Because every moment you spend together is ",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_additional_info_table",
+          "text": "SizeLarge, Medium, Small, XSmallColorBlack, Blue, Opera Mauve, Orange",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_tabs",
+          "text": "Description\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tAdditional information\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_reviews",
+          "text": "Reviews\t\t\t\t\n\n\t\t\t\t\t\t\t\n\n\t\t\t\t\t\n\n\t\t\n\t\t\t\t\t\t\tThere are no reviews yet.\n\t\t\t\t\t\n\n\t\t\n\t\n\n\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\tBe the first to review “Frisco Outdoor Heathered Nylon Collar” Cancel replyYour rating",
+          "visible": true
+        },
+        {
+          "type": "wd_wc_notices",
+          "text": "",
+          "visible": false
+        }
+      ],
+      "productIds": [
+        "21592",
+        "21592",
+        "21592"
+      ],
+      "images": [
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-1.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-2.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-5-3.jpg",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "task": "yaoxuxuan-after-import-setup",
+  "status": "completed",
+  "operationId": "cc6d4065-83be-4c51-be27-452c61de6c5e",
+  "domain": "yaoxuxuan.com",
+  "credentialsCreated": {
+    "applicationUuid": "113b9dcb-b60b-48c8-8236-10cb24d3807f",
+    "wooKeyId": 7,
+    "permission": "read_write"
+  },
+  "encryptedStored": true,
+  "authenticationVerified": true,
+  "novamiraEnabled": true,
+  "novamiraDomain": "yaoxuxuan.com",
+  "resetVersion": "0.1.1",
+  "reset": {
+    "baseline": null,
+    "epoch": "uninitialized",
+    "pending": false
+  },
+  "standardDoctor": {
+    "passed": true,
+    "scope": 8,
+    "blockers": []
+  },
+  "contentIdsUnchanged": true,
+  "counts": {
+    "pages": 43,
+    "products": 68,
+    "menus": 4,
+    "categories": 21
+  },
+  "formalSiteRequests": 0,
+  "systemSourceChanged": false,
+  "projectConfigChanged": false,
+  "baselineCaptured": false,
+  "restoreExecuted": false
+}

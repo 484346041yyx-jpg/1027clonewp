@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "target": "https://yaoxuxuan.com",
+  "status": "configured-awaiting-user-products",
+  "observed": {
+    "wordpress": "7.1.3",
+    "php": "8.3.31",
+    "woodmart": "8.5.5",
+    "woodmartCore": "1.1.8",
+    "elementor": "3.35.4",
+    "elementorPro": "3.35.1",
+    "woocommerce": "11.2.1"
+  },
+  "resources": [
+    {
+      "kind": "plugin",
+      "name": "cloneWP 测试站恢复",
+      "id": "clonewp-test-reset/clonewp-test-reset.php",
+      "version": "0.1.0",
+      "status": "active"
+    },
+    {
+      "kind": "plugin",
+      "name": "Novamira",
+      "id": "novamira/novamira.php",
+      "version": "1.12.12",
+      "status": "active"
+    }
+  ],
+  "intent": {
+    "operation": "verify-and-retain",
+    "result": "completed-no-remote-mutation-this-turn"
+  },
+  "remoteWrites": 7,
+  "interruption": {
+    "reason": "Browser UI stopped because current URL could not be reliably identified",
+    "remoteOperation": "Novamira enable AI abilities save and production-site confirmation",
+    "result": "unknown-do-not-retry-before-readback",
+    "browserCallsStopped": true,
+    "baselineCaptured": false,
+    "liveResetVerified": false,
+    "products": "user-managed-do-not-create-or-modify"
+  },
+  "novamiraEnabled": true,
+  "plan": [
+    "Enable approved Novamira abilities and verify saved state",
+    "Set site identity and Asia/Taipei timezone",
+    "Read back user permalink and visibility changes; complete if needed",
+    "Disable indexing; enable Elementor pages and HTML blocks",
+    "Do not create or modify products; do not capture baseline before user products"
+  ],
+  "settings": {
+    "general": {
+      "title": "cloneWP 固定测试站",
+      "tagline": "参考网站复刻与组件测试环境",
+      "timezone": "Asia/Taipei",
+      "verified": true
+    },
+    "reading": {
+      "showOnFront": "page",
+      "pageOnFront": 11,
+      "indexDisabled": true,
+      "verified": true
+    },
+    "elementor": {
+      "enabledPostTypes": [
+        "post",
+        "page",
+        "cms_block"
+      ],
+      "verified": true
+    },
+    "permalinks": {
+      "structure": "/%postname%/",
+      "verified": true,
+      "changedBy": "user"
+    },
+    "visibility": {
+      "comingSoon": false,
+      "verified": true,
+      "changedBy": "user"
+    },
+    "frontend": {
+      "title": "cloneWP 固定测试站 – 参考网站复刻与组件测试环境",
+      "robots": "noindex, nofollow",
+      "shopHomepage": true,
+      "verified": true
+    }
+  },
+  "baselineCaptured": false,
+  "liveResetVerified": false,
+  "products": "user-managed-no-agent-changes",
+  "dedicatedApiConnectionConfigured": true,
+  "baselineDecision": "User confirmed products not ready; retain configuration and defer capture/restore",
+  "proof": {
+    "novamiraScreenshot": "reports/test-site-yaoxuxuan/novamira-enabled.jpg",
+    "novamiraCheckbox": true,
+    "connectionStepsVisible": true,
+    "resetBaseline": "尚未建立",
+    "resetEpoch": "uninitialized"
+  },
+  "apiConnection": {
+    "status": "configured-foundation-verified-component-selfcheck-incomplete",
+    "target": "https://yaoxuxuan.com/",
+    "credentialFile": "config/credentials.yaoxuxuan.local.json",
+    "storage": "Windows DPAPI encrypted",
+    "userAuthorizedLongTermStorage": true,
+    "storedCredentialGroups": [
+      "WordPress application authentication",
+      "WooCommerce API credentials"
+    ],
+    "defaultTargetSwitched": true,
+    "authenticated": true,
+    "mcpDiscovery": true,
+    "phpReadProbe": true,
+    "containerSchemaProbe": true,
+    "standardDoctorPassed": false,
+    "standardDoctorError": "mcp_call_failed / ECONNRESET; extended check MCP -32001 timeout",
+    "baseline": null,
+    "epoch": "uninitialized",
+    "pendingReset": false
+  }
+}

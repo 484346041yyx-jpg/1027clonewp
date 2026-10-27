@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "fingerprint": "c65afb8a419d3b1e476a8ec1086c45fcc5624fcd084fa244ad37ee2d276aad7a",
+  "versions": {
+    "elementor": "3.33.2",
+    "wordpress": "7.1.3",
+    "php": "8.0.30",
+    "elementorPro": "3.32.1",
+    "novamira": "1.12.8"
+  },
+  "mode": "legacy-verified",
+  "establishedAt": "2026-10-12T07:54:00.489Z",
+  "verifiedBy": "Same actual versions and full registered schemas; only explicitly captured save_default metadata added, source-proven editor serialization",
+  "responsiveDevices": {
+    "active": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "breakpoints": {
+      "mobile": {
+        "value": 768,
+        "direction": "max"
+      },
+      "tablet": {
+        "value": 1024,
+        "direction": "max"
+      }
+    },
+    "originalDuplicationMode": "off"
+  },
+  "serializationProofAt": "2026-10-12T08:51:33.170Z"
+}

@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "kind": "native-component-extension",
+  "id": "core-single-product-v1",
+  "baseCatalogHash": "5c459e861145db6968998aebbb724da274daa1a9a6e8aba54a6363668fa5e5c1",
+  "types": [
+    "wd_single_product_gallery",
+    "wd_single_product_title",
+    "wd_single_product_rating",
+    "wd_single_product_short_description",
+    "wd_single_product_price",
+    "wd_single_product_add_to_cart",
+    "wd_single_product_meta",
+    "wd_single_product_content",
+    "wd_single_product_additional_info_table",
+    "wd_single_product_tabs",
+    "wd_single_product_reviews",
+    "wd_wc_notices"
+  ],
+  "components": {
+    "wd_single_product_gallery": {
+      "path": "data/native-product/components/wd_single_product_gallery.json",
+      "sha256": "a859378cbd6cccc3d80e5c4ad17b8b561ba3f2e63573782fc3c4527f793b0d9f"
+    },
+    "wd_single_product_title": {
+      "path": "data/native-product/components/wd_single_product_title.json",
+      "sha256": "d76d6eb0d327617c0ad667e99f24ad4f6c0495e6e66b40bc2141ea2116ba8cf3"
+    },
+    "wd_single_product_rating": {
+      "path": "data/native-product/components/wd_single_product_rating.json",
+      "sha256": "2d4d40cfcf673ca9021514473073ee61aaffaab2a3a551fe2b7e49f1280d161c"
+    },
+    "wd_single_product_short_description": {
+      "path": "data/native-product/components/wd_single_product_short_description.json",
+      "sha256": "4b4070de2def3d88afc7bf7d17d874c1a8d045af94b43b0f0775356d4e74f8f0"
+    },
+    "wd_single_product_price": {
+      "path": "data/native-product/components/wd_single_product_price.json",
+      "sha256": "5db4a159d3d742fe962c82604eb861c2b0706a11d31885dbd748ac434ad52db0"
+    },
+    "wd_single_product_add_to_cart": {
+      "path": "data/native-product/components/wd_single_product_add_to_cart.json",
+      "sha256": "608ac09ff2e9ada7f3dd2b8e501a8ec0022d34d3176e7d4729802d1974090a24"
+    },
+    "wd_single_product_meta": {
+      "path": "data/native-product/components/wd_single_product_meta.json",
+      "sha256": "b6e84e523b69aa26af80c42b14ac05ec286388a6609b35de250a1372c192463c"
+    },
+    "wd_single_product_content": {
+      "path": "data/native-product/components/wd_single_product_content.json",
+      "sha256": "49775ed48821b38ca736346e223e43ded3e3b1dd886777502edde3ece214ee67"
+    },
+    "wd_single_product_additional_info_table": {
+      "path": "data/native-product/components/wd_single_product_additional_info_table.json",
+      "sha256": "b50aee7e14cda0b01134705c19f85cc44ac9072e91cf0bafd7c68d0f292f17ee"
+    },
+    "wd_single_product_tabs": {
+      "path": "data/native-product/components/wd_single_product_tabs.json",
+      "sha256": "41291757aa8cabbe2167ef55e1b4b4a730effb6163398d8336d241950a1b40f8"
+    },
+    "wd_single_product_reviews": {
+      "path": "data/native-product/components/wd_single_product_reviews.json",
+      "sha256": "851877897498467ebdd54e9f6a4d6d327728f3b051003dffdc103b71b6cc1192"
+    },
+    "wd_wc_notices": {
+      "path": "data/native-product/components/wd_wc_notices.json",
+      "sha256": "295c01ca8f818d97e1ae0f0f80e5c0559bd4d172171e44c5df29ce5238e19948"
+    }
+  },
+  "sharedControls": {
+    "path": "data/native-product/shared-controls.json",
+    "sha256": "13976a05d9dda210ae5b8735d640a74c1738cb6533d337836eb6033eb1c647a8"
+  },
+  "qualification": {
+    "path": "data/native-product/qualification-v1.json",
+    "sha256": "e546ab8f9c0ab4bec7c668ceff7bc30ff3e83fb7f53cae4815de78d2b9c21e3a"
+  }
+}

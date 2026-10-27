@@ -1,0 +1,9 @@
+{
+  "id": 21760,
+  "postType": "woodmart_layout",
+  "layoutType": "single_product",
+  "documentClass": "Elementor\\Core\\DocumentTypes\\Post",
+  "previewProductId": 21594,
+  "editUrl": "https://yaoxuxuan.com/wp-admin/post.php?post=21760&action=elementor",
+  "elementBytes": 1591
+}

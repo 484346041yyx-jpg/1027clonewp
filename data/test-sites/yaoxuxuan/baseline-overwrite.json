@@ -1,0 +1,42 @@
+{
+  "task": "yaoxuxuan-baseline-overwrite",
+  "status": "completed",
+  "version": "0.1.1",
+  "files": [
+    "lib.php",
+    "clonewp-test-reset.php"
+  ],
+  "deployedHashes": {
+    "lib.php": "437474a3d2ca03b98fd6620a9c12362791f7addcb72b58be201e3af888d24d60",
+    "clonewp-test-reset.php": "a42a95a4a2ce20fbb3f18015dd4972ed42b024a833631bf91f93f79deb54afa7"
+  },
+  "confirmedOverwriteRequired": true,
+  "restoreUsesLatestSuccessfulBaseline": true,
+  "oldSnapshotsRetained": true,
+  "baselineBefore": {
+    "baseline": null,
+    "epoch": "uninitialized",
+    "pending": false
+  },
+  "baselineAfter": {
+    "baseline": null,
+    "epoch": "uninitialized",
+    "pending": false
+  },
+  "productsWrittenByTask": false,
+  "productCountAtReadback": 20,
+  "siteSettingsWrittenByTask": false,
+  "settingsUnchanged": true,
+  "checks": {
+    "focused": "passed",
+    "full": {
+      "total": 1573,
+      "passed": 1571,
+      "skipped": 2,
+      "failed": 0
+    },
+    "build": "passed",
+    "freshRuntimeReadback": "passed",
+    "liveCaptureOrRestore": "not-run"
+  }
+}

@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {parseNativePlanArguments} from '../src/native-plan-cli.js';
+test('current offline planning rejects retired stage and accepts only bounded current arguments',()=>{assert.equal(parseNativePlanArguments(['job','registry','--stage','desktop']),undefined);assert.deepEqual(parseNativePlanArguments(['job','registry','--catalog','catalog.json']),{job:'job',registry:'registry',catalog:'catalog.json'});assert.equal(parseNativePlanArguments(['job','registry','--publish']),undefined);});

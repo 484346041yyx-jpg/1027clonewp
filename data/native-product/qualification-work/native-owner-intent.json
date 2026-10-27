@@ -1,0 +1,6 @@
+{
+  "operationId": "product-document-owner-20261026",
+  "pageId": 21760,
+  "beforeHash": "8aa8a6786a5b5527726ee56b29b2d9490e4361a0f970d42d5779373dce8ecdb5",
+  "purpose": "convert only this newly owned qualification document to the native product-template owner; preserve element tree"
+}

@@ -1,0 +1,46 @@
+import test from 'node:test';
+import path from 'node:path';
+import os from 'node:os';
+import {mkdtemp,mkdir,readFile,rm,writeFile} from 'node:fs/promises';
+import {hashV2,documentHashV2} from '../../src/replica-v2/journal.js';
+import {canonicalNative44CSS,native44CSSHash} from '../../src/native44/css-handoff.js';
+import {NATIVE44_ALL_TYPES,NATIVE44_CATALOG_HASH} from '../../src/native44/catalog.js';
+import {fingerprintNative44Snapshot,type Native44CompareManifest} from '../../src/native44/compare.js';
+import type {DraftSnapshot} from '../../src/wordpress/types.js';
+export async function publicationFixture(t: test.TestContext) {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'clonewp-current-state-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const runId = 'run-one', taskId = 'task-one', runDir = path.join(root, 'runs', runId), folder = path.join(runDir, 'amendments', 'user-request'), reviewDir = path.join(root, 'runs', 'review-one');
+  const json = async (filename: string, value: unknown) => { await mkdir(path.dirname(filename), { recursive: true }); await writeFile(filename, JSON.stringify(value)); return { path: filename, sha256: hashV2(await readFile(filename)) }; };
+  const css = '.elementor-77 .card{color:red}', canonicalHash = native44CSSHash(canonicalNative44CSS(css));
+  const makeSnapshot = (style: string): DraftSnapshot => { const elements = [{ id: 'abc1234', elType: 'widget' as const, widgetType: 'wd_products', settings: { post_type: 'ids', include: [1], items_per_page: 1 }, elements: [] }], settings = { custom_css: style }; return { pageId: 77, runId, title: 'Draft', status: 'draft', elements, settings, hash: documentHashV2(elements, settings) }; };
+  const before = makeSnapshot(''), after = makeSnapshot(css), request = await json(path.join(folder, 'request.json'), { version: 1, pageId: 77, runId, userInstruction: 'Apply CSS and inspect.' });
+  await json(path.join(folder, 'before.json'), before); await json(path.join(folder, 'expected.json'), after);
+  const currentSnapshot = await json(path.join(folder, 'after.json'), after); await writeFile(path.join(folder, 'page-custom.css'), css);
+  const currentCSS = { path: path.join(folder, 'page-custom.css'), sha256: hashV2(css) };
+  const intent = await json(path.join(folder, 'intent.json'), { version: 1, kind: 'explicit-user-owned-draft-amendment', pageId: 77, runId, beforeHash: before.hash, expectedHash: after.hash, payloadSha256: after.hash, requestSha256: request.sha256, cssSha256: currentCSS.sha256 });
+  const receipt = await json(path.join(folder, 'receipt.json'), { version: 1, status: 'confirmed', pageId: 77, runId, beforeHash: before.hash, afterHash: after.hash, cssApplied: true });
+  const captures = [];
+  for (const viewport of ['desktop-wide', 'desktop-narrow']) { const refs = []; for (const role of ['source', 'target']) { const filename = path.join(reviewDir, `${viewport}-${role}.png`); await mkdir(reviewDir, { recursive: true }); const bytes = Buffer.from(`fixture pixels ${viewport} ${role}`); await writeFile(filename, bytes); refs.push({ path: filename, sha256: hashV2(bytes) }); } captures.push({ viewport, sourceScreenshot: refs[0], targetScreenshot: refs[1], interactions: [{ viewport, status: 'passed', problems: [] }], queries: [{ viewport, status: 'passed', problems: [] }] }); }
+  const observedAt = new Date().toISOString();
+  const report = { version: 1, kind: 'explicit-user-component-and-css-review', pageId: 77, runId, documentHash: after.hash, documentUnchanged: true, css: { applied: true, expectedHash: canonicalHash, actualHash: canonicalHash }, nativeProductSlots: 1, metrics: { documentWrites: 0, editorSessions: 0, viewports: 2 }, captures, observedAt };
+  const verification = await json(path.join(reviewDir, 'report.json'), report);
+  const reviews = captures.map(capture => ({ viewport: capture.viewport, sourceScreenshotHash: capture.sourceScreenshot.sha256, targetScreenshotHash: capture.targetScreenshot.sha256, documentHash: after.hash, verdict: 'reviewed', observedAt }));
+  const visualReview = await json(path.join(reviewDir, 'visual-reviews.json'), reviews);
+  const taskDir = path.join(root, 'references', taskId), oldRulesHash = 'a'.repeat(64), fingerprint = 'b'.repeat(64);
+  const realCatalog = await readFile(path.resolve(import.meta.dirname, '../../config/native44-component-set.json')); await mkdir(path.join(root, 'config'), { recursive: true }); await writeFile(path.join(root, 'config/native44-component-set.json'), realCatalog);
+  const componentCatalog = { path: path.join(root, 'config/native44-component-set.json'), sha256: NATIVE44_CATALOG_HASH }, knowledgeRef = await json(path.join(root, 'data/native44/index.json'), { version: 1 });
+  const knowledge = { ...knowledgeRef, fingerprint }, sourceFacts = await json(path.join(taskDir, 'source-facts.json'), { sourceUrl: 'https://source.test/', snapshots: [{ viewport: { width: 1920, height: 1080, clientWidth: 1905, scrollbarWidth: 15 } }, { viewport: { width: 1440, height: 1000, clientWidth: 1425, scrollbarWidth: 15 } }] }), componentPlan = await json(path.join(taskDir, 'component-plan.json'), {}), assetsManifest = await json(path.join(taskDir, 'asset-manifest.json'), {});
+  const program = { version: 2, workflow: 'block-replication', executionStrategy: 'native44-css-handoff', taskId, replicationProfile: 'desktop-browser-v1', selectionRulesHash: oldRulesHash, sourceUrl: 'https://source.test/', componentCatalog, knowledge, sourceFacts, componentPlan, assetsManifest, blocks: [] };
+  const programRef = await json(path.join(taskDir, 'program.json'), program);
+  const oldCode = { path: path.join(root, 'src/native44/old-code.ts'), sha256: 'd'.repeat(64) };
+  await mkdir(path.dirname(oldCode.path), { recursive: true }); await writeFile(oldCode.path, 'Current source code has changed since this already saved revision.');
+  const release = { version: 1, executorId: 'native44', componentSet: { id: 'native44-v1', catalog: componentCatalog, types: [...NATIVE44_ALL_TYPES] }, knowledge: { id: 'knowledge-v1', index: knowledgeRef, fingerprint }, selectionRules: { id: 'desktop-browser-v1', sha256: oldRulesHash, files: [oldCode] }, adapters: { id: 'native44-desktop-v1', sha256: 'c'.repeat(64), files: [oldCode] } };
+  const releaseLock = await json(path.join(taskDir, 'release-lock.json'), { version: 1, kind: 'native44-release-lock', phase: 'final', taskId, replicationProfile: 'desktop-browser-v1', createdAt: observedAt, release, program: programRef, inputs: { componentCatalog, knowledge, sourceFacts, componentPlan, assetsManifest } });
+  const journal = { version: 2, workflow: 'block-replication', taskId, runId, runDir, executionStrategy: 'native44-css-handoff', replicationProfile: 'desktop-browser-v1', selectionRulesHash: oldRulesHash, pageId: 77, targetUrl: 'https://target.test/', programHash: programRef.sha256, releaseLock, documentHash: before.hash, status: 'awaiting-comparison', mutations: [{ status: 'confirmed', pageId: 77, runId, expectedAfterHash: before.hash, observedHash: before.hash }] };
+  await json(path.join(runDir, 'journal.json'), journal);
+  const pointer = { version: 1, kind: 'completed-explicit-user-draft-amendment', pageId: 77, runId, taskId, status: 'completed', unpublished: true, documentHash: after.hash, cssApplied: true, requestedScope: 'Native product components preserved; concrete products replaceable.', counts: { containers: 0, widgets: 1, html: 0, productWidgets: 1 }, amendments: [{ intent, receipt, beforeHash: before.hash, afterHash: after.hash }], verification, visualReview, currentSnapshot, currentCSS, completedAt: observedAt };
+  const pointerFile = path.join(runDir, 'current-user-amendment.json'); await json(pointerFile, pointer);
+  const manifest = { version: 1, strategy: 'native44-css-handoff', taskId, runId, pageId: 77, releaseLock, sourceUrl: 'https://source.test/', targetUrl: 'https://target.test/', replicationProfile: 'desktop-browser-v1', selectionRulesHash: oldRulesHash, ...fingerprintNative44Snapshot(after), canvasCss: '', widgetTypes: ['wd_products'], modules: [{ key: 'products', className: 'cwp-products', sourceSelector: '.products', targetSelector: '.elementor-77 .cwp-products', required: true }], cssRules: [], viewports: [{ name: 'desktop-wide', width: 1920, height: 1080 }, { name: 'desktop-narrow', width: 1440, height: 1000 }], sourceCaptures: { version: 2, taskId, replicationProfile: 'desktop-browser-v1', selectionRulesHash: oldRulesHash, collectionStartedAt: observedAt, sourceFacts, componentPlan, viewports: [{ viewport: 'desktop-wide', snapshotId: 'wide' }, { viewport: 'desktop-narrow', snapshotId: 'narrow' }] } } as Native44CompareManifest;
+  return { root, runId, runDir, taskId, folder, json, pointer, pointerFile, report, reviews, journal, before, after, reviewDir, manifest };
+}

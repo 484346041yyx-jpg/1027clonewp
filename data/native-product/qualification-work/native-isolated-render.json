@@ -1,0 +1,352 @@
+{
+  "id": 21760,
+  "productId": 21594,
+  "productType": "simple",
+  "productName": "Juni Logo Dog Harness Green",
+  "priceHtml": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\" translate=\"no\">&#36;</span>39.99</bdi></span>",
+  "existingUnchanged": true,
+  "observedAt": "2026-10-26T05:58:29.536Z",
+  "scope": "Actual target native PHP rendering with request-local query/filter and actual native assets; isolated browser document, not a published route",
+  "observations": [
+    {
+      "width": 1920,
+      "tabsChanged": true,
+      "quantityEditable": true,
+      "widgets": [
+        {
+          "type": "wd_single_product_gallery",
+          "text": "",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_title",
+          "text": "Juni Logo Dog Harness Green",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_short_description",
+          "text": "All components of the collar are tough, weather resistant, waterproof, long lasting, and versatile.",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_price",
+          "text": "$39.99",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_add_to_cart",
+          "text": "76 in stock\n\n\t\n\t\n\t\t\n\t\t\n\n\t\n\t\t\t\n\t\n\tJuni Logo Dog Harness Green quantity\n\t\n\n\t\t\t\n\t\n\t\n\n\t\tAdd to cart\n\n\t\t\t\t\t\n\t\t\t\tBuy now",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_meta",
+          "text": "SKU:\t\t\t\n\t\t\t\n\t\t\t\t27736\t\t\t\n\t\t\n\t\n\t\t\tCategory: Harnesses",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_content",
+          "text": "Great tasting natural* nutrition for a long, happy life. With a wagging tail and licks on your face, no one can say hello like your dog. Because every moment you spend together is ",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_additional_info_table",
+          "text": "SizeMedium, SmallColorGreen",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_tabs",
+          "text": "Description\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tAdditional information\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_reviews",
+          "text": "Reviews\t\t\t\t\n\n\t\t\t\t\t\t\t\n\n\t\t\t\t\t\n\n\t\t\n\t\t\t\t\t\t\tThere are no reviews yet.\n\t\t\t\t\t\n\n\t\t\n\t\n\n\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\tBe the first to review “Juni Logo Dog Harness Green” Cancel replyYour rating *\t\t\t\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_wc_notices",
+          "text": "",
+          "visible": false
+        }
+      ],
+      "productIds": [
+        "21594",
+        "21594"
+      ],
+      "images": [
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-6-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-supplies-9-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-supplies-7-1.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-toys-4-0.jpg",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "tabsChanged": true,
+      "quantityEditable": true,
+      "widgets": [
+        {
+          "type": "wd_single_product_gallery",
+          "text": "",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_title",
+          "text": "Juni Logo Dog Harness Green",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_short_description",
+          "text": "All components of the collar are tough, weather resistant, waterproof, long lasting, and versatile.",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_price",
+          "text": "$39.99",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_add_to_cart",
+          "text": "76 in stock\n\n\t\n\t\n\t\t\n\t\t\n\n\t\n\t\t\t\n\t\n\tJuni Logo Dog Harness Green quantity\n\t\n\n\t\t\t\n\t\n\t\n\n\t\tAdd to cart\n\n\t\t\t\t\t\n\t\t\t\tBuy now",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_meta",
+          "text": "SKU:\t\t\t\n\t\t\t\n\t\t\t\t27736\t\t\t\n\t\t\n\t\n\t\t\tCategory: Harnesses",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_content",
+          "text": "Great tasting natural* nutrition for a long, happy life. With a wagging tail and licks on your face, no one can say hello like your dog. Because every moment you spend together is ",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_additional_info_table",
+          "text": "SizeMedium, SmallColorGreen",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_tabs",
+          "text": "Description\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tAdditional information\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_reviews",
+          "text": "Reviews\t\t\t\t\n\n\t\t\t\t\t\t\t\n\n\t\t\t\t\t\n\n\t\t\n\t\t\t\t\t\t\tThere are no reviews yet.\n\t\t\t\t\t\n\n\t\t\n\t\n\n\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\tBe the first to review “Juni Logo Dog Harness Green” Cancel replyYour rating *\t\t\t\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_wc_notices",
+          "text": "",
+          "visible": false
+        }
+      ],
+      "productIds": [
+        "21594",
+        "21594"
+      ],
+      "images": [
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-6-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-supplies-9-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-supplies-7-1.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-toys-4-0.jpg",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tabsChanged": true,
+      "quantityEditable": true,
+      "widgets": [
+        {
+          "type": "wd_single_product_gallery",
+          "text": "",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_title",
+          "text": "Juni Logo Dog Harness Green",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_short_description",
+          "text": "All components of the collar are tough, weather resistant, waterproof, long lasting, and versatile.",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_price",
+          "text": "$39.99",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_add_to_cart",
+          "text": "76 in stock\n\n\t\n\t\n\t\t\n\t\t\n\n\t\n\t\t\t\n\t\n\tJuni Logo Dog Harness Green quantity\n\t\n\n\t\t\t\n\t\n\t\n\n\t\tAdd to cart\n\n\t\t\t\t\t\n\t\t\t\tBuy now",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_meta",
+          "text": "SKU:\t\t\t\n\t\t\t\n\t\t\t\t27736\t\t\t\n\t\t\n\t\n\t\t\tCategory: Harnesses",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_content",
+          "text": "Great tasting natural* nutrition for a long, happy life. With a wagging tail and licks on your face, no one can say hello like your dog. Because every moment you spend together is ",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_additional_info_table",
+          "text": "SizeMedium, SmallColorGreen",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_tabs",
+          "text": "Description\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tAdditional information\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_reviews",
+          "text": "Reviews\t\t\t\t\n\n\t\t\t\t\t\t\t\n\n\t\t\t\t\t\n\n\t\t\n\t\t\t\t\t\t\tThere are no reviews yet.\n\t\t\t\t\t\n\n\t\t\n\t\n\n\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\tBe the first to review “Juni Logo Dog Harness Green” Cancel replyYour rating *\t\t\t\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_wc_notices",
+          "text": "",
+          "visible": false
+        }
+      ],
+      "productIds": [
+        "21594",
+        "21594"
+      ],
+      "images": [
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-6-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-supplies-9-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-supplies-7-1.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-toys-4-0.jpg",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "width": 430,
+      "tabsChanged": true,
+      "quantityEditable": true,
+      "widgets": [
+        {
+          "type": "wd_single_product_gallery",
+          "text": "",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_title",
+          "text": "Juni Logo Dog Harness Green",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_short_description",
+          "text": "All components of the collar are tough, weather resistant, waterproof, long lasting, and versatile.",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_price",
+          "text": "$39.99",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_add_to_cart",
+          "text": "76 in stock\n\n\t\n\t\n\t\t\n\t\t\n\n\t\n\t\t\t\n\t\n\tJuni Logo Dog Harness Green quantity\n\t\n\n\t\t\t\n\t\n\t\n\n\t\tAdd to cart\n\n\t\t\t\t\t\n\t\t\t\tBuy now",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_meta",
+          "text": "SKU:\t\t\t\n\t\t\t\n\t\t\t\t27736\t\t\t\n\t\t\n\t\n\t\t\tCategory: Harnesses",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_content",
+          "text": "Great tasting natural* nutrition for a long, happy life. With a wagging tail and licks on your face, no one can say hello like your dog. Because every moment you spend together is ",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_additional_info_table",
+          "text": "SizeMedium, SmallColorGreen",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_tabs",
+          "text": "Description\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tAdditional information\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_single_product_reviews",
+          "text": "Reviews\t\t\t\t\n\n\t\t\t\t\t\t\t\n\n\t\t\t\t\t\n\n\t\t\n\t\t\t\t\t\t\tThere are no reviews yet.\n\t\t\t\t\t\n\n\t\t\n\t\n\n\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\tBe the first to review “Juni Logo Dog Harness Green” Cancel replyYour rating *\t\t\t\t\t\t\t\t",
+          "visible": true
+        },
+        {
+          "type": "wd_wc_notices",
+          "text": "",
+          "visible": false
+        }
+      ],
+      "productIds": [
+        "21594",
+        "21594"
+      ],
+      "images": [
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-leashes-6-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-supplies-9-0.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-supplies-7-1.jpg",
+          "loaded": true
+        },
+        {
+          "url": "https://yaoxuxuan.com/wp-content/uploads/2026/10/pet-product-dogs-toys-4-0.jpg",
+          "loaded": true
+        }
+      ],
+      "overflow": false
+    }
+  ]
+}

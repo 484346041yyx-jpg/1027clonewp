@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "kind": "clonewp-inquiry-sites",
+  "defaultRecipients": [
+    "sales@example.com"
+  ],
+  "sites": []
+}

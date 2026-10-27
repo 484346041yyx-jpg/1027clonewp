@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "kind": "native-product-extension-delivery",
+  "completedAt": "2026-10-26T06:55:48.961Z",
+  "extension": {
+    "path": "data/native-product/extension-v1.json",
+    "sha256": "e3e037e64334189b577e7503ca6a9189673db5778c42d212afbad8a9ea28c280"
+  },
+  "enabled": {
+    "total": 56,
+    "widgets": 55,
+    "containers": 1,
+    "original": 44,
+    "added": 12
+  },
+  "baseFilesUnchanged": {
+    "config/native44-component-set.json": "5c459e861145db6968998aebbb724da274daa1a9a6e8aba54a6363668fa5e5c1",
+    "data/native44/index.json": "ceac8015b96f8818e85425df17bd648030ded4c607e8be362baafe9fc823ccf2",
+    "data/system/knowledge-current.json": "39b261770f1238166d4a9d542641d020e70e48c4010003669b05188272904269"
+  },
+  "flow": "Existing preparation/full/native44/responsive/compare; native document and request context adapter only",
+  "ordinaryProgramAutomaticallyExtended": false,
+  "bridgePluginInstalled": false,
+  "existingPagesEdited": false,
+  "displayConditionsAssigned": false,
+  "qualification": {
+    "path": "data/native-product/qualification-v1.json",
+    "sha256": "e546ab8f9c0ab4bec7c668ceff7bc30ff3e83fb7f53cae4815de78d2b9c21e3a"
+  },
+  "previewAdapter": {
+    "path": "data/native-product/qualification-work/compare-preview-adapter.json",
+    "sha256": "35e5c9ec175c03563b4df79be242923b2ee2bfc5604d32119abccce37c605b82"
+  },
+  "visualEvidence": [
+    {
+      "path": "data/native-product/qualification-work/settings-1920.png",
+      "sha256": "ea49fd55eed33a08800567b85e27ce3a1a64acc58f896e3e02a2c2736d1553f5"
+    },
+    {
+      "path": "data/native-product/qualification-work/settings-1440.png",
+      "sha256": "90870cb955fc2739384b4ca8eaf8235be1273660590c3fddb7d3e076d006fb3e"
+    },
+    {
+      "path": "data/native-product/qualification-work/settings-390.png",
+      "sha256": "53d490638790df0090cc8932f6a22cfa40123a5da5dd9b71418a7df975285c57"
+    },
+    {
+      "path": "data/native-product/qualification-work/settings-430.png",
+      "sha256": "4b17d9abc472e36a9bfcfd4bea9a51c45ec21b7f152b8cfea9f34b227e180176"
+    }
+  ],
+  "checks": {
+    "focusedBeforeActivation": {
+      "tests": 130,
+      "pass": 130
+    },
+    "compatibilityRecheck": {
+      "tests": 62,
+      "pass": 62
+    },
+    "fullSuite": {
+      "tests": 1614,
+      "pass": 1610,
+      "fail": 2,
+      "skipped": 2,
+      "exitCode": 1,
+      "failures": [
+        "Windows EPERM renaming a local synthetic media ledger",
+        "Read-only browser candidate open exceeded 3000ms"
+      ]
+    },
+    "unchangedSourceRecheck": {
+      "tests": 32,
+      "pass": 32,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "coverage": [
+        "Both failed files",
+        "New native runtime/compiler/registry",
+        "Original44 style capabilities"
+      ]
+    },
+    "build": {
+      "exitCode": 0
+    },
+    "context": {
+      "status": "ready",
+      "enabled": 56,
+      "baseOnly": 44
+    }
+  },
+  "resource": {
+    "id": 21760,
+    "name": "cloneWP 单品组件隔离验证 20261026",
+    "postType": "woodmart_layout",
+    "layoutType": "single_product",
+    "status": "draft",
+    "displayConditionsAssigned": false,
+    "editUrl": "https://yaoxuxuan.com/wp-admin/post.php?post=21760&action=elementor"
+  },
+  "limits": [
+    "No live cart, checkout or review submission",
+    "Positive ratings and nonempty notices were not available in the target sample",
+    "All sampled variations had equal prices; different-price UI transition not claimed",
+    "Qualification validates native capabilities; future replicas still require current source, registration, visual and interaction review"
+  ]
+}

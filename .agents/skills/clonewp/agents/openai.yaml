@@ -1,0 +1,4 @@
+interface:
+  display_name: "CloneWP 双模式建站"
+  short_description: "Original and replica native Elementor draft workflows"
+  default_prompt: "Use $clonewp to select original or replica mode and build a native editable Elementor draft."

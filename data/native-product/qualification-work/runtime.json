@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "runtime": "elementor-pro-product-v1",
+  "targetOrigin": "https://yaoxuxuan.com",
+  "pageId": 21760,
+  "runId": "core-product-qualification-20261026",
+  "productId": 21594,
+  "documentType": "product",
+  "documentClass": "ElementorPro\\Modules\\Woocommerce\\Documents\\Product",
+  "previewType": "single/product",
+  "previewId": 21594,
+  "pageTemplate": "default",
+  "conditions": [],
+  "query": {
+    "p": 21594,
+    "post_type": "product"
+  },
+  "versions": {
+    "elementor": "3.35.4",
+    "elementorPro": "3.35.1",
+    "woocommerce": "10.9.4"
+  },
+  "readAt": "2026-10-26T05:10:23.693Z"
+}

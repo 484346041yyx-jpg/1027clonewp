@@ -1,0 +1,877 @@
+{
+  "version": 1,
+  "kind": "native44-pending-form-registered-used-control-projection",
+  "source": {
+    "path": "D:/cloneWP/references/furryskitchen-20261017-observation/pending-form-capabilities-2026-10-17T19-43-06-917Z-ab3c77bd/capabilities.json",
+    "sha256": "33b2c95be9eccee890e54a93baf2f9e0a222f09e530deaf59c33461566343190"
+  },
+  "sourceFullSchemaHash": "60d94fcc56088415ef76d402a54945e70c551b4ad84ce203cc2d536df8ca3bf0",
+  "method": "Exact selected controls including every original repeater field and condition; this projection has its own schema identity, not the source full-schema hash.",
+  "versions": {
+    "elementor": "3.33.2",
+    "wordpress": "7.1.3",
+    "php": "8.0.30",
+    "elementorPro": "3.32.1",
+    "woodmart": "8.3.4",
+    "activeTemplate": "woodmart",
+    "woodmartCore": "1.1.5",
+    "novamira": "1.12.8"
+  },
+  "schema": {
+    "type": "form",
+    "class": "ElementorPro\\Modules\\Forms\\Widgets\\Form",
+    "controls": {
+      "form_fields": {
+        "type": "form-fields-repeater",
+        "default": [
+          {
+            "custom_id": "name",
+            "field_type": "text",
+            "field_label": "Name",
+            "placeholder": "Name",
+            "width": "100",
+            "dynamic": {
+              "active": true
+            }
+          },
+          {
+            "custom_id": "email",
+            "field_type": "email",
+            "required": "true",
+            "field_label": "Email",
+            "placeholder": "Email",
+            "width": "100"
+          },
+          {
+            "custom_id": "message",
+            "field_type": "textarea",
+            "field_label": "Message",
+            "placeholder": "Message",
+            "width": "100"
+          }
+        ],
+        "fields": {
+          "_id": {
+            "type": "hidden",
+            "tab": "content",
+            "name": "_id",
+            "default": ""
+          },
+          "form_fields_tabs": {
+            "type": "tabs",
+            "tab": "content",
+            "name": "form_fields_tabs"
+          },
+          "form_fields_content_tab": {
+            "type": "tab",
+            "tab": "content",
+            "label": "Content",
+            "tabs_wrapper": "form_fields_tabs",
+            "name": "form_fields_content_tab"
+          },
+          "field_type": {
+            "type": "select",
+            "tab": "content",
+            "label": "Type",
+            "options": {
+              "text": "Text",
+              "email": "Email",
+              "textarea": "Textarea",
+              "url": "URL",
+              "tel": "Tel",
+              "radio": "Radio",
+              "select": "Select",
+              "checkbox": "Checkbox",
+              "acceptance": "Acceptance",
+              "number": "Number",
+              "date": "Date",
+              "time": "Time",
+              "upload": "File Upload",
+              "password": "Password",
+              "html": "HTML",
+              "hidden": "Hidden",
+              "recaptcha": "reCAPTCHA",
+              "recaptcha_v3": "reCAPTCHA V3",
+              "honeypot": "Honeypot",
+              "step": "Step"
+            },
+            "default": "text",
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "field_type"
+          },
+          "field_label": {
+            "type": "text",
+            "tab": "content",
+            "label": "Label",
+            "default": "",
+            "dynamic": {
+              "active": true
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "field_label"
+          },
+          "placeholder": {
+            "type": "text",
+            "tab": "content",
+            "label": "Placeholder",
+            "default": "",
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "operator": "in",
+                  "value": [
+                    "tel",
+                    "text",
+                    "email",
+                    "textarea",
+                    "number",
+                    "url",
+                    "password",
+                    "time",
+                    "date"
+                  ]
+                }
+              ]
+            },
+            "dynamic": {
+              "active": true
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "placeholder"
+          },
+          "required": {
+            "type": "switcher",
+            "tab": "content",
+            "label": "Required",
+            "return_value": "true",
+            "default": "",
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "operator": "!in",
+                  "value": [
+                    "checkbox",
+                    "recaptcha",
+                    "recaptcha_v3",
+                    "hidden",
+                    "html",
+                    "step"
+                  ]
+                },
+                {
+                  "name": "field_type",
+                  "operator": "!in",
+                  "value": [
+                    "honeypot"
+                  ]
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "required"
+          },
+          "previous_button": {
+            "name": "previous_button",
+            "label": "Previous Button",
+            "type": "text",
+            "dynamic": {
+              "active": true
+            },
+            "ai": {
+              "active": false
+            },
+            "condition": {
+              "field_type": "step"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "next_button": {
+            "name": "next_button",
+            "label": "Next Button",
+            "type": "text",
+            "dynamic": {
+              "active": true
+            },
+            "ai": {
+              "active": false
+            },
+            "condition": {
+              "field_type": "step"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "selected_icon": {
+            "name": "selected_icon",
+            "label": "Icon",
+            "type": "icons",
+            "fa4compatibility": "icon",
+            "description": "Visible only if selected step type contains &quot;Icon&quot;",
+            "default": {
+              "value": "fas fa-star",
+              "library": "fa-solid"
+            },
+            "recommended": {
+              "fa-solid": [
+                "chevron-down",
+                "angle-down",
+                "angle-double-down",
+                "caret-down",
+                "caret-square-down"
+              ],
+              "fa-regular": [
+                "caret-square-down"
+              ]
+            },
+            "skin": "inline",
+            "label_block": false,
+            "condition": {
+              "field_type": "step"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "attachment_type": {
+            "name": "attachment_type",
+            "label": "Send files",
+            "type": "select",
+            "condition": {
+              "field_type": "upload"
+            },
+            "options": {
+              "link": "Email with link",
+              "attach": "Email with attachment",
+              "both": "Email with both"
+            },
+            "default": "link",
+            "description": "Uploads you receive via link are stored on your server. However, uploads via attachment won&#039;t be saved on your server, and under Submissions",
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "file_sizes": {
+            "name": "file_sizes",
+            "label": "Max. File Size",
+            "placeholder": "Size in MB",
+            "type": "number",
+            "min": 1,
+            "max": 64,
+            "condition": {
+              "field_type": "upload"
+            },
+            "description": "Size is in MB. If you need to increase max upload size please contact your hosting.",
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs",
+            "title": "Size in MB"
+          },
+          "file_types": {
+            "name": "file_types",
+            "label": "Allowed File Types",
+            "type": "text",
+            "ai": {
+              "active": false
+            },
+            "condition": {
+              "field_type": "upload"
+            },
+            "description": "Enter the allowed file types, separated by a comma (jpg, gif, pdf, etc).",
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "allow_multiple_upload": {
+            "name": "allow_multiple_upload",
+            "label": "Multiple Files",
+            "type": "switcher",
+            "condition": {
+              "field_type": "upload"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "max_files": {
+            "name": "max_files",
+            "label": "Max. Files",
+            "type": "number",
+            "condition": {
+              "field_type": "upload",
+              "allow_multiple_upload": "yes"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "acceptance_text": {
+            "name": "acceptance_text",
+            "label": "Acceptance Text",
+            "type": "textarea",
+            "condition": {
+              "field_type": "acceptance"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "checked_by_default": {
+            "name": "checked_by_default",
+            "label": "Checked by Default",
+            "type": "switcher",
+            "condition": {
+              "field_type": "acceptance"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "field_min": {
+            "name": "field_min",
+            "label": "Min. Value",
+            "type": "number",
+            "condition": {
+              "field_type": "number"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "field_max": {
+            "name": "field_max",
+            "label": "Max. Value",
+            "type": "number",
+            "condition": {
+              "field_type": "number"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "min_date": {
+            "name": "min_date",
+            "label": "Min. Date",
+            "type": "date_time",
+            "condition": {
+              "field_type": "date"
+            },
+            "label_block": false,
+            "picker_options": {
+              "enableTime": false
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "max_date": {
+            "name": "max_date",
+            "label": "Max. Date",
+            "type": "date_time",
+            "condition": {
+              "field_type": "date"
+            },
+            "label_block": false,
+            "picker_options": {
+              "enableTime": false
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "use_native_date": {
+            "name": "use_native_date",
+            "label": "Native HTML5",
+            "type": "switcher",
+            "condition": {
+              "field_type": "date"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "use_native_time": {
+            "name": "use_native_time",
+            "label": "Native HTML5",
+            "type": "switcher",
+            "condition": {
+              "field_type": "time"
+            },
+            "tab": "content",
+            "inner_tab": "form_fields_content_tab",
+            "tabs_wrapper": "form_fields_tabs"
+          },
+          "field_options": {
+            "type": "textarea",
+            "tab": "content",
+            "label": "Options",
+            "default": "",
+            "description": "Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char (&quot;|&quot;). For example: First Name|f_name",
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "operator": "in",
+                  "value": [
+                    "select",
+                    "checkbox",
+                    "radio"
+                  ]
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "field_options"
+          },
+          "allow_multiple": {
+            "type": "switcher",
+            "tab": "content",
+            "label": "Multiple Selection",
+            "return_value": "true",
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "value": "select"
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "allow_multiple",
+            "default": ""
+          },
+          "select_size": {
+            "type": "number",
+            "tab": "content",
+            "label": "Rows",
+            "min": 2,
+            "step": 1,
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "value": "select"
+                },
+                {
+                  "name": "allow_multiple",
+                  "value": "true"
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "select_size",
+            "default": ""
+          },
+          "inline_list": {
+            "type": "switcher",
+            "tab": "content",
+            "label": "Inline List",
+            "return_value": "elementor-subgroup-inline",
+            "default": "",
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "operator": "in",
+                  "value": [
+                    "checkbox",
+                    "radio"
+                  ]
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "inline_list"
+          },
+          "field_html": {
+            "type": "textarea",
+            "tab": "content",
+            "label": "HTML",
+            "dynamic": {
+              "active": true
+            },
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "value": "html"
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "field_html",
+            "default": ""
+          },
+          "width": {
+            "type": "select",
+            "tab": "content",
+            "label": "Column Width",
+            "options": {
+              "20": "20%",
+              "25": "25%",
+              "30": "30%",
+              "33": "33%",
+              "40": "40%",
+              "50": "50%",
+              "60": "60%",
+              "66": "66%",
+              "70": "70%",
+              "75": "75%",
+              "80": "80%",
+              "100": "100%",
+              "": "Default"
+            },
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "operator": "!in",
+                  "value": [
+                    "hidden",
+                    "recaptcha",
+                    "recaptcha_v3",
+                    "step"
+                  ]
+                },
+                {
+                  "name": "field_type",
+                  "operator": "!in",
+                  "value": [
+                    "honeypot"
+                  ]
+                }
+              ]
+            },
+            "responsive": {
+              "max": "desktop"
+            },
+            "parent": null,
+            "default": "100",
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "width",
+            "inheritors": [
+              "width_tablet"
+            ]
+          },
+          "width_tablet": {
+            "type": "select",
+            "tab": "content",
+            "label": "Column Width",
+            "options": {
+              "20": "20%",
+              "25": "25%",
+              "30": "30%",
+              "33": "33%",
+              "40": "40%",
+              "50": "50%",
+              "60": "60%",
+              "66": "66%",
+              "70": "70%",
+              "75": "75%",
+              "80": "80%",
+              "100": "100%",
+              "": "Default"
+            },
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "operator": "!in",
+                  "value": [
+                    "hidden",
+                    "recaptcha",
+                    "recaptcha_v3",
+                    "step"
+                  ]
+                }
+              ]
+            },
+            "responsive": {
+              "max": "tablet"
+            },
+            "parent": "width",
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "width_tablet",
+            "default": "",
+            "inheritors": [
+              "width_mobile"
+            ]
+          },
+          "width_mobile": {
+            "type": "select",
+            "tab": "content",
+            "label": "Column Width",
+            "options": {
+              "20": "20%",
+              "25": "25%",
+              "30": "30%",
+              "33": "33%",
+              "40": "40%",
+              "50": "50%",
+              "60": "60%",
+              "66": "66%",
+              "70": "70%",
+              "75": "75%",
+              "80": "80%",
+              "100": "100%",
+              "": "Default"
+            },
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "operator": "!in",
+                  "value": [
+                    "hidden",
+                    "recaptcha",
+                    "recaptcha_v3",
+                    "step"
+                  ]
+                }
+              ]
+            },
+            "responsive": {
+              "max": "mobile"
+            },
+            "parent": "width_tablet",
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "width_mobile",
+            "default": ""
+          },
+          "rows": {
+            "type": "number",
+            "tab": "content",
+            "label": "Rows",
+            "default": 4,
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "value": "textarea"
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "rows"
+          },
+          "recaptcha_size": {
+            "type": "select",
+            "tab": "content",
+            "label": "Size",
+            "default": "normal",
+            "options": {
+              "normal": "Normal",
+              "compact": "Compact"
+            },
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "value": "recaptcha"
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "recaptcha_size"
+          },
+          "recaptcha_style": {
+            "type": "select",
+            "tab": "content",
+            "label": "Style",
+            "default": "light",
+            "options": {
+              "light": "Light",
+              "dark": "Dark"
+            },
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "value": "recaptcha"
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "recaptcha_style"
+          },
+          "recaptcha_badge": {
+            "type": "select",
+            "tab": "content",
+            "label": "Badge",
+            "default": "bottomright",
+            "options": {
+              "bottomright": "Bottom Right",
+              "bottomleft": "Bottom Left",
+              "inline": "Inline"
+            },
+            "description": "To view the validation badge, switch to preview mode",
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "value": "recaptcha_v3"
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "recaptcha_badge"
+          },
+          "css_classes": {
+            "type": "hidden",
+            "tab": "content",
+            "label": "CSS Classes",
+            "default": "",
+            "title": "Add your custom class WITHOUT the dot. e.g: my-class",
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_content_tab",
+            "name": "css_classes"
+          },
+          "form_fields_advanced_tab": {
+            "type": "tab",
+            "tab": "content",
+            "label": "Advanced",
+            "condition": {
+              "field_type!": "html"
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "name": "form_fields_advanced_tab"
+          },
+          "field_value": {
+            "type": "text",
+            "tab": "content",
+            "label": "Default Value",
+            "default": "",
+            "dynamic": {
+              "active": true
+            },
+            "ai": {
+              "active": false
+            },
+            "conditions": {
+              "terms": [
+                {
+                  "name": "field_type",
+                  "operator": "in",
+                  "value": [
+                    "text",
+                    "email",
+                    "textarea",
+                    "url",
+                    "tel",
+                    "radio",
+                    "select",
+                    "number",
+                    "date",
+                    "time",
+                    "hidden"
+                  ]
+                }
+              ]
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_advanced_tab",
+            "name": "field_value"
+          },
+          "custom_id": {
+            "type": "text",
+            "tab": "content",
+            "label": "ID",
+            "description": "Please make sure the ID is unique and not used elsewhere on the page. This field allows <code>A-z 0-9</code> &amp; underscore chars without spaces.",
+            "render_type": "none",
+            "required": true,
+            "dynamic": {
+              "active": true
+            },
+            "ai": {
+              "active": false
+            },
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_advanced_tab",
+            "name": "custom_id",
+            "default": ""
+          },
+          "shortcode": {
+            "type": "raw_html",
+            "tab": "content",
+            "label": "Shortcode",
+            "classes": "forms-field-shortcode",
+            "raw": "<input class=\"elementor-form-field-shortcode\" value='[field id=\"{{ view.container.settings.get( 'custom_id' ) }}\"]' readonly />",
+            "tabs_wrapper": "form_fields_tabs",
+            "inner_tab": "form_fields_advanced_tab",
+            "name": "shortcode"
+          }
+        }
+      },
+      "button_text": {
+        "type": "text",
+        "label": "Submit",
+        "default": "Send"
+      },
+      "selected_button_icon": {
+        "type": "icons",
+        "label": "Icon",
+        "default": {
+          "value": "",
+          "library": ""
+        }
+      },
+      "submit_actions": {
+        "type": "select2",
+        "label": "Add Action",
+        "default": [
+          "email",
+          "save-to-database"
+        ],
+        "options": {
+          "save-to-database": "Collect Submissions",
+          "email": "Email",
+          "email2": "Email 2",
+          "redirect": "Redirect",
+          "webhook": "Webhook",
+          "mailchimp": "MailChimp",
+          "drip": "Drip",
+          "activecampaign": "ActiveCampaign",
+          "getresponse": "GetResponse",
+          "convertkit": "ConvertKit",
+          "mailerlite": "MailerLite",
+          "slack": "Slack",
+          "discord": "Discord",
+          "popup": "Popup"
+        },
+        "render_type": "none"
+      },
+      "_attributes": {
+        "type": "textarea",
+        "label": "Custom Attributes",
+        "default": ""
+      },
+      "_css_classes": {
+        "type": "text",
+        "label": "CSS Classes",
+        "default": ""
+      }
+    }
+  },
+  "frontendInert": "unverified",
+  "businessStatus": "pending"
+}

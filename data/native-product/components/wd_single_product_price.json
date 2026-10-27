@@ -1,0 +1,1543 @@
+{
+  "componentType": "wd_single_product_price",
+  "title": "wd_single_product_price",
+  "controls": [
+    {
+      "sharedControl": "control_867bd6d2dca24f318b886d28a731041062b963215e19024893de15cc04015412"
+    },
+    {
+      "sharedControl": "control_cd6a1ad5c721da8c6786a2031fc8fd0fe27c7bf300ff4b25284252c115ab3184"
+    },
+    {
+      "sharedControl": "control_9178ebc2c1d4b444845af9f4a877f34906f0686c93707bf903a05f2a06131542"
+    },
+    {
+      "sharedControl": "control_49489baadaed198d2bd71293a25bbf72d4327fb57597c1d394669073ab7a4cfb"
+    },
+    {
+      "sharedControl": "control_aa974bb75b6ed1ae8a76578581fd225624595e65ad14659080882e9b798ce4db"
+    },
+    {
+      "sharedControl": "control_0fd60a82c78d03b85c5ebff3ac04d5a9803f7b757360216c174331821bf10a85"
+    },
+    {
+      "sharedControl": "control_55f10ee2ce4a3b2f4d970259efc23bab316bb3013d8f8535e497e5f20cce7774"
+    },
+    {
+      "sharedControl": "control_53c363418f717d3297f6f261fa3f91c38fcec6ee543abdda2920bbaff52b8da2"
+    },
+    {
+      "sharedControl": "control_2f03533f92ec8086bf2b2107c3353d96285d6599f6fd089c800a91b5037f0016"
+    },
+    {
+      "sharedControl": "control_ab4f048d93f5e7594d3cb2e1365f801bee3d02e62554a3b57d0bad215c5a6f3c"
+    },
+    {
+      "sharedControl": "control_ca48a835999ba52a121bc53493d9238f36ae50f011e448d611beeb1777d3ab81"
+    },
+    {
+      "sharedControl": "control_94206a7243322ff34fa956d5f3623e3320c9cf148b21a7eb073f5505a9590bfe"
+    },
+    {
+      "sharedControl": "control_adc46fc190fa55ae991344a3f2a74e6b38a6e23d92c1d21ddce7819e1411bf16"
+    },
+    {
+      "sharedControl": "control_34fa18b8b33ba9c6d8319dab451eeb5d33c27b17baee043dc07bbb019d968982"
+    },
+    {
+      "sharedControl": "control_bd72004e03bb25df2864d7df9d232fbff5f70a00387dc0fb758dc5a1561f6e2b"
+    },
+    {
+      "sharedControl": "control_a1514ac0aa4fc1aa806a0e40b9773c4d40bf1f26b6ac7702b3397252f84326a4"
+    },
+    {
+      "sharedControl": "control_841d6290a5e29f0bf31cefcd743366ba763337fc3fef907a4ae8329c1da6aec1"
+    },
+    {
+      "sharedControl": "control_71de25866c3e514b37f17ab3c2fc54952c8c13cb7f8e35f96c3686d500c98573"
+    },
+    {
+      "sharedControl": "control_c8a1f2740e7c3358c52702b13a73a5a62d80b9ad40812cdda42b11791fc416a4"
+    },
+    {
+      "sharedControl": "control_ac4d13f826f4c7afa8722138d971927bc6b05cbc01133235e5123aebc1002001"
+    },
+    {
+      "sharedControl": "control_60dd6c14c0766eed3eda825cc6588bf1524a457f8fdb8059ce67ea3ca0416c03"
+    },
+    {
+      "sharedControl": "control_49252c9e55c0e8c0c83e0b105ee91c1850e0090be692e734b638cdb10a60334e"
+    },
+    {
+      "sharedControl": "control_33dafcf2138fa67799e9676895167b3cc9ed55060bbf91edb200fd25f049ff65"
+    },
+    {
+      "sharedControl": "control_cdefd83ba2812fae05a64f57e19d97b973cbf4f37031a0dc8f01b6f2f5766960"
+    },
+    {
+      "sharedControl": "control_f30ae34d321eefad85f8a2e0474f34b9f95fd926b85a957f4344af1a2dd7ca7d"
+    },
+    {
+      "sharedControl": "control_d22397338e2802ccb5829b6ddfad3b40bc4638fc22d8b67f2574a1ce82ae4d50"
+    },
+    {
+      "sharedControl": "control_bb84d81e2a492edb70e3225bc68193c5cb8365ad1d96403af2fbb58357a9aab0"
+    },
+    {
+      "sharedControl": "control_790e48376a2c20e5f65b36018f1ccb9b1d10881e34eb949c6ee50dc92b911e76"
+    },
+    {
+      "sharedControl": "control_e9baa10932692fce57bc4faa1053d2f034cad0b11ec514a79c2e9761b9a358bf"
+    },
+    {
+      "sharedControl": "control_6ff9d0b7f3cda182368041739c744299d21af4b5cb75234f693bad907c0c613d"
+    },
+    {
+      "sharedControl": "control_0a467fb1ea2cb2433ae771c0e4f60614d26c8d7392b9eef992a18b24318245f8"
+    },
+    {
+      "sharedControl": "control_841b9b75b6064c20ab5f92f0599015457aef4040dad506bd14ef2de05abf6be9"
+    },
+    {
+      "sharedControl": "control_da924a0c75d05c515bd10603ec29ed045742b2274aef125bd4fe665c795b8f69"
+    },
+    {
+      "sharedControl": "control_644b09ca296678db029fb42a8067d782dd12f43cd73607da764d2976dfdd677e"
+    },
+    {
+      "sharedControl": "control_15a72a829dc1c3f19758a05c528f869883e90e521684b8ff8026372dd6c2f2c0"
+    },
+    {
+      "sharedControl": "control_a0ddd5c76475c50ab5783fc85bc6323d23e4a008845d7d9f0c1bdd0ab2bb66b1"
+    },
+    {
+      "sharedControl": "control_7d9578a87829d3303fddc8fbf9bd2506f82b35d271d97659a4dfe8859e09191d"
+    },
+    {
+      "sharedControl": "control_5a8e3153971a68f8a9768e07d563417bfc155236b2b0041c311e654f66fd4bcf"
+    },
+    {
+      "sharedControl": "control_3d736d7301cfbb741dab3e1124dadafc0d4a58d133d08785da590a141308bc14"
+    },
+    {
+      "sharedControl": "control_6319f22d9aef361fca897428ab7c351338df642e7278052e12af694a966c95c9"
+    },
+    {
+      "sharedControl": "control_c543db9768e649d325010dee5c3aa8c6c1df528cff4262a5a3122489ba8544ed"
+    },
+    {
+      "sharedControl": "control_943245c572e7a5f03c4ba9ab2b92d0f4b735238290d682dd437fe4e51bf4d580"
+    },
+    {
+      "sharedControl": "control_1bbe3aecd6a8affbb019ae33ab73cf95d835a405aa6fb44ae95e47a7c89df482"
+    },
+    {
+      "sharedControl": "control_331a20e986aa073a992b3d0fe6963fed9c6a4bc8c4904e25205a7c380b70a387"
+    },
+    {
+      "sharedControl": "control_ea5c45f556ea4407a07400c65acd2fbff70f69c739ca969f310df1568f15ee5d"
+    },
+    {
+      "sharedControl": "control_0b4b7f1e8ffd9135fbee00f2c9307f259ca2e51fc60ca86bc768482f35acddb4"
+    },
+    {
+      "sharedControl": "control_88b1fb104f246c8122e7f71615abd396bd572d281cfd8673e817078f4909dc95"
+    },
+    {
+      "sharedControl": "control_4667a9f4b08ab94a654422e5afccc2225ee41535b275b0fe44a049a4e33709c9"
+    },
+    {
+      "sharedControl": "control_f1a63302ea4c43c0c7ff45fe15b83e4286bf4da6ebf5e5e769ffbb832132d5cc"
+    },
+    {
+      "sharedControl": "control_777490fac8072b339d43768a33332c0ab325c40c9cc0c230e19ee5e2d45321e8"
+    },
+    {
+      "sharedControl": "control_19300db8cfe9011addd394e8300afd253c195de93290c0788919337480f80231"
+    },
+    {
+      "sharedControl": "control_9a0ffdf74975455ac4aa6bebff10a9096af3ecb5281eb38ad8106f239b5c1b1a"
+    },
+    {
+      "sharedControl": "control_af89677f6b069890a9ea7c85239c5fb1e17c277cd65f29190f87b3b3d9611c3f"
+    },
+    {
+      "sharedControl": "control_b053d906a7e1c87f4c3a567518ded2f5ed12de9957dbd57e850232e42aeb0171"
+    },
+    {
+      "sharedControl": "control_a89aa9eb5793359cbdfcd14d064d279c40516bf79bc21580b6508697c73aea56"
+    },
+    {
+      "sharedControl": "control_c9462a1db58e58c210a1e293a39c556e5884730c2e4e4e125794294761771028"
+    },
+    {
+      "sharedControl": "control_4dc6fd9f3773cdb23cdcfd471ee1f81a36f6b9247c36fe961a0816b27039ae0d"
+    },
+    {
+      "sharedControl": "control_601e458a6513b306f8c8953f7e1db6d54a17880b5d7462e5aaf55b6f92fdd523"
+    },
+    {
+      "sharedControl": "control_411a923c95905c166d1db60942aee0483d38a00d3e7e16fc6b7abb752ca38c1f"
+    },
+    {
+      "sharedControl": "control_15bbc7030e3191f45b04fb61aded674259d650ff8c8d4870e3a5d6e78e077bc2"
+    },
+    {
+      "sharedControl": "control_f14287c1c7a327a7ca6cc337021e20a4f5dc15d88af088aa9ecd7e5b096bd0df"
+    },
+    {
+      "sharedControl": "control_d5bd1cb4c54aa15a82eca39ac6f3ec2d8620d1c4474378e2d0bb4f22ff3f165d"
+    },
+    {
+      "sharedControl": "control_75d73008798afd3e07f6949be8720561a3c47942a90a83748013d1ec2764fa04"
+    },
+    {
+      "sharedControl": "control_f35299d9d4f067cd5d005d39bf7ac91f21d2e3210a0ea67bf665007f64ae2483"
+    },
+    {
+      "sharedControl": "control_0dd78ef368fab83ebfa40a34d4eaceae95446a957e4d3fdce9855af5f72b33ed"
+    },
+    {
+      "sharedControl": "control_6be6b0d5aa3d073dec6aa772618e6f1b8ea6e36214d7445949278d474101340d"
+    },
+    {
+      "sharedControl": "control_a50c1b298e9c95026254410911d6eaebd900cafdb255a00415ed7858ce740806"
+    },
+    {
+      "sharedControl": "control_3568fc5d9b69f8e4b677c6b994d6a9a1af9c5145f02bfba3feac58121615c6cc"
+    },
+    {
+      "sharedControl": "control_c4bba67f89de4046adf10839fc6288120866e1558c2fd4433f10725207db17e2"
+    },
+    {
+      "sharedControl": "control_c18ca94a662720b38474c9ce6a9ca5ab379c155598580e27914025dbd4ae8a71"
+    },
+    {
+      "sharedControl": "control_33501f79d44fe7f62e568b5b25db8982a2051d311d59fd6d0f5aee57f5a44daf"
+    },
+    {
+      "sharedControl": "control_0feb814b6ba4a63182f623a55d83c36a6cf0178df483c7a2d3902cb5b25b5597"
+    },
+    {
+      "sharedControl": "control_d17bc74fb43e158c9e66a051d681e880a02086b52d1009b1d99d70b9d80541cc"
+    },
+    {
+      "sharedControl": "control_8723b3f479f9b834f86b77a6ed11b209ee1a3a0c4531b33089b382101a44f861"
+    },
+    {
+      "sharedControl": "control_55430a852c992dbd890dabcf5f3fdffbe57ca29932fd0248bd0f749e30bd1af9"
+    },
+    {
+      "sharedControl": "control_6fe881a5d0a179160cbf4a7ea00c6b29885df0f6f654fa7d5cb439515d57c363"
+    },
+    {
+      "sharedControl": "control_52fd70dc50a3cf796dab6e66ed01fe6b7a7417785e76a7537e9bcd66cc74b9ee"
+    },
+    {
+      "sharedControl": "control_039150dcd770af8d4360daa16f6ebcba2e66ae33434544cabd375f7b69972229"
+    },
+    {
+      "sharedControl": "control_4543881bb453fa5d10b609905bea765e357bf5f7ed78312b2bcdf6c8c2b287ec"
+    },
+    {
+      "sharedControl": "control_079389ab97ad4535fc6004eae1bf0af3383d8b9cf0bb2e64c77fa9b230a9c984"
+    },
+    {
+      "sharedControl": "control_dd6c2a2bf74545888a1f460a3aceffdea8689a418be418a55223066cd58927a8"
+    },
+    {
+      "sharedControl": "control_a3ebd5dd8973eaf3a38dcfaadbf4f07bc40630085fe4b745aba120ff1a96ab62"
+    },
+    {
+      "sharedControl": "control_c1c7fc36f4591b3abc4a1618ad73f22d73993c36bf7c8c748be9286cbe3053b5"
+    },
+    {
+      "sharedControl": "control_42ddb94f1868f2518cb0286aacce8344401756e3e75c2eb2037118b6afe98924"
+    },
+    {
+      "sharedControl": "control_d1a3be186f77d4692c331aca0170fe3b3f50997a0ea4bd9eceebbc1f99b148c5"
+    },
+    {
+      "sharedControl": "control_8e4da18cd34576ad1e05ffab59bb29dcb3ebf63d48092a5a400db34cfd6a9b45"
+    },
+    {
+      "sharedControl": "control_4719b3ce3b0e7ff1356ac37bf9712cdf480e1ba66049f6c7986c0aebe0392687"
+    },
+    {
+      "sharedControl": "control_500946ac7bbe37c4041ac8db72ce493dda27a46bd45a7753259934fd68c82f0c"
+    },
+    {
+      "sharedControl": "control_581f892458c34dd691cd796d5cf0b9d4fe7edee0f1477a5d03b9cc8523d7fbfe"
+    },
+    {
+      "sharedControl": "control_b227aee887e6a9e2c114ce33592459c83fe799592facccb56a205115541ad23b"
+    },
+    {
+      "sharedControl": "control_5dfcba90c321d696080a4239a8419ab8cc777b2e864350700380612425307411"
+    },
+    {
+      "sharedControl": "control_f1672fbd8fef332289cbd5c3a3e1c5981abf18ef3451ace853bc4066312f5aae"
+    },
+    {
+      "sharedControl": "control_3dbe69f83f69202ec5b4a1eac651cf4c7fb4cd64a0955a379eae4baa8d2e1d49"
+    },
+    {
+      "sharedControl": "control_33143daf2b9d12c06d1008f77ad3eea14d8bdab325b6053b687cd93172543ad4"
+    },
+    {
+      "sharedControl": "control_eb87cb79ef4d94629a9890f695b1d8b1f232aefdaaa9045201dda1526c0f8eb6"
+    },
+    {
+      "sharedControl": "control_df0d9afa93f025dac45632ac97d83fa115559f7ac84be1621927841681a718c7"
+    },
+    {
+      "sharedControl": "control_af043cea2f1811751b5888c6b55004f8c40ec00e22de06f7850080fea201da5b"
+    },
+    {
+      "sharedControl": "control_862b417bf1ce4cb6c2acb36c3128e86f234114a426a2861ee3fc09cac5349cdc"
+    },
+    {
+      "sharedControl": "control_1fde16dee16c78434d0e22c57ce870584c99a3adb990270753b15860c6d96a64"
+    },
+    {
+      "sharedControl": "control_d48902f90200b3ee72a67e9b6d3b326f3363cc4b5174016ad275ed989ad94966"
+    },
+    {
+      "sharedControl": "control_46cca987d91df974f6ce8b26dbe722fa90943172c6fe5857f00ff6705070c9bb"
+    },
+    {
+      "sharedControl": "control_a931964744a430abe2b1df9adf3815623251b65dd1a342b4ea530250a3277dd5"
+    },
+    {
+      "sharedControl": "control_cb4fa214194bfde52fe4deda01a40eb649eea2f33b0aaa4f41b22686f0c37a50"
+    },
+    {
+      "sharedControl": "control_ae535b05a0f7b83e8a3e4f16a5058ef201115bd03ebedcfa1065310c7531e194"
+    },
+    {
+      "sharedControl": "control_395f0042bb22e77ddb0d7a007baef95f45917dec38d1a0a775ea915f0da025c9"
+    },
+    {
+      "sharedControl": "control_417ec5598fdf0f19dfa91b60a05cd11a3c4c9bf38d7059372e188ec3cf84b5e0"
+    },
+    {
+      "sharedControl": "control_03c4eac0e0ada73ce40a4ccc14e4929f3c636ff9a3cbce2222fefe8384d40fef"
+    },
+    {
+      "sharedControl": "control_85add40493bbc5da309c5c618505aec765b8c03df24e16d021b9dac3047ca5f1"
+    },
+    {
+      "sharedControl": "control_6ba6396e162850b75f1f74f0678c6622fbdce5b2fbdc0738acfe9c40cdfb339d"
+    },
+    {
+      "sharedControl": "control_d523d76d9f2b5d946fd8b3aa5d903abec8c94f26c46fc93026fd74e8301cc316"
+    },
+    {
+      "sharedControl": "control_9eb37a07d27987eeaa9a22d657aace846d9be406b4491edccf18bbcd3b97e4fa"
+    },
+    {
+      "sharedControl": "control_9e05d2fedd845082d83b79e7a99a7111dd4988c234eec22920382d7a62410aa0"
+    },
+    {
+      "sharedControl": "control_b44ad63b2b0f17c2c7e1e7221001795af9bf0556442c3bd6b86880e41eda26ba"
+    },
+    {
+      "sharedControl": "control_346199139b22a9a808d8a946c56c42977c7c7e58834c0867562fde3b0d5110cb"
+    },
+    {
+      "sharedControl": "control_30d02da03b87c294285aec1f9ad01dd486def9415d40afc11488b1ebf79afe3f"
+    },
+    {
+      "sharedControl": "control_267b3d6ffe8c12571e2094eb5b52ce980a8b442c1e504bdc25819bd7d3d21f88"
+    },
+    {
+      "sharedControl": "control_dff657194322c00de3175dc40939f6d5cb52c6fcd518b9e48547e04c9aa6ab15"
+    },
+    {
+      "sharedControl": "control_c626ac0c72cec840885a920f56c406bea1fe7a3645c168b87af8acc759639858"
+    },
+    {
+      "sharedControl": "control_53b1780faea1085a53a93d64f53b5f86648c59cee80942c5bff22b79b763f83b"
+    },
+    {
+      "sharedControl": "control_512af1dcb48b85e0b66bc3311b1be3de450fadf3208c923e4f169cd412ca2046"
+    },
+    {
+      "sharedControl": "control_27abb0225e1c26fcbf286db22e31882b1635fb92c4cf4fc3e124ea72f2f4e60e"
+    },
+    {
+      "sharedControl": "control_e338b60080c82773399accdda8086a1b47db25759c29f8e490e3d1e35f64b64f"
+    },
+    {
+      "sharedControl": "control_fa7735727f776c6b31a84db75c35a68bb4617610b1ef62cb6e2c8d21db09b81b"
+    },
+    {
+      "sharedControl": "control_40d2dd0e3139c9ff50a82a1a874bc6b295b7b1f9bf2d941a1375d756090f264e"
+    },
+    {
+      "sharedControl": "control_432b31102b211322af560647bd2299b1d0f4c0b7d819c0ef427d44a6724937e1"
+    },
+    {
+      "sharedControl": "control_763f1a88f24f2746d3a3f0cddaa131e9afa5b21455647f8ca0a785badb39fa39"
+    },
+    {
+      "sharedControl": "control_a6542c8989460c92afc32a3786064f7f9b7067c791e09978bcc7ce9d425a15ef"
+    },
+    {
+      "sharedControl": "control_de789e74643cdf152beec9720fb36c11a504948417279aba62cf88ecce5ef9ee"
+    },
+    {
+      "sharedControl": "control_de09eaf691124dfb41701b27d1d10d76e698751f6e2d6ec5c8f5420a8d3f3a71"
+    },
+    {
+      "sharedControl": "control_6046c5180bcbad8a83c6f89f6ee98911a7fc85d0d88abfba010c36e141059de2"
+    },
+    {
+      "sharedControl": "control_efc9ae3fb5f8219e65a11273458331e7e062132fb609a66ad28ec589841bdba6"
+    },
+    {
+      "sharedControl": "control_318fd418707f87f0d927ba5450380859bbd78f1a6e74783e302043d34b26ad1d"
+    },
+    {
+      "sharedControl": "control_ef62ded06b9432d710a3b1e660e73e9b7ab495fdec0bfe70d0b70c09ab5bbf76"
+    },
+    {
+      "sharedControl": "control_8a596cecbec047aae03cf6ac03ad537e0fa461f827fe744e1ed2a165f6bda638"
+    },
+    {
+      "sharedControl": "control_ad3526b1733210eb7f62a51ac729a73de8210cbf2a2e9181f7aebd8755256bf9"
+    },
+    {
+      "sharedControl": "control_f8f78b36b0950f731b041da5a678887bc63901cd43875b6b92040afc3ec597ce"
+    },
+    {
+      "sharedControl": "control_7581da79b524e8bc867d8e24708ec1541a82d43e36f9c9e05ae4418db0d8a166"
+    },
+    {
+      "sharedControl": "control_27e69b3f3851c8f998da4f6292eb64da8474330088294819954eee142f2d05b1"
+    },
+    {
+      "sharedControl": "control_de2815a1acac02608c912172584fceb1a46fe5abcf4d88c6e61862e0d5556e6f"
+    },
+    {
+      "sharedControl": "control_bf7d3f8622f53889afcdeca704f082154b2f55471959b7141e1a1f21af15d038"
+    },
+    {
+      "sharedControl": "control_d41c22bfe70c5e64a9d853587752583df40664e22c9752517fc72638410d95fc"
+    },
+    {
+      "sharedControl": "control_9a0d6f454ec8621d7ff901eb0dd4919cdadb2ea28de01147df7e74c54e165f3a"
+    },
+    {
+      "sharedControl": "control_b0573cf7d7a749912655b3009efb2f543afd8133e8bc1d212c2275a610aa01f1"
+    },
+    {
+      "sharedControl": "control_8e2b088fb11b2271a29090d2d51383f1fddca4a0cc296dfdf67a40ed33b06995"
+    },
+    {
+      "sharedControl": "control_886cbd9e4263f7fa20288a87bbb5e7f77761c3a1c15493334610dcf2c343a725"
+    },
+    {
+      "sharedControl": "control_b47b241d7f59e50fb712642341695970e3d0d811bcb5ff45c97cc71cf786d055"
+    },
+    {
+      "sharedControl": "control_bc0b7e1de4aad8858afe22fef9a1d11121880fd0ba2077de6bd9128cdd4af7d4"
+    },
+    {
+      "sharedControl": "control_f9b1d90f0886e2802d87af61cb1f64900a86b6dca72e1add0a9507530f8291a1"
+    },
+    {
+      "sharedControl": "control_70f1565766735ce8f46bb4abbd4b55eee6807286038fb1f0c53c2af384a6dda8"
+    },
+    {
+      "sharedControl": "control_a09c80a6588e74818f0af6e9c33308a8986af29780a5e334c3920c1f4562ce9e"
+    },
+    {
+      "sharedControl": "control_3049f2ee9d841fb9fe14d23cd9324bcb79cf2967b93b36982e23b28417e6ae8b"
+    },
+    {
+      "sharedControl": "control_7403d62fc206fce7b2275cbcf011376a5eb06eb2b881fe420055f0d6e935e7be"
+    },
+    {
+      "sharedControl": "control_3423b53f6cf4b203d825defed2870f3691d2d1dd3ae750ab34501f4f3b02f1ef"
+    },
+    {
+      "sharedControl": "control_57b067b5a2ae74215097b138cd5f46f5ce338cecf4025f77f9f263c13818822c"
+    },
+    {
+      "sharedControl": "control_7807fbd29137f460533109f0f7d16f5ba6bd870d1809b7ede1c3974e7cd942fe"
+    },
+    {
+      "sharedControl": "control_00cc1ed0e6a2f23fd014f0de9986b79b9571f2a2357537a561feaebcbfca7030"
+    },
+    {
+      "sharedControl": "control_e7bebf5250bf2765c8cc8aeb7bbf06db6625db326690e847d650d4fff40fa044"
+    },
+    {
+      "sharedControl": "control_c9def7afaea7115cca7129d56946d80cb8c0c5f1211d16cc65723900c9f788b9"
+    },
+    {
+      "sharedControl": "control_ecab3c5750761246a26f710547dd50dd88d1b98eca33c725946569692be7bc73"
+    },
+    {
+      "sharedControl": "control_8835342bb8ecc2589903b70089a38851ded5eb2f6957e66c19650ce6916c593b"
+    },
+    {
+      "sharedControl": "control_eef2341ca8a900b675d3a2688e76cfc6b9c94e37fc1409762d038ec5a5708f95"
+    },
+    {
+      "sharedControl": "control_ce06dd1bf455a9efe3ff26e52dc2dd3ea21a5d66dfbabed4f0d97c522a7c425e"
+    },
+    {
+      "sharedControl": "control_f11a06e6da13e20eb9d386195e6b3070fc9cd3767d0257a4089b6feac63d38b4"
+    },
+    {
+      "sharedControl": "control_13b7b4ac4ea673ef81fc839fe037fdcc8515c39036fb927450f94d72ba044239"
+    },
+    {
+      "sharedControl": "control_55e1dece5752dc5643d6923404524ff2608afcb6dc5d0f5a93de0569ecd7ea0e"
+    },
+    {
+      "sharedControl": "control_1a5eeb110b792035e16e35984909265539da1c970e18ae6bf1f4317402838980"
+    },
+    {
+      "sharedControl": "control_45372e21f8cdb694c1a4db83e81688fce097b9257d8d5cd1f914b280230ac97b"
+    },
+    {
+      "sharedControl": "control_c40edfb48139d956ab3ddb4761f20279a09815dceb0a21cf5ed9e439fda3da59"
+    },
+    {
+      "sharedControl": "control_63ea3cde3f7e683f95fef324abcddf11eab643bd59b317bb434faa996188378d"
+    },
+    {
+      "sharedControl": "control_9d7268fa216f56cbf8ea984aca3f4cb746ccb9a6eebbd9cbe0aa8c50405c0af2"
+    },
+    {
+      "sharedControl": "control_60308151c51f97247361aa83f9d6c5041b109ea0bf7a08e419c77d7a3337b6df"
+    },
+    {
+      "sharedControl": "control_ba21098fb5d960024677528efc1a21c99aed89e3b76eb6ec9c99d61f1c65df52"
+    },
+    {
+      "sharedControl": "control_b4264f8a400684d0af276bae6559e556338d096763e79788a842d97c72b2c860"
+    },
+    {
+      "sharedControl": "control_08aa9d96894c08ef9aa518c7433227bd57d3576da8bae9d52cac4b6a53d3b76f"
+    },
+    {
+      "sharedControl": "control_46448a3d5664fb4293dec06deaabe7a0fe7246c8a14a4dae9f34828c5da2b026"
+    },
+    {
+      "sharedControl": "control_25f7aed2135d278778332772ff4fbe03090ff9f5a5e97a0864409e2c58c4c615"
+    },
+    {
+      "sharedControl": "control_af89ca42f5246f514abb0dd411473b6ece89e3b40ccdb56a2ffbec40760a53b5"
+    },
+    {
+      "sharedControl": "control_00f8f0d714dfed74365c8a510664a6b099dce39237f30e257006402a255afb5f"
+    },
+    {
+      "sharedControl": "control_6fa21b99f39aea6522c425986fb0f11a0a094d9440e8610ce5322b1892112492"
+    },
+    {
+      "sharedControl": "control_20ea87e06ce0467cf6439e05d86b8f1e8fd8965f21a595ad67d3900b1e78339a"
+    },
+    {
+      "sharedControl": "control_8f3722d32ee397f61e4744b72719d2584f4787366970339a779aafc4c76de4ff"
+    },
+    {
+      "sharedControl": "control_5bd5969ef6cca6042eca558b5582083df40b08072ca7c872e486586e24d37acc"
+    },
+    {
+      "sharedControl": "control_a82894ef8d81ca94a530a13cbba7a2a9db002a56a2b13d50c1326ff92d977db2"
+    },
+    {
+      "sharedControl": "control_c90680abc48c21deaed51b34e820f3ef5ae2d5aef508964dd8f0459a7e00084a"
+    },
+    {
+      "sharedControl": "control_d271937814ca51a6cd27e7f783776dcb0386c3f8c9598771f4f71019f35bce2d"
+    },
+    {
+      "sharedControl": "control_10fe461362b5d6b04a89490955498e74d9b8c31477b83de7f15679b094afe954"
+    },
+    {
+      "sharedControl": "control_a70f3b7e766cd7c644fefb7154453f9082741864f86f1f13e9af89a895fe70b7"
+    },
+    {
+      "sharedControl": "control_b97ffdf4e38a13724c6cdd09dba16996277873d14492644ea84346d4adc25c02"
+    },
+    {
+      "sharedControl": "control_28d6e1eacaef7151ca53400392553084ece5c5645747487693da72043c9eca22"
+    },
+    {
+      "sharedControl": "control_65e048e016bd8545cf0c2dc2eefdf4be9c88d1089aff28a90edc36a700b8efff"
+    },
+    {
+      "sharedControl": "control_620948e4f9354002625e7619d4b267925e1d1047e9be0292e55821c2ab8bd25d"
+    },
+    {
+      "sharedControl": "control_d63fa5e1756bb0f139f145cb53f90950886538841b56c0938f02bacc564094d2"
+    },
+    {
+      "sharedControl": "control_08a2af3592714969349ded05d7b3f5987c7431a5dc1ff0274b4c4e19ca00955e"
+    },
+    {
+      "sharedControl": "control_819d085fc91cec1abbc77854be917926db3f1852a31a7293ef8b3f9baf8becf7"
+    },
+    {
+      "sharedControl": "control_f9a2245b50942f4e51be2c91f5acac4354ffd878f760c8bfec2aebdb6cd2074a"
+    },
+    {
+      "sharedControl": "control_022ffd0d91a85a5c6bea69527021d09beec705d47b658523c1c5942daaff2ac4"
+    },
+    {
+      "sharedControl": "control_c166401eaace99f1d525bcfa3f93595c8ee6ccb47ed208f955c3ea0fed6903a9"
+    },
+    {
+      "sharedControl": "control_a2d09777b90b29c1185f606940cd5b3437260d93cafb00f145f5b550d51392cc"
+    },
+    {
+      "sharedControl": "control_9b08846858caa789172687ea8ccb8d06529736e449528ebdb2cb8bf827549e4a"
+    },
+    {
+      "sharedControl": "control_bde030af48d510b3987992982e167f88448b8d4b665bed0487305a03dbe315b3"
+    },
+    {
+      "sharedControl": "control_18dbd2dcb84c933864d409b7da4794f826b4239dd53867658d3f2b9a7f988b07"
+    },
+    {
+      "sharedControl": "control_fa2f759a422b67ffd0935330be567fcda3807e809c2194c39fdd6838b6c91d9a"
+    },
+    {
+      "sharedControl": "control_26bcc61dfd4d3c351e6323d79a7ebe60de825eb39508cddb1633470f8dcb8eb3"
+    },
+    {
+      "sharedControl": "control_a36999c6ccef892a1bb02716107b204d505f194973a913cf7a5748756231337d"
+    },
+    {
+      "sharedControl": "control_78459035c2009cd913a331f2642e217ae0f8d37ca08754b2c5893bc2bc4b89fb"
+    },
+    {
+      "sharedControl": "control_6f5c2289ccb3fca577332cea9fc055796b6f3366cee14c12d9c692b49e8748da"
+    },
+    {
+      "sharedControl": "control_38440c0bc0fac859b8cf04016cc6f249d836f7eb7aaa6363ec8d9de1268cb98c"
+    },
+    {
+      "sharedControl": "control_6e0c78323be6153de48b8ad553f1d6ed219b814e4087dd4b50b8288cc6128762"
+    },
+    {
+      "sharedControl": "control_7b45b641a895cacb06f89adaedaad544c925f869d05687a0c34bdf44d44efac2"
+    },
+    {
+      "sharedControl": "control_4dcad451401b27c774fb19308f1de072b152ce5c26e4fdb6eebf340a1f0af4d1"
+    },
+    {
+      "sharedControl": "control_aed7ff08c290d6019e548bb36ca4797bae7c9527cd36a8ccdf9a50624e6312bb"
+    },
+    {
+      "sharedControl": "control_1810ef29a6329584346a6faa81ae3e44dbb3e3b65f52953734cffeb1a661ef82"
+    },
+    {
+      "sharedControl": "control_5609ce7394e5d6d0bdee7590fca0e371df447e872aa8845f9f5fdf90b926607d"
+    },
+    {
+      "sharedControl": "control_08a9140dc4cb33482c72f07f28478ee337fa2fb28af1c7fcba708e247756a9fb"
+    },
+    {
+      "sharedControl": "control_b1390169fdb8d6ed945e558eded8880a236cef33eee0cb884b9bde60637fd67d"
+    },
+    {
+      "sharedControl": "control_932b67e964c2aa2a0b1c432870eebe92c05f960ae992b6d448d6b737f7792315"
+    },
+    {
+      "sharedControl": "control_adac0bd020cd6c6023f9b8776885b0d2499bd308c928c4f4c62372c700eb4119"
+    },
+    {
+      "sharedControl": "control_926d6fdbc0aed8c7e0c77e5fe01accfbf3fb23e00528b9b9d4f4d6e18df42e76"
+    },
+    {
+      "sharedControl": "control_c8f9ab14ba265c5fab05d7aab4b55aa5342ac75b4b87ba9849c7289a4b94a676"
+    },
+    {
+      "sharedControl": "control_de0e4cc2b5d5fece38548135c2f01553b53ae870e5aba53767e1dc4561a3548f"
+    },
+    {
+      "sharedControl": "control_cb1885aec8041b5be39161b7b1c25b329db0ddb835021f1258e3ed519591c5b5"
+    },
+    {
+      "sharedControl": "control_f3e200fbf6f029225edf506c6676db2dd3a4fbfb8f124450e6501b93a5f21e28"
+    },
+    {
+      "sharedControl": "control_f688627881dc722031d292824328a93042daf7a6674b90a0152470231f402255"
+    },
+    {
+      "sharedControl": "control_12879364a1019a2722f89d94006930c6f5fb178a15405fff695aa38866db0439"
+    },
+    {
+      "sharedControl": "control_d0fb71111c41d4c42e4bba5fc33385280be51f40f0eb9fc98c1ad04b69f94c13"
+    },
+    {
+      "sharedControl": "control_48473a13e6b008636371d2e6305c125ffa3ccd35c439a83aef736757481c136c"
+    },
+    {
+      "sharedControl": "control_d7110b461515cc3edb3fefb72ee9cf290e038bef55f1150dc4936fe0a9a9cfb2"
+    },
+    {
+      "sharedControl": "control_fc2f4a3f2a020c084f86ba8f5e9928089bc298ebf994aaf5c0801dd230da34f6"
+    },
+    {
+      "sharedControl": "control_1b702967137818a288b310ba696e63d2a8bcc68e8829678732d888e0a6f69a7f"
+    },
+    {
+      "sharedControl": "control_771763b30eb8f1d047fcc18d9b55ef5505e5505eca1d0911b5f843aaf3c72ee3"
+    },
+    {
+      "sharedControl": "control_dc56dee58eb6d70e439b0e187a49ddfc9407a58b6d9b4b3767b2f6c706222fe0"
+    },
+    {
+      "sharedControl": "control_04137bb2bd0957d523455390f8ca014fb0fa6978c454e7d731febde5bc065d78"
+    },
+    {
+      "sharedControl": "control_2038c263ece5a700edb394409afd09f1a681530adfe69facec1473d5a44f41ef"
+    },
+    {
+      "sharedControl": "control_71d502f44a613d31bb382c2a327f51cdfb78421b8f77d5ce7f95ad72c2d551af"
+    },
+    {
+      "sharedControl": "control_f68f2a215a0691880d53c865dd5fd31e1a71beb1f6856306f9c86003e83fe297"
+    },
+    {
+      "sharedControl": "control_a2649df6a03e63272064ed70614fbd825418b16331aa0c2158ee256fdbfbf2e8"
+    },
+    {
+      "sharedControl": "control_854c5ea891b630b2cea3f2632bcb0982208e684246082915a12dc3336ef52c5f"
+    },
+    {
+      "sharedControl": "control_1dd27ab21d9c6d88bd11e60b14d6f782785e5ed3f733fe865aaf48ccdfa7e2f0"
+    },
+    {
+      "sharedControl": "control_2b7deab935cc58239a42df977c569138aebc1c58807cd16e5fe172f311adbd4c"
+    },
+    {
+      "sharedControl": "control_d7426cb2cc963ea8b68c3c960b7620aca4181e5f5aebb73e806a1b2418cd70b6"
+    },
+    {
+      "sharedControl": "control_ca25dc15991bf99e4e7b843aed50609db6a890cfd0c99e7aa32d0ef449858780"
+    },
+    {
+      "sharedControl": "control_6abc158eb3ee79ff70f59bdae8f2bc58f8aac75c21fe7d42f963975512751fba"
+    },
+    {
+      "sharedControl": "control_7479d5daf83d1b988742d95abb5d12ef9ede214b0e45be6af5a29cb0d3911493"
+    },
+    {
+      "sharedControl": "control_3d2a45b7819437134054021cfe00d7edb4bb3a5231d4e9b319c583803c3cafa9"
+    },
+    {
+      "sharedControl": "control_f803f30169018f8d015e1c72414ff03399092e858d621143445de79cd6d1a2b5"
+    },
+    {
+      "sharedControl": "control_69090dd305d9f40f8a1227aa460d9a5d317b40813b9296032963f6641a130080"
+    },
+    {
+      "sharedControl": "control_32d4e9b842817d58b6a5f95ad76603013cc8c570ac7cb5787a54ec117cd2bae3"
+    },
+    {
+      "sharedControl": "control_5ad2b8c6c77b953a915310e000f2d562a3408f7b40eb3ce43f01d7044b34eaa1"
+    },
+    {
+      "sharedControl": "control_9ebdbd58c38c367029ac09b463e1aa7c57d6fc682c41155f90cd976ea1bb1a2a"
+    },
+    {
+      "sharedControl": "control_1cef6a3acc06e49bcbf8a1f8e01d97d0472a024744bb2577ecd9c7b543f1e733"
+    },
+    {
+      "sharedControl": "control_88e15d53dace4622a9cf70b827d5d89de1ed89838c02835022123f5afe7be4bc"
+    },
+    {
+      "sharedControl": "control_d4afe4bb46144a34cf6ac5f12be4c289cc634967983498433a83dfac9797bbd5"
+    },
+    {
+      "sharedControl": "control_f3bb2b94425705221bc1c98b0a2ea2ec9bc69c139a656d459ead5e18d249b3a5"
+    },
+    {
+      "sharedControl": "control_b03c617b3de6917e3daa1421740d86057ca20d400d63ff1f75941731bdb3013c"
+    },
+    {
+      "sharedControl": "control_8fa904debc4c2f06f4f9d8913a61810c0e44a15bae554c73728cfa7aa9354f64"
+    },
+    {
+      "sharedControl": "control_a44c9288ba3761cd0c81a8f4a43da174f06f91d2aeab781e59a328f004ff4788"
+    },
+    {
+      "sharedControl": "control_b74d71b71e846d804b809af0590c087743d9cd1df3ddae7ce06cd61c82937272"
+    },
+    {
+      "sharedControl": "control_62af3373bbd5499767e831b3e32648cf96e3cc39e9087d75fb4fd04d2fba83cf"
+    },
+    {
+      "sharedControl": "control_1a279090c3a2293a7119c467f10de74cb1fe90fd1f26bd67a730659a0b750e54"
+    },
+    {
+      "sharedControl": "control_e6ab0ed75599c9ebd5086efd33aa629fbb6b2c9ab877c4f67bc468d1f80252b8"
+    },
+    {
+      "sharedControl": "control_ae28a4ad9d0c953064e7c6f265cd8186559be44ed271c2e8a486fca33a456a31"
+    },
+    {
+      "sharedControl": "control_5d8fa9fc36137dcd7adfd9f9c1ff3381b77f9e5b96740bee2b97808bda436c73"
+    },
+    {
+      "sharedControl": "control_5916ddeb14a60a8e0c317dbc3b0a867fc0d74787b0be3fbb6587988e27460711"
+    },
+    {
+      "sharedControl": "control_f7afb84256017ae8c40d7aee5003efec2bca0b66becd53e9d19b95d34bc8a29c"
+    },
+    {
+      "sharedControl": "control_a94d2f88e7aa9ee8c34a8bf940e700cfb9c7e25bc98b9a73f1a169966805485d"
+    },
+    {
+      "sharedControl": "control_7741d8bc80ea65076a4841f2cbce4d9a535c29500b5fc0c42ea52f7b424ef91c"
+    },
+    {
+      "sharedControl": "control_eb7a08ac343e1a5d1a164867fd024deeabce515f69f39d834d22b9bf91db8d8b"
+    },
+    {
+      "sharedControl": "control_8a5cfd7b80b442d5d91ca9e44c98d69b9c13fd71f9206a6235e573aaef86617c"
+    },
+    {
+      "sharedControl": "control_5e02f6d05d585e260d5b0a233c443ee1ae4a8abca67c4d0f24c4f77741446ba5"
+    },
+    {
+      "sharedControl": "control_c156daa96bf10d6bab9677d0775773d53cee4a2ca7e49819e018f853cb42b00b"
+    },
+    {
+      "sharedControl": "control_05eb3f3b5142ab4f359e097ab7ce20338c514aa219022ac99340d45f8047ffb4"
+    },
+    {
+      "sharedControl": "control_ba4d1db1e1a09962239fea9b83e1bed5a66a6c50a3211a4a4781f819db27a126"
+    },
+    {
+      "sharedControl": "control_06c64b37232c26db45af0db6dcc6b55d5598f5c86d2ed0678f85887746ef531a"
+    },
+    {
+      "sharedControl": "control_749c50d69a39ee0e5baa5c85ac8d2be479ba89e7374202409d071b8f39a25887"
+    },
+    {
+      "sharedControl": "control_71eb631631dc37142b4cb849ddc782e1c377ef6a018e4c81aa9bb6c94ee1ea01"
+    },
+    {
+      "sharedControl": "control_6af99c2a2f8a08e81a4b407664422f3eae42f2f18aefbd843402e0fc2bbe889e"
+    },
+    {
+      "sharedControl": "control_c5404996f09179988eda865d0a4883a419139145723c20d499c85b0cd4a0dd43"
+    },
+    {
+      "sharedControl": "control_5c067c1c790eb7050bda6163c77933b3e1855a8c43b27ff7b7cbd7610efd1758"
+    },
+    {
+      "sharedControl": "control_e4c4e04bb7f088fed9b97ca6312c81418cb4eae80ce35c7b4ee612751c658878"
+    },
+    {
+      "sharedControl": "control_4c8e497a577123aa4a24ec97ab4a6388394e3d0d7c4c65bfb93307df2877e898"
+    },
+    {
+      "sharedControl": "control_20672ecb1206fadfee2b86b6caa8031e63330471e8357f6d0251d7fb3dd0bbd7"
+    },
+    {
+      "sharedControl": "control_92f9b89a51f9af911ff682e4032a52ad54cd677f45d176f56f220fac0cde1153"
+    },
+    {
+      "sharedControl": "control_14755a5fe7d2074861461e626e7552074be45d70a087fb380fd223d03c29f06d"
+    },
+    {
+      "sharedControl": "control_4ebf13a610984ba1db0d8550fb21a3b206c291789c9c86d8b79a1a3453e7d0e5"
+    },
+    {
+      "sharedControl": "control_738bdafff899a89f4e35b321b3f10987e38320f5c25be6e1baf6104832818305"
+    },
+    {
+      "sharedControl": "control_80266b1ed5cf686fdde1a70494e93d6468910f159cdb122dfa70c8e0c7503ffd"
+    },
+    {
+      "sharedControl": "control_214b7dfee83f1939bd4a27126e0015e64430fafb80c61d203843c3dcd8ea187c"
+    },
+    {
+      "sharedControl": "control_921961c6014a5679e9a09de9800803e62616a2360959b758fe9a13a8acc95c5c"
+    },
+    {
+      "sharedControl": "control_4f542f09d06b406f5669729b86ea9ce2123b7e1646d3b8904218d36ee36df8f0"
+    },
+    {
+      "sharedControl": "control_0e776ca71a64fcded59009ef109b1841daf0585a02f312518e963614290dc923"
+    },
+    {
+      "sharedControl": "control_a20b30b15b405cfe19dfdb5d2438436bf4f4dac0aa5bda8a6d66b8ff8509a871"
+    },
+    {
+      "sharedControl": "control_406693a50b8a1f4c2c60154be7e774e73a0bb96e5363d2334b59413b510f53cf"
+    },
+    {
+      "sharedControl": "control_caf619e3e387cca55e0bafa0b9d2b7d8321ab68e92662187f24e96f44f5c7932"
+    },
+    {
+      "sharedControl": "control_fded3294b9d98c183f00e6fce1004ff65081c1009d8211d07854517b8528efc5"
+    },
+    {
+      "sharedControl": "control_2f4f7bd046ce6e864585b799a61d9a9ef8ba6bccdda5758bf07481042291922e"
+    },
+    {
+      "sharedControl": "control_86ac06d2cc21b029ee5abf68a4ed03a7fe01eb334cac875f44802a7b16590e2c"
+    },
+    {
+      "sharedControl": "control_62feed3f6dadcbe89693f0a11ac5f5ce4eec8afedef636ad67cb40a9840c09d4"
+    },
+    {
+      "sharedControl": "control_b61fa254511abbe3840b603e2518fa217086101cf10ac0034c54d0762d3f7359"
+    },
+    {
+      "sharedControl": "control_58b26f809bd5b4d0b5a6062f141e0dc81aab095a475d2da3226ef9ea005870bb"
+    },
+    {
+      "sharedControl": "control_f486f903352154b23747e733aeaaa3168070020e62f5c87747be49db728dc891"
+    },
+    {
+      "sharedControl": "control_40ebdfed2784537808b0c082a2338f1bbfebd2402c81e6955b98080c4ea8dbd0"
+    },
+    {
+      "sharedControl": "control_47c1bcff38e81b9217674eb46abeeddfcfbe2c9fd368b2e38dfecebce562054c"
+    },
+    {
+      "sharedControl": "control_a611a29b0f89ce3d81d9e62d778a0eebcbddb2cdb8249c7b887526a2f3cc4d2e"
+    },
+    {
+      "sharedControl": "control_2d8fba7c0548c814c23016116fc17df55d7d10414d650bd27a0e985c826fde79"
+    },
+    {
+      "sharedControl": "control_61c45b136cbfb1b687dd9b3c5c906c8d43be4f26217771129e7827f6fcb4a462"
+    },
+    {
+      "sharedControl": "control_a2eb6be2b771566d07144e6ba16246626a2996ec805459685f0a517633be2a44"
+    },
+    {
+      "sharedControl": "control_3f70070058b62aed94bb0a3ae7e1c734e3666364d08b46f73d7dbe37eade29f4"
+    },
+    {
+      "sharedControl": "control_0a9781a2c2b17e7342da7946328db5a56a8ebd1dd25bc4ea09097a4b02ef25cb"
+    },
+    {
+      "sharedControl": "control_4dcd59ea254154fe126ff824523808c26cd523f166803a7bd8b25e61c30a57a4"
+    },
+    {
+      "sharedControl": "control_f8838c248248082415fac131f6d3400b59dba99776a25a85a67671a4e543e297"
+    },
+    {
+      "sharedControl": "control_37bade6a80f14ea0af1e680b8654d62fb711d48e31a315dd40e27bbdbbba076d"
+    },
+    {
+      "sharedControl": "control_86f7b1f3491914de76f3f3e6a50c8c10dbd7692d13d14111f25d39841471969f"
+    },
+    {
+      "sharedControl": "control_d0e8483f99dd7a357046dd6c564110ff0d489b7ebcbdfbcf5aff647d3831c5d9"
+    },
+    {
+      "sharedControl": "control_f5597be3b6705b4ecedee2a717aef0c676777ed8b9367f214d0967d66d7953d3"
+    },
+    {
+      "sharedControl": "control_0cbdec101dbdc58dc20e684334e03f9847f34cc5b593e2bc10d43e5f628f3b36"
+    },
+    {
+      "sharedControl": "control_f8e3d09dc5c5b92f41197acd48f44d36ac68247bad872d9d6b47e766772bdcbb"
+    },
+    {
+      "sharedControl": "control_b46c6130b0ce3ea8119d6646cd3053d7ae89594b541cb44ed3bcaab363275aba"
+    },
+    {
+      "sharedControl": "control_ca29da8ad8eba16543e0d5a59a1a90f758c0406b7c212323acdd0d7d106917e5"
+    },
+    {
+      "sharedControl": "control_961bc6e9722c040fc90f57fbf0f7316e0f41160331f8cfa0e81b1a8e2f52f6af"
+    },
+    {
+      "sharedControl": "control_aa0233d1020d6f9c0756f43276dc81ffcfd4d40c6e1f75118ce26aed0ba224ed"
+    },
+    {
+      "sharedControl": "control_ccd2b58416c3bba1fbf9802a2b873842fd858ca2b37b927339ddce1365dcf525"
+    },
+    {
+      "sharedControl": "control_4ede78827e865cd58fd185a30e75314118354bf864cd87377101433cb7d65c1b"
+    },
+    {
+      "sharedControl": "control_4f038e8e1ceddb69fa630d2176f04b6777989c18f48129b6e8d8c409813e3578"
+    },
+    {
+      "sharedControl": "control_576fb915afef94a4adf246bc4f331dfbcae11169430b82f3c91605050c09a588"
+    },
+    {
+      "sharedControl": "control_c252f4e0db2d8f65a9c9653fe219c8e36eb564d96242a4c648b14655d0e34af2"
+    },
+    {
+      "sharedControl": "control_efdf9c0437ff6ad196b9dfec336c04862bd5a29500e963c4e395172ea092f688"
+    },
+    {
+      "sharedControl": "control_ee5bf857919dbdba3c0123131300a645379633abce52f134ee344af9a53c3db8"
+    },
+    {
+      "sharedControl": "control_f41e0d7b7bf1840afcd8960cbdfab9ad025195e98a10a8feb711e4f85a24c815"
+    },
+    {
+      "sharedControl": "control_d8885d42309dbd5cb94b099df94fadac6a368a108844ada5274bcae93651c6cf"
+    },
+    {
+      "sharedControl": "control_1ae6916cbecdf78b58600a201e4c93679e879fab4aaeead25a8a05c6a91b7514"
+    },
+    {
+      "sharedControl": "control_4e05461051e2d2d88f32db69e6199b9c0834025130371e86c9c71c008832c4b3"
+    },
+    {
+      "sharedControl": "control_694aa03fdd177f0178591015880bb08708ef06bd46f71ec012f6e74cd17e3d27"
+    },
+    {
+      "sharedControl": "control_57161ff4545f3bd844cc88b985a9a211bd70b769cde3e5e605f7497718bf2242"
+    },
+    {
+      "sharedControl": "control_28b42207b76df3789c6f4df5bacafdd97d25d6803370dd42784408a636aff8e4"
+    },
+    {
+      "sharedControl": "control_50bb0dd8a0226d1296913a5930c8e1ed2f69044afbf8d65bfa8a32baf166c1ae"
+    },
+    {
+      "sharedControl": "control_15912871d8280ce33d3b8da35031bc8fdee3eaf0c95b6c48a17774f058077623"
+    },
+    {
+      "sharedControl": "control_2e6f09b30bb82262cfb95ac82192e1da6efb257892767ea8d4783ea5de3055d4"
+    },
+    {
+      "sharedControl": "control_f26ec7aa8640ab242a4d1d2d280b07286b0baf097eb2458be0b7f86a49a36d86"
+    },
+    {
+      "sharedControl": "control_4fdbb1304221353492fa9fbe6e965b3974dff031589d9f46fad238b71331c1b7"
+    },
+    {
+      "sharedControl": "control_9481317b9eaf2123f646d897b07937f66e967ec108043687c5dce33ae36c7081"
+    },
+    {
+      "sharedControl": "control_4a0f12abdc65fff8ef6479a8eb5ee7b58b4e36e04878efdbe006a1a6782dcfc2"
+    },
+    {
+      "sharedControl": "control_c96b19d00dfdfc0226105e9696f6ffc7fe320d5b9e9b1b52671910aebd40ab41"
+    },
+    {
+      "sharedControl": "control_c890d95af5710ce8ad256ac3e7c21b9a73c99835a1396073dacbe573658ddce1"
+    },
+    {
+      "sharedControl": "control_ff49c5efdea10aed490392f6deeb14e3c77f3da7a4cd5a1c5135ca8fc5723c08"
+    },
+    {
+      "sharedControl": "control_59c705defa5781d3dc7aad64ee93a4a5f179b78c47e32c3064f35bc321cb1510"
+    },
+    {
+      "sharedControl": "control_d9e49058dfffa9c3450ee1351224a400c95cbe10d7754be6d3964eb657ad6e8e"
+    },
+    {
+      "sharedControl": "control_57130e3c9ca1d5e82b1e1706477a9eef5896f4bddaa80583f3f9970129853dd8"
+    },
+    {
+      "sharedControl": "control_662998be8f48a7904c1cf81ff124aa6f2426e36a2c402db491fc6f6e6dee5332"
+    },
+    {
+      "sharedControl": "control_47db5dd66dd389bb53d6a979f8848f0584b65148ae8b8e559063c512868306fd"
+    },
+    {
+      "sharedControl": "control_e757cc59f858548a4c846f9cdbb64486c6877334376adf03ca7d32f598f87e30"
+    },
+    {
+      "sharedControl": "control_0df88f6abc764a2974269108f3458aa224e4114e73cc1e6dd39ce85cac7a4cb1"
+    },
+    {
+      "sharedControl": "control_2a5fa546bf7fee99135146a3393c923cf80073cd1ec131917ea5c45b809b9177"
+    },
+    {
+      "sharedControl": "control_8c462e8d75c821b4f31c48650bb9f3e74f811e6487cb938d1c01547aaa41eb78"
+    },
+    {
+      "sharedControl": "control_04f6c2a9ad08edc3f405e4d30488308bb4c0109cabd6d3c51703728370068db3"
+    },
+    {
+      "sharedControl": "control_4b43ddfd38c7418e5936226cd8a91a833002b4960fb05aa6fa923a7a2508a5ae"
+    },
+    {
+      "sharedControl": "control_90689e98c8e6a2edc4f18060fcf55fb1e9a91b1703bdfa4def0502ded776fc5b"
+    },
+    {
+      "sharedControl": "control_d7b0a9195d704178d5f3ab11b9835d8494be6e2405589bf11d7b9238d324036c"
+    },
+    {
+      "sharedControl": "control_3469b94adb0e8d095132f9c49abb7bdfe876d49d1895b91778c0b4c7d7aa9ff6"
+    },
+    {
+      "sharedControl": "control_e74f559be6c6395906cda5fb40099a68c34739ff8c1e21fa432e16ca992ce3c7"
+    },
+    {
+      "sharedControl": "control_73a3ff5a64328d1bb64f36d42df7e9b30394875b1c17c0897a4f241663ea2c28"
+    },
+    {
+      "sharedControl": "control_f85312a3b4d79975086567281fd22a8c3bccdb0b358cb828a4bc74c688b69f7e"
+    },
+    {
+      "sharedControl": "control_d6e52e5fa8cce9bfc884f334be4bc4008913ee4d9d76d1707a85f2b2645aa07f"
+    },
+    {
+      "sharedControl": "control_11141fec49e566a33c98cd62a6c5aabf2c35efab5b9ad01ab65e548fcafa57fd"
+    },
+    {
+      "sharedControl": "control_c2e826911fe3cf3ff3b3c233cb3fc0889c6c49a69645586c999f13fa206a57b7"
+    },
+    {
+      "sharedControl": "control_85b22817117e63b48efdeff8558044b3efa2d5783e8fd6a26d14a3eea72e7d11"
+    },
+    {
+      "sharedControl": "control_8c527c90bb27c72e633ee72ac01edfcf9889c9bafa5c3ab30c86f2b5f8f1e2ac"
+    },
+    {
+      "sharedControl": "control_5cc714b1fc6d1a3aef4887d7bfd21da595eae6afd02edbea5fce123bf84e4801"
+    },
+    {
+      "sharedControl": "control_28dae12d7d0b06abcf442f891b7f71ee8e25d7c543df6872f3c996bc96e15978"
+    },
+    {
+      "sharedControl": "control_d3ecaa6ce5ec2386b13d550b9d5c93cc6606dff1e70c8ff16df33dd96dfddb19"
+    },
+    {
+      "sharedControl": "control_f7498ea740d5c2cf10ef05b991cc1fdbe6a2dca3617f287338a3b6cd5d5ca51f"
+    },
+    {
+      "sharedControl": "control_3895acb4d51c103a9f944cd6a826838dab9cc8e397d19d92e499b76eb0041f22"
+    },
+    {
+      "sharedControl": "control_04608519e92dc7aa4c8bee04a86cd083d77895be39cddcf4f7e10309bbff7382"
+    },
+    {
+      "sharedControl": "control_143b4569ecf2ade41294a348ac22fd26bd9e1522f5a826e92c589245a09138f6"
+    },
+    {
+      "sharedControl": "control_e6dc6726449806f6f12fee7a810ca61c24de1b0d46f8595252c5561fe8b8cb92"
+    },
+    {
+      "sharedControl": "control_25e9270c4144d7a0f550b94b1f2fdffcb57ec2dc21ae72f17d46e10f405ede63"
+    },
+    {
+      "sharedControl": "control_2e57672c8ab8dc03f1adfc85da6dcb3e3e2d462042ddc329bd8e004d3e235f9c"
+    },
+    {
+      "sharedControl": "control_73e2aefb49df272e329fbf7826998b2c75d42e8016b10e08beb6625b698ef578"
+    },
+    {
+      "sharedControl": "control_815b38270406326860334621b574945e9551d720f6f55ed7623281ef7e21440f"
+    },
+    {
+      "sharedControl": "control_e3417e443903647152ad9ab875224219cfdfd1d86e89649ec8827e8ab6d12ce4"
+    },
+    {
+      "sharedControl": "control_0d79878a0722c4fbddbb258c6bc1b48527bb711dee650f9b0d3fbfd01e85f23a"
+    },
+    {
+      "sharedControl": "control_ad91c63ae1c5f47c2f58de7d8c74a525b7c6053368e13fa438d4d3add0bc1dd1"
+    },
+    {
+      "sharedControl": "control_12c6c018ba461d74fae2b51901c8ede784ce72eda186db77c73b97166d00558e"
+    },
+    {
+      "sharedControl": "control_53eade68cf19ce7615b774cf99d85e25449115c0097b8b1442b05409f889abe9"
+    },
+    {
+      "sharedControl": "control_b91525ac6167c071ea96bcbc201b9e24242ceaaf3c1317970aa38334f133c827"
+    },
+    {
+      "sharedControl": "control_76b716fc855858f865229c1b0a3227b5f207c97376fdc690b63de19057b131d7"
+    },
+    {
+      "sharedControl": "control_87bea3ca3956960b421c46e446d5d4693283bef7f87b46944e9f799a338aa139"
+    },
+    {
+      "sharedControl": "control_0b804af92f44d4aca442e9559b6120a289445e9090456c57c7171e983b1e1605"
+    },
+    {
+      "sharedControl": "control_52e0acdcee5118c316968e2f87c82c1bbc9cdfe7490a8af5b22e3b716ae5cf3b"
+    },
+    {
+      "sharedControl": "control_9200429f5ac00d858eb78d832f4a92da1b495a8812290d502c7c8ec74d37b16e"
+    },
+    {
+      "sharedControl": "control_311736ef043334b61779e3aa1a127b9d8da42ab8f4dcb54756fcc0ab02a767d6"
+    },
+    {
+      "sharedControl": "control_451d6611eda926085ff01040412c20e237158d674dafb3ee3b42aff885691fa7"
+    },
+    {
+      "sharedControl": "control_436c33e24531ca6bf342dd1fbc64b8cc84fa6a06b7c6e4fa4cdac05595b14e48"
+    },
+    {
+      "sharedControl": "control_9bb4d94c758849e922577dfa0d73c103e5bd8bb36a9925f888cc09d2f8a1a031"
+    },
+    {
+      "sharedControl": "control_e07085029fff2741016439c1584438a012883dfed4de6e13bec2f24f2794ab28"
+    },
+    {
+      "sharedControl": "control_6682210e4300364a8fa823e4b2b65a2a62a160a83aac3de0b14328a027820619"
+    },
+    {
+      "sharedControl": "control_334c8870da9e695ae67ec0faad3f224c7327dba91fdf6473d7c541ca16b276fc"
+    },
+    {
+      "sharedControl": "control_242f5899398af6512cd5e989b3cbe17b62696e0a2a997102efd89980d30826ae"
+    },
+    {
+      "sharedControl": "control_64e5c773b8d5ab88d76503f6524c267f01edbfc98e66c34033193846dac25822"
+    },
+    {
+      "sharedControl": "control_7f4b2cfaade0dd89a2a62f58cca66f4b4b088e5974d36adc6d59e7d4a14252fe"
+    },
+    {
+      "sharedControl": "control_b7c32a52e8e9dac9231c32d5a1e164fe98568950e74c6bffb82092750f762c7d"
+    },
+    {
+      "sharedControl": "control_506776b2ba6a21923b452f1ff779cafb63371b40ed0091179fa4e2c6f062b15d"
+    },
+    {
+      "sharedControl": "control_452990b58d713c1053d91873ee5db3e6b48866947cf7da5786c59b5e64822c3e"
+    },
+    {
+      "sharedControl": "control_18cd2a6d14bc8a4a24d68c95f649da04511ef5a5e4dcd38f0136707d72618699"
+    },
+    {
+      "sharedControl": "control_449a319be444fc7077619db1e6e3ffac29ae5841a85a0846338199771bed8fc1"
+    },
+    {
+      "sharedControl": "control_72653c289b18a55d146f030551ac99217f87b6f8e23ca032399c335958be1715"
+    },
+    {
+      "sharedControl": "control_b1afbcf27680c5ebae6247c2570bf7416443f5ee5b86dc1bc3cc86218444a285"
+    },
+    {
+      "sharedControl": "control_cb30f7db5bd2a250763a6f6e060aeafdb00447c6a357b9a176d9b8abc5deb6c0"
+    },
+    {
+      "sharedControl": "control_c46b73cad74de053a58405df7478845721fc8b82a8345d03c0556539bed3cd73"
+    },
+    {
+      "sharedControl": "control_c517220c25f0beb3d960bd46b5a90046279ec4887c9ab416123e5088fa1abcd6"
+    },
+    {
+      "sharedControl": "control_d14ac38069f309a8bc0800f5d6bb59c9c2f8e56657ec817f8c52896df8d415cd"
+    },
+    {
+      "sharedControl": "control_0873f10258fd79aae6c9e388bbcb19e0ed5626b6205d2600961dde1f3675f4d4"
+    },
+    {
+      "sharedControl": "control_ba40b7c20772dc5f96791647159821302d36dbb789d0086e9cfa25fe3ba22a61"
+    },
+    {
+      "sharedControl": "control_4c5a85205c28a7dc5ae346dcabb51d4d7815b223e3fb8ef66e887190c0955bad"
+    },
+    {
+      "sharedControl": "control_ceba952e35b0fd1272867abbfc4930a30ebb635f6a7638daab583a84ad1427df"
+    },
+    {
+      "sharedControl": "control_90633c564330a9114aaf67be1527736b3dc4e5cbff216e949ea77040262d9930"
+    },
+    {
+      "sharedControl": "control_755c3359b0169367667341af944c6bd435a76e0ad32b2f564afef82b48634df9"
+    },
+    {
+      "sharedControl": "control_17c31615181ee3e13cdb4e29e238c1d7ad1304c15616b95325ddaa50c8b2b654"
+    },
+    {
+      "sharedControl": "control_590a229f056c9068589a5d2e32c2cecaea78a1c25f92a2cdad660ec49d019ad7"
+    },
+    {
+      "sharedControl": "control_c190f91e47bc774892ab9a686590bcd94c4709eaf3b2bc53ddf6753547116d1e"
+    },
+    {
+      "sharedControl": "control_25f100eded4bf0d5352ebd0c0a23288fd1bf4ba03a116afbb381fdf10d5f2393"
+    },
+    {
+      "sharedControl": "control_e1dfca6c06fa2adfc76c00481e2e2c4e12ba358f45a33460e2cdcfb9bd015c42"
+    },
+    {
+      "sharedControl": "control_727b6c0ea8425c502d27fdb33de6786d89f8a5508cadbcbb4df48acff0556b75"
+    },
+    {
+      "sharedControl": "control_2db44a0a9724e066a2320e3fc28ab86ee8359b7a40fea49bfe3f01ad2f26d0e0"
+    },
+    {
+      "sharedControl": "control_7262a5666a359fa85dad8ae02ebd3c8a911f70cdfb73925a47fcaecd4cf77204"
+    },
+    {
+      "sharedControl": "control_f3d70e70a269733f50be7764edbb4c1d16b8faf2eb55c94860a5e34784c0338a"
+    },
+    {
+      "sharedControl": "control_7b02ad701a9cadc0d7d92faf740e0199e6458713f62e02caa9937589f4646752"
+    },
+    {
+      "sharedControl": "control_9dd949871516133b6354714c294b607e54ef7ed749ac144e77273eccee4ed0f6"
+    },
+    {
+      "sharedControl": "control_7c88bfc19a1f3bf019c07b9c1d38899c29ba1f4823733c63a57f743577f1038d"
+    },
+    {
+      "sharedControl": "control_0c95857b4538b2db67a536829f5a34a25b0ca9ed45947f95e8734ba3eadd9094"
+    },
+    {
+      "sharedControl": "control_9a169cd4974f06bf0337ca23f14642a116420860e6eee967d4b898741321a9c6"
+    },
+    {
+      "sharedControl": "control_3db9e9c7299c37e8a49ed31911b7b9d79cfe77b718bdd97da6814935353e8331"
+    },
+    {
+      "sharedControl": "control_fe30d89bbba58c67d44c6b7e88aa74bd58533f27bdfee0ea3904bb4de215fa17"
+    },
+    {
+      "sharedControl": "control_5416c576e0f145ad036a141b0e5de29b67b563b997fbcf99daa77b80121b5ced"
+    },
+    {
+      "sharedControl": "control_36b417e526a659934cd3084111cd9b563ff8b166bc521e3424ab318562fdfa52"
+    },
+    {
+      "sharedControl": "control_b0d8d0edbf98551b8ed8d42009430666b210bc263a136463b2c6cac36d520ebd"
+    },
+    {
+      "sharedControl": "control_53b05e213882ffd58951d345646e81d1bf08d9b0ad13f11c098676c91f0fbeaa"
+    },
+    {
+      "sharedControl": "control_d2e89e2c5ae6652a8767b57c69e32f27a1621da0e074438db3a5367888ebff48"
+    },
+    {
+      "sharedControl": "control_fb91a238a362be9819222b202e916ee1cee8a6966209ea15b4e325b3bfb02d90"
+    },
+    {
+      "sharedControl": "control_ef95673acc0ff22602217777f0739d7883fe5509e88e4d5b75ab2c919b171023"
+    },
+    {
+      "sharedControl": "control_f2f87065087789c0b80c7a49eb671cefbe4b6896856af90c2d0e0cf861ce638c"
+    },
+    {
+      "sharedControl": "control_c86dd09fbb5e9d8bceb0f94c6839eec4b6953cf12726575f21c8032931346071"
+    },
+    {
+      "sharedControl": "control_a9ac2c6c45d23de82031c3973a93bced6c0836e7455550ec444689d7284daa10"
+    },
+    {
+      "sharedControl": "control_30c4e69046d5905bd231e4e6792651ef64a37b23553421bf885e579a4469cf69"
+    },
+    {
+      "sharedControl": "control_0f29554e331da00e568441b5c77058d351045dd33a89279f283f18b4a7ba94ff"
+    },
+    {
+      "sharedControl": "control_ba59a9c048ad637660a080e6a3238e43a1bfefda22b046c9886a8450ed17938d"
+    },
+    {
+      "sharedControl": "control_f262ef700ab2ec3a95194d8ae8d8cfe31d8a9961f7225fa3263ec03331948828"
+    },
+    {
+      "sharedControl": "control_a47623d921bd18fbd994fc3a4b8317208ab20fda1f723adb1b144d3e55e66913"
+    },
+    {
+      "sharedControl": "control_6edf96959e04f162f6ca0b2f6c454f181e8d4f7b6b17d7bad77db9639225e2b0"
+    },
+    {
+      "sharedControl": "control_4de0c6dd5f6d35421b32a36f299a3f85e80532d7fa14483fe0baa231643de04b"
+    },
+    {
+      "sharedControl": "control_40825544aadf0758d5775c46509fff9567d59cdb81d4b549501aba808122b8c0"
+    },
+    {
+      "sharedControl": "control_4031c77a419cdc5d0cba1a0b30d5e5aadba49e7ac9192abea2a0273fd77af3eb"
+    },
+    {
+      "sharedControl": "control_5d0b39cb9712313a07fd353ef07e627fd9fa79814cd516d2ec4da8ad4ac54a60"
+    },
+    {
+      "sharedControl": "control_149581e1b1ae8c1a60d927cbc6440a8d933e0c8a5188a202d050ce8e05b721ca"
+    },
+    {
+      "sharedControl": "control_dd27ded3ba53fd229fcc763d1df4dcf658df96564ffa6332e907904f2c49e3f3"
+    },
+    {
+      "sharedControl": "control_e64f0a11bdb747435f841ef44e49d9934348a113fb851af9b5b413bd700072cf"
+    },
+    {
+      "sharedControl": "control_3bbac03f462aa55ac9a0a73e93a7c9a1fd5db347afff177d7f05480474e33e6e"
+    },
+    {
+      "sharedControl": "control_f60ede91b1aba869d972231f779d349b057b366120d5cb3fd8295966db26de98"
+    },
+    {
+      "sharedControl": "control_39acd821dd069f0030e33ac2fd312b43621bb1fb6baa9fc374445f8a485d70b2"
+    },
+    {
+      "sharedControl": "control_60de64b99b7121893949509a1a8c002199cd691e2fdbe42f89a6500ba0fe3626"
+    },
+    {
+      "sharedControl": "control_3e36ff457c8aca37d8114a5de0a12659cc4c0e7ad21e42c4aa517610a150bb2a"
+    },
+    {
+      "sharedControl": "control_c36c1d1413fefcdda0033e718c40f7e81c5008497c6515ef74ccbe3afeb7947e"
+    },
+    {
+      "sharedControl": "control_83012cf11121bdb59d2b18aa97d1b3655c41c7dc851cda084e2428bb5538d0e2"
+    },
+    {
+      "sharedControl": "control_6d410ec20b56b77bd040410b6c9862e095d906d5a59ac326db4ccdb1726935a8"
+    },
+    {
+      "sharedControl": "control_7fb61bf92626889ab1edd950e6ab553972fa4a0679fd922a236ecbf78a73c721"
+    },
+    {
+      "sharedControl": "control_1bdc07e5fc1e07a8933e8e8d0e40b2c3c80d2868753c9e59c8902b6e89d3baed"
+    },
+    {
+      "sharedControl": "control_73c894a5da74cc644d0f40c2b8cb08528a192e2ad479678218b126e8e2373a65"
+    },
+    {
+      "sharedControl": "control_241418be36aa80a5ead23a190621867d9aa4c8b89409a07cfe467f57881289d2"
+    },
+    {
+      "sharedControl": "control_0add0d9a6ea6ab0e267bb3366ff5ff47660b693d2171471bad6572085120bc7b"
+    },
+    {
+      "sharedControl": "control_5d400ba5ddeefb6c1bbe7a00e0731a92dc1825aeaca6796b31751ded091e1af4"
+    },
+    {
+      "sharedControl": "control_67b2c849c43e8d90c0548a57c52a04ee28d3149c4707224d9601444f9ed8bc4c"
+    },
+    {
+      "sharedControl": "control_500e61a289a32a9a3ea9101a99ee829d62adedfbca38db0daede9a124f3a08f2"
+    },
+    {
+      "sharedControl": "control_d873521632a6bb3c4fff99efaef5a6dbd77f06016f591ae26f2fbf006ed8ed92"
+    },
+    {
+      "sharedControl": "control_b7151f4c3198eb5745658739a928e6436e50a32d60ef676588c3e229f8434771"
+    },
+    {
+      "sharedControl": "control_c855132f69a15574f23287f21a47832ed407afa4b388eaad5e488b01d2bb2e03"
+    },
+    {
+      "sharedControl": "control_6066d10dbab0285e8a1643f4bb4bfd0180451b55e404d48b818a0a0af1d03497"
+    },
+    {
+      "sharedControl": "control_cab4110b7b9cbac0933326c139632625b28f71d7ca58e817cd3224fe9cf58aa4"
+    },
+    {
+      "sharedControl": "control_9bc2fc9b7cc66d143ba0c7b46b23a05a7d0f6a6c29908626854fe8520ade651f"
+    },
+    {
+      "sharedControl": "control_67202746cfe5986853aeb84f4f0f839962b0a66dc2da83c96b031d2af7e10275"
+    },
+    {
+      "sharedControl": "control_ddc0e2eb96e33b19b01bb583bdcb2ce97b9416bc936bd97e931e82719fec5f1d"
+    },
+    {
+      "sharedControl": "control_3bce425634bc12235dcfb9e94d22c2694e7ab7f67eec7b668637344d0b131dd0"
+    },
+    {
+      "sharedControl": "control_74924d4f7502caf8a99016ce58008ceafb8d0c7601b036508c55b3bef8becf54"
+    },
+    {
+      "sharedControl": "control_1dfd6e93d59a5d10cea812ab8fa205d3037b6217ca2b8a4314423201315a3bbe"
+    },
+    {
+      "sharedControl": "control_961f7cd85cb39f8e74a4c3aee7f53c0665a6fe54ee8d57decf358e2a9bd5a9c6"
+    },
+    {
+      "sharedControl": "control_21c4608be50f7ac9c95a37353fba5bff092440de6c4dfd28b93725a234b94da4"
+    },
+    {
+      "sharedControl": "control_65531bb6c20724b7e2b6c0485191121c75fffb7f74521142732771e7b80bb134"
+    },
+    {
+      "sharedControl": "control_aef0d4b6ab106ed6dd47a02f4330917d6f9c1f82948a1a12e513bcabaf9e9393"
+    },
+    {
+      "sharedControl": "control_4ce5e9c8193d248d15c9c1f51b71234759dd4599eb7c211a04a39975ccd82a38"
+    },
+    {
+      "sharedControl": "control_b1e245bee8c31e6f1f996cb46495e8fd8c78dddc77ff05654812e7579d14c78a"
+    },
+    {
+      "sharedControl": "control_7e7d3875f6b66a165f87e123e89f59be77e821c3ae8ce84f226a911bf75723fb"
+    }
+  ],
+  "semanticSlots": {
+    "currentRecord": [
+      "price"
+    ]
+  },
+  "usage": {
+    "suitableFor": [
+      "当前商品原生字段和服务"
+    ],
+    "unsuitableFor": [
+      "未绑定当前商品的页面"
+    ],
+    "contentModel": "resource-query",
+    "primaryContentFields": [],
+    "repeaterKeys": [],
+    "resourceDependencies": [
+      "current-product"
+    ],
+    "panelEditing": "通过原生组件面板配置样式、布局和手机字段；数据由当前商品提供",
+    "pageCss": "现有页面隔离 CSS",
+    "interactionRequirements": [],
+    "restrictions": [
+      "Requires a task-owned native WoodMart single_product template and fresh current product/runtime proof; never ordinary Page impersonation.",
+      "Use the original unified workflow, exact live registered controls and one responsive data/action owner.",
+      "No observed product IDs, amounts or phone settings are production defaults; inspect the task source.",
+      "Positive rating, notice and different-price variation states require actual task verification when present."
+    ]
+  },
+  "sourceOwnership": {
+    "package": "woodmart-8.5.5",
+    "baseline": "data/adapters/core-product-source.json"
+  },
+  "renderModel": {
+    "kind": "native-current-record",
+    "field": "price"
+  },
+  "runtimeAssets": {
+    "dependencies": [
+      "current-product",
+      "native-currency-tax-price-filters"
+    ]
+  },
+  "runtimeIdentity": {
+    "widgetType": "wd_single_product_price",
+    "class": "XTS\\Modules\\Layouts\\Price",
+    "owner": {
+      "postType": "woodmart_layout",
+      "layoutType": "single_product",
+      "data": "current WooCommerce product request",
+      "preview": "native existing preview record; observation only"
+    }
+  },
+  "modes": [],
+  "evidence": {
+    "sourceStudied": true,
+    "targetRegistered": false,
+    "usageVerified": "historical-qualified",
+    "resourceBlocked": [],
+    "historicalEnvironmentFingerprint": "current-registration-observation",
+    "historicalCore": "1.1.7",
+    "targetCore": "task-local",
+    "effectRecordCount": 1,
+    "interactionAttempts": 0,
+    "interactionChanged": 0,
+    "runtimeRetestRequired": [
+      "Actual target registration and native template ownership",
+      "Current task desktop/phone appearance and interactions; conditional states and selected modes"
+    ],
+    "records": []
+  }
+}

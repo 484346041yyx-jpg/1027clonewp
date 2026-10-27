@@ -1,0 +1,56 @@
+{
+  "name": "clonewp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Reference websites reproduced as native editable Elementor pages",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "test": "node tools/test.mjs",
+    "create": "tsx src/replica-full/entry.ts",
+    "create:replica": "tsx src/replica-full/entry.ts",
+    "replica:full": "tsx src/replica-full/cli.ts",
+    "replica:prepare": "tsx src/replica-preparation/cli.ts",
+    "compare:replica": "tsx src/native44/compare-cli.ts",
+    "revision": "tsx src/native44/revision-cli.ts",
+    "revision:css": "tsx src/native44/current-css-revision-cli.ts",
+    "revision:native": "tsx src/native44/current-native-revision-cli.ts",
+    "current-review": "tsx src/native44/current-review-cli.ts",
+    "delivery": "tsx src/native44/delivery-summary-cli.ts",
+    "editor:complete": "tsx src/editor-completion/cli.ts",
+    "publication": "tsx src/native44/publication-cli.ts",
+    "context:load": "tsx src/context/cli.ts load",
+    "context:index": "tsx src/context/cli.ts index",
+    "workspace": "tsx src/workspace/cli.ts",
+    "workspace:start": "tsx src/workspace/cli.ts start",
+    "learn:page": "tsx src/components/learn-cli.ts page",
+    "learn:component": "tsx src/components/learn-cli.ts component",
+    "knowledge:import": "tsx tools/import-native44-knowledge.ts",
+    "native44:environment": "tsx src/native44/environment-cli.ts",
+    "native44:compatibility": "tsx src/native44/compatibility-cli.ts",
+    "reference": "tsx src/reference-cli.ts",
+    "browser:preflight": "tsx src/replica-v2/browser-preflight-cli.ts",
+    "design:check": "tsx src/reference-check-cli.ts",
+    "design:plan": "tsx src/native-plan-cli.ts",
+    "doctor": "tsx src/doctor.ts",
+    "smoke:live": "tsx src/live-smoke.ts",
+    "claude:capture": "tsx src/claude-capture/cli.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "css-tree": "3.2.1",
+    "parse5": "8.0.1",
+    "playwright": "1.64.0",
+    "sharp": "0.35.5",
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "@types/css-tree": "3.2.0",
+    "@types/node": "26.6.5",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

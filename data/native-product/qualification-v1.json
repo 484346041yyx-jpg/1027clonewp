@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "kind": "core-product-qualification",
+  "status": "qualified",
+  "existingPagesModified": false,
+  "scope": "Actual target native PHP render and assets in a request-local product query; isolated draft and browser only; no global display conditions",
+  "runtime": "woodmart-native-single-product-v1",
+  "evidence": [
+    {
+      "path": "data/native-product/target-baseline.json",
+      "sha256": "7eb8637ccdc3083331865786723b8ffa3df2c93ff1472c008561d5aebc89ed40"
+    },
+    {
+      "path": "data/native-product/qualification-work/reconciled.json",
+      "sha256": "9f5eb9fe673822d479c08af3308e494f532ec2826d46bc59f8be5e6e5d578913"
+    },
+    {
+      "path": "data/native-product/qualification-work/woodmart-native-owner.json",
+      "sha256": "b935d89d6b6b213f92000a397a417a77d2dada147e0b79cebcb16347a6c58c38"
+    },
+    {
+      "path": "data/native-product/qualification-work/native-isolated-render.json",
+      "sha256": "aed7d234773de196e4ec986897fbc2578c1ddb9beac8240fa4ba94b58f1cf818"
+    },
+    {
+      "path": "data/native-product/qualification-work/native-verified-variable-render.json",
+      "sha256": "e5b88219c3da4d6cb764ac10fec4fd45b8cc6c6e4cb96cb09cab3d6d862e701e"
+    },
+    {
+      "path": "data/native-product/qualification-work/native-compiler-context-save.json",
+      "sha256": "0865a5c9020b4e44ea3401de08933ee7bff7a59e5b85b7cc5f9646531d557359"
+    },
+    {
+      "path": "data/native-product/qualification-work/native-settings-render.json",
+      "sha256": "1fcc6319cd90c15858530f8a687c7edc817079553affb9070c7a7eba70c50175"
+    }
+  ],
+  "components": {
+    "wd_single_product_gallery": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "native control exercised without submission"
+    },
+    "wd_single_product_title": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "not applicable to static or empty output"
+    },
+    "wd_single_product_rating": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "conditional-empty: real target products have zero ratings",
+      "interaction": "not applicable to static or empty output"
+    },
+    "wd_single_product_short_description": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "not applicable to static or empty output"
+    },
+    "wd_single_product_price": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "not applicable to static or empty output"
+    },
+    "wd_single_product_add_to_cart": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "native control exercised without submission"
+    },
+    "wd_single_product_meta": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "not applicable to static or empty output"
+    },
+    "wd_single_product_content": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "not applicable to static or empty output"
+    },
+    "wd_single_product_additional_info_table": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "not applicable to static or empty output"
+    },
+    "wd_single_product_tabs": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "native control exercised without submission"
+    },
+    "wd_single_product_reviews": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "visible native output",
+      "interaction": "native control exercised without submission"
+    },
+    "wd_wc_notices": {
+      "registered": true,
+      "saved": true,
+      "rendered": true,
+      "outcome": "conditional-empty: no current notice",
+      "interaction": "not applicable to static or empty output"
+    }
+  },
+  "limits": [
+    "No positive-rated target record was available; positive rating output remains conditional and must be checked on the actual task.",
+    "No nonempty notice was generated; notice output remains native and task-dependent.",
+    "No cart, checkout, review or stock writes were performed.",
+    "Observed variable prices were identical; genuine variation IDs changed and native price data was verified, but unequal-price display is not qualified by this sample.",
+    "These are native capability qualifications, not pixel parity or all-mode certification for future replicas.",
+    "Native templates remain inactive until a separately authorized display-condition assignment; no public product route was replaced."
+  ],
+  "instanceValues": "Evidence artifacts only; no IDs, prices, widths, sample values or widget modes become defaults.",
+  "settingsVerified": {
+    "mechanism": "Original compiler plus registered native settings, native context scoped around save, actual target CSS/assets in browser",
+    "desktop": "Actual separately saved typography and two gallery columns",
+    "phone": "Actual native mobile typography and one gallery column",
+    "valuesAreDefaults": false
+  }
+}

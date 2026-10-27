@@ -1,0 +1,22 @@
+import { targetProductId } from './product-contract.js';
+
+/** Fixed public WooCommerce getters only. No template rendering, cart, reviews or record writes. */
+export function targetProductReadPHP(input: number): string {
+  const productId = targetProductId(input);
+  return `
+$clonewpProductRead=true;$id=${productId};
+if(!function_exists('wc_get_product')||!defined('WC_VERSION')){throw new RuntimeException('woocommerce_product_provider_missing');}
+$product=wc_get_product($id);
+if(!$product||$product->get_status()!=='publish'||!$product->is_visible()||get_post_field('post_password',$id)!==''){throw new RuntimeException('target_product_not_public');}
+if(!in_array($product->get_type(),['simple','variable'],true)){throw new RuntimeException('target_product_type_not_supported');}
+$price=static function($p){return ['current'=>(string)$p->get_price(),'regular'=>(string)$p->get_regular_price(),'sale'=>(string)$p->get_sale_price(),'html'=>(string)$p->get_price_html(),'onSale'=>(bool)$p->is_on_sale()];};
+$stock=static function($p){return ['status'=>(string)$p->get_stock_status(),'managed'=>(bool)$p->managing_stock(),'quantity'=>$p->get_stock_quantity()===null?null:(float)$p->get_stock_quantity(),'purchasable'=>(bool)$p->is_purchasable(),'inStock'=>(bool)$p->is_in_stock(),'backordersAllowed'=>(bool)$p->backorders_allowed()];};
+$image=static function($id){if(!$id){return null;}$url=wp_get_attachment_image_url($id,'full');if(!$url){throw new RuntimeException('target_product_media_missing');}return ['id'=>(int)$id,'url'=>(string)$url,'alt'=>(string)get_post_meta($id,'_wp_attachment_image_alt',true)];};
+$mediaIds=array_values(array_unique(array_filter(array_merge([(int)$product->get_image_id()],$product->get_gallery_image_ids()))));
+if(count($mediaIds)>200){throw new RuntimeException('target_product_media_limit');}$media=[];foreach($mediaIds as $mediaId){$media[]=$image($mediaId);}
+$attributes=[];foreach($product->get_attributes() as $a){$options=$a->is_taxonomy()?wc_get_product_terms($id,$a->get_name(),['fields'=>'names']):$a->get_options();if(is_wp_error($options)){throw new RuntimeException('target_product_attributes_unavailable');}$attributes[]=['key'=>(string)sanitize_title($a->get_name()),'name'=>(string)$a->get_name(),'label'=>(string)wc_attribute_label($a->get_name(),$product),'options'=>array_values(array_map('strval',$options)),'visible'=>(bool)$a->get_visible(),'variation'=>(bool)$a->get_variation()];}
+$children=$product->is_type('variable')?$product->get_children():[];if(count($children)>200){throw new RuntimeException('target_product_variations_limit');}
+$variations=[];foreach($children as $childId){$v=wc_get_product($childId);if(!$v||!$v->is_type('variation')||(int)$v->get_parent_id()!==$id){throw new RuntimeException('target_product_variation_owner');}if($v->get_status()!=='publish'||!$v->variation_is_visible()){continue;}$variations[]=['id'=>(int)$v->get_id(),'parentId'=>(int)$v->get_parent_id(),'attributes'=>(object)$v->get_attributes(),'price'=>$price($v),'stock'=>$stock($v),'image'=>$image((int)$v->get_image_id())];}
+$terms=static function($taxonomy)use($id){$items=wc_get_product_terms($id,$taxonomy,['fields'=>'all']);if(is_wp_error($items)){throw new RuntimeException('target_product_terms_unavailable');}$out=[];foreach($items as $term){$out[]=['id'=>(int)$term->term_id,'name'=>(string)$term->name,'slug'=>(string)$term->slug];}return $out;};
+return ['woocommerceVersion'=>(string)WC_VERSION,'currency'=>(string)get_woocommerce_currency(),'product'=>['id'=>$id,'status'=>'publish','type'=>(string)$product->get_type(),'name'=>(string)$product->get_name(),'permalink'=>(string)$product->get_permalink(),'sku'=>(string)$product->get_sku(),'description'=>(string)$product->get_description(),'shortDescription'=>(string)$product->get_short_description(),'price'=>$price($product),'stock'=>$stock($product),'soldIndividually'=>(bool)$product->is_sold_individually(),'media'=>$media,'attributes'=>$attributes,'defaultAttributes'=>(object)($product->is_type('variable')?$product->get_default_attributes():[]),'variations'=>$variations,'variationChildrenCount'=>count($children),'categories'=>$terms('product_cat'),'tags'=>$terms('product_tag'),'reviews'=>['enabled'=>(bool)$product->get_reviews_allowed(),'average'=>(float)$product->get_average_rating(),'ratingCount'=>(int)$product->get_rating_count(),'reviewCount'=>(int)$product->get_review_count()]]];`;
+}

@@ -1,0 +1,348 @@
+{
+  "runId": "core-product-qualification-20261026",
+  "pageId": 21760,
+  "beforeHash": "814129090d1a7fc46d42643f784fd2b67f9af7b63828d4f550c1ef66c5fa1495",
+  "afterHash": "814129090d1a7fc46d42643f784fd2b67f9af7b63828d4f550c1ef66c5fa1495",
+  "usedTypes": [
+    "wd_single_product_gallery",
+    "container",
+    "wd_single_product_title",
+    "wd_single_product_rating",
+    "wd_single_product_short_description",
+    "wd_single_product_price",
+    "wd_single_product_add_to_cart",
+    "wd_single_product_meta",
+    "wd_single_product_content",
+    "wd_single_product_additional_info_table",
+    "wd_single_product_tabs",
+    "wd_single_product_reviews",
+    "wd_wc_notices"
+  ],
+  "savedTree": [
+    {
+      "id": "f745f39",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-0dd5dd0266b4",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "62b4689",
+          "elType": "widget",
+          "settings": {
+            "thumbnails_position": "bottom_column",
+            "grid_columns": "2",
+            "grid_columns_mobile": "1",
+            "carousel_on_mobile": "disable",
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_gallery"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "79bfc23",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-b593ee444a91",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "1ef401c",
+          "elType": "widget",
+          "settings": {
+            "typography_typography": "custom",
+            "typography_font_size": {
+              "unit": "px",
+              "size": 32,
+              "sizes": []
+            },
+            "typography_font_size_mobile": {
+              "unit": "px",
+              "size": 19,
+              "sizes": []
+            },
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_title"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "ad71a30",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-b678e401374c",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "2b00b24",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_rating"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "2c0453e",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-0f95ef2fa88b",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "07c6b3d",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_short_description"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "8c81fd9",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-d91968091d0e",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "efd59ad",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_price"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "add4374",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-cd1e07237402",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "b6c16a9",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_add_to_cart"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "f5298c5",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-d27da0b8f1ed",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "799bbb4",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_meta"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "3c1e99a",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-9ee991cca090",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "c9018e6",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_content"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "881b272",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-ad35b0512637",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "82746f6",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_additional_info_table"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "5c8b67b",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-3918af857698",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "ee7175c",
+          "elType": "widget",
+          "settings": {
+            "enable_reviews": "",
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_tabs"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "e650e7c",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-1d170c5a1a4c",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "bc71a26",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_reviews"
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "7c256bf",
+      "elType": "container",
+      "settings": {
+        "css_classes": "cwp-n44-1664f47891ad",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "b314525",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_wc_notices"
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "instanceSettings": [
+    {
+      "type": "wd_single_product_gallery",
+      "settings": {
+        "thumbnails_position": "bottom_column",
+        "grid_columns": "2",
+        "grid_columns_mobile": "1",
+        "carousel_on_mobile": "disable"
+      }
+    },
+    {
+      "type": "wd_single_product_title",
+      "settings": {
+        "typography_typography": "custom",
+        "typography_font_size": {
+          "unit": "px",
+          "size": 32,
+          "sizes": []
+        },
+        "typography_font_size_mobile": {
+          "unit": "px",
+          "size": 19,
+          "sizes": []
+        }
+      }
+    },
+    {
+      "type": "wd_single_product_rating",
+      "settings": {}
+    },
+    {
+      "type": "wd_single_product_short_description",
+      "settings": {}
+    },
+    {
+      "type": "wd_single_product_price",
+      "settings": {}
+    },
+    {
+      "type": "wd_single_product_add_to_cart",
+      "settings": {}
+    },
+    {
+      "type": "wd_single_product_meta",
+      "settings": {}
+    },
+    {
+      "type": "wd_single_product_content",
+      "settings": {}
+    },
+    {
+      "type": "wd_single_product_additional_info_table",
+      "settings": {}
+    },
+    {
+      "type": "wd_single_product_tabs",
+      "settings": {
+        "enable_reviews": ""
+      }
+    },
+    {
+      "type": "wd_single_product_reviews",
+      "settings": {}
+    },
+    {
+      "type": "wd_wc_notices",
+      "settings": {}
+    }
+  ]
+}

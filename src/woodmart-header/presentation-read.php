@@ -1,0 +1,5 @@
+if(!current_user_can('edit_theme_options'))throw new RuntimeException('header_permission_missing');
+$builder=\XTS\Modules\Header_Builder::get_instance();$schema=[];foreach(['Logo','Mainmenu','Account','Cart','Row','Text'] as $k){$args=$builder->elements->elements_classes[$k]->get_args();$fields=[];foreach($args['params'] as $f=>$v)$fields[$f]=array_intersect_key($v,array_flip(['id','type','value','options']));$schema[$k]=$fields;}
+$files=[];foreach(['inc/modules/header-builder/class-styles.php','header-elements/cart.php','header-elements/account.php','header-elements/main-menu.php','header-elements/logo.php','inc/modules/header-builder/elements/abstract/class-element.php'] as $f){$p=get_template_directory().'/'.$f;if(is_file($p))$files[$f]=file_get_contents($p);}
+$css=get_post_meta(15769,'_elementor_page_settings',true)['custom_css']??'';preg_match_all('/@font-face\s*\{[^}]+\}/',$css,$fonts);
+return ['schema'=>$schema,'files'=>$files,'fonts'=>$fonts[0],'themeCustomCssIdReference'=>str_contains(wp_get_custom_css(),'whb-header_193941')];

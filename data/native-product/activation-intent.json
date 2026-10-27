@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "extension": {
+    "path": "data/native-product/extension-v1.json",
+    "sha256": "e3e037e64334189b577e7503ca6a9189673db5778c42d212afbad8a9ea28c280"
+  },
+  "baseline": {
+    "config/native44-component-set.json": "5c459e861145db6968998aebbb724da274daa1a9a6e8aba54a6363668fa5e5c1",
+    "data/native44/index.json": "ceac8015b96f8818e85425df17bd648030ded4c607e8be362baafe9fc823ccf2",
+    "data/system/knowledge-current.json": "39b261770f1238166d4a9d542641d020e70e48c4010003669b05188272904269"
+  },
+  "authorization": "User explicitly authorized adding the twelve verified native product components while preserving original44 and existing pages",
+  "createdAt": "2026-10-26T06:19:47.569Z"
+}

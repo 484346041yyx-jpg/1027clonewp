@@ -1,0 +1,5 @@
+/** Run native document work with a real WooCommerce product query, restoring request globals afterwards. */
+export function nativeProductRequestPHP(productId:number,code:string):string {
+ if(!Number.isSafeInteger(productId)||productId<1||typeof code!=='string'||!code)throw Error('native_product_request_input');
+ return `$nativePrior=[];foreach(['post','product','wp_query','wp_the_query'] as $name)$nativePrior[$name]=['present'=>array_key_exists($name,$GLOBALS),'value'=>$GLOBALS[$name]??null];try{$nativeQuery=new \\WP_Query(['post_type'=>'product','p'=>${productId},'posts_per_page'=>1]);if(!$nativeQuery->have_posts())throw new \\RuntimeException('native_product_request_missing');$GLOBALS['wp_query']=$nativeQuery;$GLOBALS['wp_the_query']=$nativeQuery;$nativeQuery->the_post();$GLOBALS['product']=wc_get_product(${productId});if(!$GLOBALS['product']||$GLOBALS['product']->get_status()!=='publish')throw new \\RuntimeException('native_product_request_record');return (static function(){${code}})();}finally{foreach($nativePrior as $name=>$prior){if($prior['present'])$GLOBALS[$name]=$prior['value'];else unset($GLOBALS[$name]);}}`;
+}

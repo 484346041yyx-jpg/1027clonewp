@@ -1,0 +1,10 @@
+{
+  "operationId": "woodmart-native-context-20261026",
+  "runId": "core-product-qualification-20261026",
+  "resource": "native-qualification/21760",
+  "allowedPriorType": "elementor_library",
+  "targetType": "woodmart_layout",
+  "layoutType": "single_product",
+  "preserveElementData": true,
+  "modifyConditions": false
+}

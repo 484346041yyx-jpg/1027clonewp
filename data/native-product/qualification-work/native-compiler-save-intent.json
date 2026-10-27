@@ -1,0 +1,558 @@
+{
+  "runId": "core-product-qualification-20261026",
+  "pageId": 21760,
+  "beforeHash": "79ac57e54a42752c610ae938eee72845e737b3fc44f5f5d0528b8a171c563f5b",
+  "program": {
+    "version": 2,
+    "workflow": "block-replication",
+    "executionStrategy": "native44-css-handoff",
+    "componentModelPolicy": "unified-components-v1",
+    "componentExtension": {
+      "path": "data/native-product/extension-v1.json",
+      "sha256": "769191531e2e560fc39c9f0d48120d4419eadd8fed3fc8fd41bd7bec08c3c2d4"
+    },
+    "currentRecord": {
+      "recordType": "product",
+      "contextKey": "qualification",
+      "productId": 21592
+    },
+    "taskId": "core-product-qualification",
+    "title": "Native qualification only",
+    "sourceUrl": "https://yaoxuxuan.com/",
+    "componentCatalog": {
+      "path": "config/native44-component-set.json",
+      "sha256": "5c459e861145db6968998aebbb724da274daa1a9a6e8aba54a6363668fa5e5c1"
+    },
+    "knowledge": {
+      "path": "data/native44/index.json",
+      "sha256": "ceac8015b96f8818e85425df17bd648030ded4c607e8be362baafe9fc823ccf2",
+      "fingerprint": "84ab61347930d57695f702e58996002edf6003e947727920684ad74224c6c1de"
+    },
+    "targetEnvironment": {
+      "woodmart": "8.5.5",
+      "woodmartCore": "1.1.8",
+      "elementor": "3.35.4",
+      "elementorPro": "3.35.1"
+    },
+    "sourceFacts": {
+      "path": "data/native-product/target-baseline.json",
+      "sha256": "7eb8637ccdc3083331865786723b8ffa3df2c93ff1472c008561d5aebc89ed40"
+    },
+    "componentPlan": {
+      "path": "data/native-product/target-baseline.json",
+      "sha256": "7eb8637ccdc3083331865786723b8ffa3df2c93ff1472c008561d5aebc89ed40"
+    },
+    "assetsManifest": {
+      "path": "data/native-product/target-baseline.json",
+      "sha256": "7eb8637ccdc3083331865786723b8ffa3df2c93ff1472c008561d5aebc89ed40"
+    },
+    "viewports": [
+      {
+        "name": "desktop",
+        "width": 1920,
+        "height": 1080,
+        "stage": "desktop"
+      },
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844,
+        "stage": "responsive"
+      }
+    ],
+    "blocks": [
+      {
+        "kind": "native",
+        "key": "qualified0",
+        "widgetType": "wd_single_product_gallery",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {
+          "thumbnails_position": "bottom_column",
+          "grid_columns": "2",
+          "grid_columns_mobile": "1",
+          "carousel_on_mobile": "disable"
+        },
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "media",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified1",
+        "widgetType": "wd_single_product_title",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {
+          "typography_typography": "custom",
+          "typography_font_size": {
+            "unit": "px",
+            "size": 32,
+            "sizes": []
+          },
+          "typography_font_size_mobile": {
+            "unit": "px",
+            "size": 19,
+            "sizes": []
+          }
+        },
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "title",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified2",
+        "widgetType": "wd_single_product_rating",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "rating",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified3",
+        "widgetType": "wd_single_product_short_description",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "short-description",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified4",
+        "widgetType": "wd_single_product_price",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "price",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified5",
+        "widgetType": "wd_single_product_add_to_cart",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "purchase",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified6",
+        "widgetType": "wd_single_product_meta",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "meta",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified7",
+        "widgetType": "wd_single_product_content",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "content",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified8",
+        "widgetType": "wd_single_product_additional_info_table",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "attributes",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified9",
+        "widgetType": "wd_single_product_tabs",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {
+          "enable_reviews": ""
+        },
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "content",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified10",
+        "widgetType": "wd_single_product_reviews",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "reviews",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      },
+      {
+        "kind": "native",
+        "key": "qualified11",
+        "widgetType": "wd_wc_notices",
+        "sourceFactIds": [
+          "nativeQualification"
+        ],
+        "widgetSettings": {},
+        "model": {
+          "data": {
+            "source": "current-record",
+            "recordType": "product",
+            "contextKey": "qualification",
+            "field": "notices",
+            "evidenceFactIds": [
+              "nativeQualification"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "composition": {
+    "elements": [
+      {
+        "id": "f745f39",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-0dd5dd0266b4"
+        },
+        "elements": [
+          {
+            "id": "62b4689",
+            "elType": "widget",
+            "widgetType": "wd_single_product_gallery",
+            "settings": {
+              "thumbnails_position": "bottom_column",
+              "grid_columns": "2",
+              "grid_columns_mobile": "1",
+              "carousel_on_mobile": "disable"
+            },
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "79bfc23",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-b593ee444a91"
+        },
+        "elements": [
+          {
+            "id": "1ef401c",
+            "elType": "widget",
+            "widgetType": "wd_single_product_title",
+            "settings": {
+              "typography_typography": "custom",
+              "typography_font_size": {
+                "unit": "px",
+                "size": 32,
+                "sizes": []
+              },
+              "typography_font_size_mobile": {
+                "unit": "px",
+                "size": 19,
+                "sizes": []
+              }
+            },
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "ad71a30",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-b678e401374c"
+        },
+        "elements": [
+          {
+            "id": "2b00b24",
+            "elType": "widget",
+            "widgetType": "wd_single_product_rating",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "2c0453e",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-0f95ef2fa88b"
+        },
+        "elements": [
+          {
+            "id": "07c6b3d",
+            "elType": "widget",
+            "widgetType": "wd_single_product_short_description",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "8c81fd9",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-d91968091d0e"
+        },
+        "elements": [
+          {
+            "id": "efd59ad",
+            "elType": "widget",
+            "widgetType": "wd_single_product_price",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "add4374",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-cd1e07237402"
+        },
+        "elements": [
+          {
+            "id": "b6c16a9",
+            "elType": "widget",
+            "widgetType": "wd_single_product_add_to_cart",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "f5298c5",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-d27da0b8f1ed"
+        },
+        "elements": [
+          {
+            "id": "799bbb4",
+            "elType": "widget",
+            "widgetType": "wd_single_product_meta",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "3c1e99a",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-9ee991cca090"
+        },
+        "elements": [
+          {
+            "id": "c9018e6",
+            "elType": "widget",
+            "widgetType": "wd_single_product_content",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "881b272",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-ad35b0512637"
+        },
+        "elements": [
+          {
+            "id": "82746f6",
+            "elType": "widget",
+            "widgetType": "wd_single_product_additional_info_table",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "5c8b67b",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-3918af857698"
+        },
+        "elements": [
+          {
+            "id": "ee7175c",
+            "elType": "widget",
+            "widgetType": "wd_single_product_tabs",
+            "settings": {
+              "enable_reviews": ""
+            },
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "e650e7c",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-1d170c5a1a4c"
+        },
+        "elements": [
+          {
+            "id": "bc71a26",
+            "elType": "widget",
+            "widgetType": "wd_single_product_reviews",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      },
+      {
+        "id": "7c256bf",
+        "elType": "container",
+        "isInner": false,
+        "settings": {
+          "css_classes": "cwp-n44-1664f47891ad"
+        },
+        "elements": [
+          {
+            "id": "b314525",
+            "elType": "widget",
+            "widgetType": "wd_wc_notices",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      }
+    ],
+    "pageSettings": {
+      "hide_title": "yes",
+      "background_background": "classic",
+      "background_color": "#FFFFFF"
+    }
+  },
+  "scope": "owned qualification draft only; instance settings are not defaults"
+}

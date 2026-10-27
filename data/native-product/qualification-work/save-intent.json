@@ -1,0 +1,359 @@
+{
+  "pageId": 21760,
+  "runId": "core-product-qualification-20261026",
+  "before": {
+    "pageId": 21760,
+    "runId": "core-product-qualification-20261026",
+    "title": "cloneWP 单品组件隔离验证 20261026",
+    "status": "draft",
+    "elements": [],
+    "settings": {
+      "hide_title": "yes",
+      "wd__woodmart_whb_header": "none",
+      "wd__woodmart_open_categories": "",
+      "wd__woodmart_title_off": "",
+      "wd__woodmart_page-title-size": "inherit",
+      "wd__woodmart_title_bg_color": "",
+      "wd__woodmart_title_image": {
+        "url": "",
+        "id": "",
+        "size": ""
+      },
+      "wd__woodmart_title_image_size": "full",
+      "wd__woodmart_title_image_custom_dimension": {
+        "width": "",
+        "height": ""
+      },
+      "wd__woodmart_title_color": "default",
+      "wd__woodmart_main_layout": "default",
+      "wd__woodmart_sidebar_width": "default",
+      "wd__woodmart_custom_sidebar": "none",
+      "wd__woodmart_footer_off": "",
+      "wd__woodmart_prefooter_off": "",
+      "wd__woodmart_copyrights_off": "",
+      "wd__woodmart_mobile_content": "",
+      "margin": {
+        "unit": "px",
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": "",
+        "isLinked": true
+      },
+      "padding": {
+        "unit": "px",
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": "",
+        "isLinked": true
+      },
+      "background_background": "",
+      "background_color": "",
+      "background_color_stop": {
+        "unit": "%",
+        "size": 0,
+        "sizes": []
+      },
+      "background_color_b": "#f2295b",
+      "background_color_b_stop": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+      },
+      "background_gradient_type": "linear",
+      "background_gradient_angle": {
+        "unit": "deg",
+        "size": 180,
+        "sizes": []
+      },
+      "background_gradient_position": "center center",
+      "background_image": {
+        "url": "",
+        "id": "",
+        "size": ""
+      },
+      "background_position": "",
+      "background_xpos": {
+        "unit": "px",
+        "size": 0,
+        "sizes": []
+      },
+      "background_ypos": {
+        "unit": "px",
+        "size": 0,
+        "sizes": []
+      },
+      "background_attachment": "",
+      "background_repeat": "",
+      "background_size": "",
+      "background_bg_width": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+      },
+      "background_video_link": "",
+      "background_video_start": "",
+      "background_video_end": "",
+      "background_play_once": "",
+      "background_play_on_mobile": "",
+      "background_privacy_mode": "",
+      "background_video_fallback": {
+        "url": "",
+        "id": "",
+        "size": ""
+      },
+      "background_slideshow_gallery": [],
+      "background_slideshow_loop": "yes",
+      "background_slideshow_slide_duration": 5000,
+      "background_slideshow_slide_transition": "fade",
+      "background_slideshow_transition_duration": 500,
+      "background_slideshow_background_size": "",
+      "background_slideshow_background_position": "",
+      "background_slideshow_lazyload": "",
+      "background_slideshow_ken_burns": "",
+      "background_slideshow_ken_burns_zoom_direction": "in",
+      "custom_css": "",
+      "scroll_snap": "",
+      "scroll_snap_position": "",
+      "scroll_snap_padding": {
+        "unit": "px",
+        "size": "",
+        "sizes": []
+      },
+      "force_stop": "",
+      "preview_type": "single/product",
+      "preview_id": 21594,
+      "page_template": "default",
+      "post_title": "cloneWP 单品组件隔离验证 20261026",
+      "post_status": "draft",
+      "content_wrapper_html_tag": "div",
+      "preview_search_term": ""
+    },
+    "hash": "4f326a982a32a6cf0fb4a5f2439e8d750cc85ecbaf5a32a8e154042b4f02668f"
+  },
+  "composition": {
+    "elements": [
+      {
+        "id": "d8a18d8",
+        "elType": "container",
+        "settings": {
+          "content_width": "boxed",
+          "flex_direction": "column"
+        },
+        "elements": [
+          {
+            "id": "29b3568",
+            "elType": "widget",
+            "widgetType": "wd_single_product_gallery",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "15bdcc3",
+            "elType": "widget",
+            "widgetType": "wd_single_product_title",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "d004700",
+            "elType": "widget",
+            "widgetType": "wd_single_product_rating",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "e8774a2",
+            "elType": "widget",
+            "widgetType": "wd_single_product_short_description",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "2736c59",
+            "elType": "widget",
+            "widgetType": "wd_single_product_price",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "c2dc6b6",
+            "elType": "widget",
+            "widgetType": "wd_single_product_add_to_cart",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "610c659",
+            "elType": "widget",
+            "widgetType": "wd_single_product_meta",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "7cd5aa3",
+            "elType": "widget",
+            "widgetType": "wd_single_product_content",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "40afe77",
+            "elType": "widget",
+            "widgetType": "wd_single_product_additional_info_table",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "c63006d",
+            "elType": "widget",
+            "widgetType": "wd_single_product_tabs",
+            "settings": {
+              "enable_reviews": "",
+              "accordion_on_mobile": "yes"
+            },
+            "elements": []
+          },
+          {
+            "id": "a60d2f6",
+            "elType": "widget",
+            "widgetType": "wd_single_product_reviews",
+            "settings": {},
+            "elements": []
+          },
+          {
+            "id": "9a1cdf5",
+            "elType": "widget",
+            "widgetType": "wd_wc_notices",
+            "settings": {},
+            "elements": []
+          }
+        ]
+      }
+    ],
+    "pageSettings": {
+      "hide_title": "yes",
+      "wd__woodmart_whb_header": "none",
+      "wd__woodmart_open_categories": "",
+      "wd__woodmart_title_off": "",
+      "wd__woodmart_page-title-size": "inherit",
+      "wd__woodmart_title_bg_color": "",
+      "wd__woodmart_title_image": {
+        "url": "",
+        "id": "",
+        "size": ""
+      },
+      "wd__woodmart_title_image_size": "full",
+      "wd__woodmart_title_image_custom_dimension": {
+        "width": "",
+        "height": ""
+      },
+      "wd__woodmart_title_color": "default",
+      "wd__woodmart_main_layout": "default",
+      "wd__woodmart_sidebar_width": "default",
+      "wd__woodmart_custom_sidebar": "none",
+      "wd__woodmart_footer_off": "",
+      "wd__woodmart_prefooter_off": "",
+      "wd__woodmart_copyrights_off": "",
+      "wd__woodmart_mobile_content": "",
+      "margin": {
+        "unit": "px",
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": "",
+        "isLinked": true
+      },
+      "padding": {
+        "unit": "px",
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": "",
+        "isLinked": true
+      },
+      "background_background": "",
+      "background_color": "",
+      "background_color_stop": {
+        "unit": "%",
+        "size": 0,
+        "sizes": []
+      },
+      "background_color_b": "#f2295b",
+      "background_color_b_stop": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+      },
+      "background_gradient_type": "linear",
+      "background_gradient_angle": {
+        "unit": "deg",
+        "size": 180,
+        "sizes": []
+      },
+      "background_gradient_position": "center center",
+      "background_image": {
+        "url": "",
+        "id": "",
+        "size": ""
+      },
+      "background_position": "",
+      "background_xpos": {
+        "unit": "px",
+        "size": 0,
+        "sizes": []
+      },
+      "background_ypos": {
+        "unit": "px",
+        "size": 0,
+        "sizes": []
+      },
+      "background_attachment": "",
+      "background_repeat": "",
+      "background_size": "",
+      "background_bg_width": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+      },
+      "background_video_link": "",
+      "background_video_start": "",
+      "background_video_end": "",
+      "background_play_once": "",
+      "background_play_on_mobile": "",
+      "background_privacy_mode": "",
+      "background_video_fallback": {
+        "url": "",
+        "id": "",
+        "size": ""
+      },
+      "background_slideshow_gallery": [],
+      "background_slideshow_loop": "yes",
+      "background_slideshow_slide_duration": 5000,
+      "background_slideshow_slide_transition": "fade",
+      "background_slideshow_transition_duration": 500,
+      "background_slideshow_background_size": "",
+      "background_slideshow_background_position": "",
+      "background_slideshow_lazyload": "",
+      "background_slideshow_ken_burns": "",
+      "background_slideshow_ken_burns_zoom_direction": "in",
+      "custom_css": "",
+      "scroll_snap": "",
+      "scroll_snap_position": "",
+      "scroll_snap_padding": {
+        "unit": "px",
+        "size": "",
+        "sizes": []
+      },
+      "force_stop": "",
+      "preview_type": "single/product",
+      "preview_id": 21594,
+      "page_template": "default",
+      "post_title": "cloneWP 单品组件隔离验证 20261026",
+      "post_status": "draft",
+      "content_wrapper_html_tag": "div",
+      "preview_search_term": ""
+    }
+  }
+}

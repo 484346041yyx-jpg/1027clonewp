@@ -1,0 +1,11 @@
+/** Compositor pixel scale need not equal an emulated devicePixelRatio. */
+export function observedRasterScale(input:{receipt?:unknown;image:{width:number;height:number};facts?:{innerWidth?:number;clientWidth?:number;devicePixelRatio?:number}}):{scale:number;basis:'observed-viewport-raster'|'legacy-device-pixel-ratio';gaps:Array<{code:string;message:string}>}{
+  const receipt=input.receipt as {method?:string;before?:{innerWidth?:number;clientWidth?:number;devicePixelRatio?:number};contentRaster?:{width?:number;height?:number;scale?:number;scaleBasis?:string;measuredDevicePixelRatio?:number};constraints?:{domOrCSSMutations?:number;viewportOverrides?:number;captureBeyondViewport?:boolean;fromSurface?:boolean}}|undefined;
+  const raster=receipt?.contentRaster,facts=input.facts,scale=raster?.scale;
+  const valid=receipt?.method==='scroll-viewport-cdp-no-beyond'&&raster?.scaleBasis==='actual-png-viewport-ratio'&&typeof scale==='number'&&Number.isFinite(scale)&&scale>0&&scale<=3&&raster.width===input.image.width&&raster.height===input.image.height&&receipt.before?.innerWidth===facts?.innerWidth&&receipt.before?.clientWidth===facts?.clientWidth&&receipt.before?.devicePixelRatio===facts?.devicePixelRatio&&raster.measuredDevicePixelRatio===facts?.devicePixelRatio&&Math.abs(input.image.width-(facts?.clientWidth??NaN)*scale)<=1&&receipt.constraints?.domOrCSSMutations===0&&receipt.constraints?.viewportOverrides===0&&receipt.constraints?.captureBeyondViewport===false&&receipt.constraints?.fromSurface===true;
+  if(valid)return{scale:scale!,basis:'observed-viewport-raster',gaps:[]};
+  const fallback=typeof facts?.devicePixelRatio==='number'&&Number.isFinite(facts.devicePixelRatio)&&facts.devicePixelRatio>0?facts.devicePixelRatio:1,gaps:Array<{code:string;message:string}>=[];
+  if(receipt)gaps.push({code:'screenshot-raster-receipt-incoherent',message:'Screenshot receipt does not reproduce actual PNG dimensions, CSS viewport and capture constraints; it cannot authorize another scale.'});
+  if(!facts?.clientWidth||Math.abs(input.image.width-facts.clientWidth*fallback)>1)gaps.push({code:'screenshot-raster-scale-unproven',message:'Legacy screenshot width does not match observed client width and DPR; scale is never inferred by fitting pixels to expected geometry.'});
+  return{scale:fallback,basis:'legacy-device-pixel-ratio',gaps};
+}

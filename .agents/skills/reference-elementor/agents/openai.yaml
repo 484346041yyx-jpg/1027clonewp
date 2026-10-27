@@ -1,0 +1,3 @@
+interface:
+  display_name: "Reference Elementor"
+  short_description: "Preserve source blocks in an editable Elementor draft"

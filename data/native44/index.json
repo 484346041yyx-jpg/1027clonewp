@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 1,
+  "artifactType": "native44-knowledge",
+  "catalogHash": "5c459e861145db6968998aebbb724da274daa1a9a6e8aba54a6363668fa5e5c1",
+  "requiredEnvironment": {
+    "woodmart": "8.5.5",
+    "woodmartCore": "1.1.8",
+    "elementor": "3.35.4",
+    "elementorPro": "3.35.1"
+  },
+  "historicalEnvironment": {
+    "activeTheme": "woodmart-child",
+    "activeThemeVersion": "1.0.0",
+    "contactForm7": "6.1.5",
+    "elementor": "3.35.4",
+    "elementorPro": "3.35.1",
+    "introspector": "2.0.0",
+    "woocommerce": "10.7.0",
+    "woodmart": "8.5.5",
+    "woodmartCore": "1.1.6",
+    "wordpress": "7.1"
+  },
+  "source": {
+    "fingerprint": "b1dfeb32edbcb8e09b37c4bfa82b4931c57c93a72e2819cde32e3625deb1cf3b",
+    "files": {
+      "index": {
+        "path": "D:/Cloneweb/data/component-knowledge/index.json",
+        "sha256": "158bbee7a17695e8af10866e115c861dae6b244a3928948259b0b02c2d471798",
+        "bytes": 681
+      },
+      "manual": {
+        "path": "D:/Cloneweb/data/component-knowledge/b1dfeb32edbcb8e09b37c4bfa82b4931c57c93a72e2819cde32e3625deb1cf3b/component-manual.json",
+        "sha256": "eb11ccc408fa63214bcb3d4ff88899b117d383fbc0d27d5d19fc9f3508c72fec",
+        "bytes": 244126628
+      },
+      "effects": {
+        "path": "D:/Cloneweb/data/component-knowledge/b1dfeb32edbcb8e09b37c4bfa82b4931c57c93a72e2819cde32e3625deb1cf3b/component-effect-model.json",
+        "sha256": "4ee5c0a0eebe33f44b5ed275871f86195df0b55dba0a318d27b99e9a72ad4d3c",
+        "bytes": 31321542
+      },
+      "coverage": {
+        "path": "D:/Cloneweb/data/component-knowledge/b1dfeb32edbcb8e09b37c4bfa82b4931c57c93a72e2819cde32e3625deb1cf3b/component-knowledge-coverage.json",
+        "sha256": "72ac4d94bfd4b931694f0d1d465aac0c567984264700cbac36ece010ebb13d6b",
+        "bytes": 1198
+      }
+    },
+    "packageHashes": {
+      "woodmart": "29a1f89b06cc6ca8ffd42be1433ff7e2276205c93d8f8134d6558a713fba2798",
+      "woodmart-core": "0f64e3899ba88efe0505d5cae79c01f682abbad98366e71d5800d42e4bcf9a76",
+      "elementor": "f5aed94308f8d3dd15b4724888c796dcf3e5d62c8ceb5eca113116b37ce94081",
+      "elementor-pro": "5cd81f4754447eb79eb74c0927ac0f24bae4a040dea67cc9c1a6b85811eafc67"
+    },
+    "packages": {
+      "woodmart": {
+        "path": "C:/Users/Administrator/Desktop/work tool/Theme/WoodMart 8.5.5/1-主题安装包/woodmart.zip",
+        "header": "woodmart/style.css",
+        "version": "8.5.5",
+        "sha256": "29a1f89b06cc6ca8ffd42be1433ff7e2276205c93d8f8134d6558a713fba2798"
+      },
+      "woodmart-core": {
+        "path": "C:/Users/Administrator/Desktop/work tool/Theme/WoodMart 8.5.5/2-配套插件/woodmart-core.zip",
+        "header": "woodmart-core/woodmart-core.php",
+        "version": "1.1.8",
+        "sha256": "0f64e3899ba88efe0505d5cae79c01f682abbad98366e71d5800d42e4bcf9a76"
+      },
+      "elementor": {
+        "path": "C:/Users/Administrator/Desktop/work tool/Plugin/Elementor 3.35.4 Pro 3.35.1/elementor.3.35.4.zip",
+        "header": "elementor/elementor.php",
+        "version": "3.35.4",
+        "sha256": "f5aed94308f8d3dd15b4724888c796dcf3e5d62c8ceb5eca113116b37ce94081"
+      },
+      "elementor-pro": {
+        "path": "C:/Users/Administrator/Desktop/work tool/Plugin/Elementor 3.35.4 Pro 3.35.1/elementor-pro_3.35.1.zip",
+        "header": "elementor-pro/elementor-pro.php",
+        "version": "3.35.1",
+        "sha256": "5cd81f4754447eb79eb74c0927ac0f24bae4a040dea67cc9c1a6b85811eafc67"
+      }
+    }
+  },
+  "sharedControls": {
+    "path": "shared-controls.json",
+    "sha256": "1c76f33153f4daa8f57ac89bca164b2df1af1af09b21b4ad55af4d307e775737",
+    "count": 399
+  },
+  "components": {
+    "text-editor": {
+      "path": "components/text-editor.json",
+      "sha256": "c6ba6f038a9d00f32349d8846b9e633202ae8d16a85b8d4486cd388be6b42dec",
+      "controlCount": 319
+    },
+    "html": {
+      "path": "components/html.json",
+      "sha256": "bd62b6cf60ca8cc299b68eae06b3de0050911333e993348813df615c7a8a8593",
+      "controlCount": 277
+    },
+    "heading": {
+      "path": "components/heading.json",
+      "sha256": "00f7e5dbb3a5988afe0d48fed4cded784048aaf52d90fdca359024152d8c8d04",
+      "controlCount": 300
+    },
+    "woocommerce-products": {
+      "path": "components/woocommerce-products.json",
+      "sha256": "15122f7864c7482c782d84bd378350ac1b55cb438d0a726e4029cad2190b6f84",
+      "controlCount": 444
+    },
+    "wd_nested_carousel": {
+      "path": "components/wd_nested_carousel.json",
+      "sha256": "1fd24e22d1e665630e1d4a5deefc2d473d0dba38bdab78776d0b419760b35931",
+      "controlCount": 299
+    },
+    "wd_text_block": {
+      "path": "components/wd_text_block.json",
+      "sha256": "1570722556a82937cbb52aeff37157e4c4a7fd089c1fa73f2856883c851fda3d",
+      "controlCount": 352
+    },
+    "slides": {
+      "path": "components/slides.json",
+      "sha256": "1eca51a3025889e3cbde5314bbcb473afd715f850f19a6abebd49ad97f57e6f5",
+      "controlCount": 411
+    },
+    "wd_products_tabs": {
+      "path": "components/wd_products_tabs.json",
+      "sha256": "46538a8158984011410d29752e8d575adaa2941a951b60b42d6c7cb0f39fc3ac",
+      "controlCount": 406
+    },
+    "wd_products_brands": {
+      "path": "components/wd_products_brands.json",
+      "sha256": "dcf37b23a8bafcc7061aff854e2d9ae577fc8bb4091870d173d4bde92cd8cdb2",
+      "controlCount": 319
+    },
+    "wd_products": {
+      "path": "components/wd_products.json",
+      "sha256": "88c072aa4e9c8efa474a4ef4fd0fc5198f5cc59f1c51e44f7b35a7112185bdfb",
+      "controlCount": 358
+    },
+    "wd_blog": {
+      "path": "components/wd_blog.json",
+      "sha256": "8519e8788d782d2165f00a6a110065187edc18d56e0f6cabbd32351468dbfead",
+      "controlCount": 334
+    },
+    "wd_button": {
+      "path": "components/wd_button.json",
+      "sha256": "aaf91ab46d4e8ad07568e5e5e2707ef7d6d99150dbb6a08d95231c9dbc04f834",
+      "controlCount": 310
+    },
+    "wd_wc_breadcrumb": {
+      "path": "components/wd_wc_breadcrumb.json",
+      "sha256": "110526f6919959520acb71f45a9cc8048fbc0d00bfd8fb890979813efc459fbd",
+      "controlCount": 303
+    },
+    "wd_image_or_svg": {
+      "path": "components/wd_image_or_svg.json",
+      "sha256": "c831ab82598daf29139e68b806ceecbc11ac9d857cf1ccfa63c8d9cef8706fbe",
+      "controlCount": 292
+    },
+    "accordion": {
+      "path": "components/accordion.json",
+      "sha256": "4a5272c7e6a96ff9d38b06b9f7cc7b0a4ecc1be96f35d114ccbdfb30e76cbee7",
+      "controlCount": 323
+    },
+    "wd_title": {
+      "path": "components/wd_title.json",
+      "sha256": "0094221088c077fe87bde28bf238df5e37efb40996e013c2b6fb572a2b6f1bea",
+      "controlCount": 451
+    },
+    "wd_contact_form_7": {
+      "path": "components/wd_contact_form_7.json",
+      "sha256": "785cac8334cbec442b9c6c1fb10232f4ab7c96b4e09c32960a0692060197ee92",
+      "controlCount": 288
+    },
+    "wd_product_categories": {
+      "path": "components/wd_product_categories.json",
+      "sha256": "8eb70638e1837ef6bfdff97e7bd5215b703a0ef4d782799c3e895d1b0bc891b8",
+      "controlCount": 405
+    },
+    "wd_testimonials": {
+      "path": "components/wd_testimonials.json",
+      "sha256": "19da58db0f239e7f23c6bc4baef269dca60a072739b23fd90905bed5e59277fc",
+      "controlCount": 308
+    },
+    "wd_banner_carousel": {
+      "path": "components/wd_banner_carousel.json",
+      "sha256": "c123f9706afd7d1bdda9e0133e96168010911a02d40d8d468f7ef64675494df6",
+      "controlCount": 461
+    },
+    "wd_wishlist": {
+      "path": "components/wd_wishlist.json",
+      "sha256": "bcce2592700bdb4c26ac3658a37e23ca6c86bd34c054357af2846501eae06d3f",
+      "controlCount": 276
+    },
+    "wd_page_heading": {
+      "path": "components/wd_page_heading.json",
+      "sha256": "706ba8ff30b0bfadb9e0f3e153ea781fd1ca78094502b2201e73aab827ad993c",
+      "controlCount": 290
+    },
+    "wd_compare": {
+      "path": "components/wd_compare.json",
+      "sha256": "d520f95f34f11068be7dba61db3ba75d2bcb1f1ef7de078899def8abe10ca778",
+      "controlCount": 276
+    },
+    "wd_element_breadcrumbs": {
+      "path": "components/wd_element_breadcrumbs.json",
+      "sha256": "955c0864e9c77a56927dc04d6a3e55bebda1447e9a64ab124339baff66e616ca",
+      "controlCount": 303
+    },
+    "wd_infobox_carousel": {
+      "path": "components/wd_infobox_carousel.json",
+      "sha256": "93fba9ef0b109f275e573a0cbe108e4aebb9b118c061410a2303940c8dd4cf62",
+      "controlCount": 450
+    },
+    "wd_infobox": {
+      "path": "components/wd_infobox.json",
+      "sha256": "2ee0da45b11d946a2d806cf02295bcac8ca56032a29e5a9dad64076404ccdbbd",
+      "controlCount": 437
+    },
+    "wd_extra_menu_list": {
+      "path": "components/wd_extra_menu_list.json",
+      "sha256": "dce1f8640e05fd14017103e0f6feafbf160cb47f92bfc5f46ef43f03d6824652",
+      "controlCount": 308
+    },
+    "wd_sidebar": {
+      "path": "components/wd_sidebar.json",
+      "sha256": "de0555886cf2a2bdd9055e7fe1b24ea6dee555242184f03cdb6774b6ef635108",
+      "controlCount": 277
+    },
+    "wd_counter": {
+      "path": "components/wd_counter.json",
+      "sha256": "ccd060e68ba4d87d48d18554b89138587d95d6036ed248c6bae38afe45e32e19",
+      "controlCount": 293
+    },
+    "wd_list": {
+      "path": "components/wd_list.json",
+      "sha256": "3607a19a05d24b75a5a3ad179257fda557e876b159b7a95295ccff7c5c2727b6",
+      "controlCount": 306
+    },
+    "wd_social_buttons": {
+      "path": "components/wd_social_buttons.json",
+      "sha256": "b4fac754f618936524617239ffee3b2f0bddcc0d6a2d402c1946bf3672b14b32",
+      "controlCount": 322
+    },
+    "nested-tabs": {
+      "path": "components/nested-tabs.json",
+      "sha256": "c7e381a50636463e15c54bab85e2947abdf4082a043e9c6772adf3238537080c",
+      "controlCount": 482
+    },
+    "nested-accordion": {
+      "path": "components/nested-accordion.json",
+      "sha256": "6797f239cc6521680d85e3fd312f1f8525c53b75c138c31da72755713ca60b02",
+      "controlCount": 466
+    },
+    "social-icons": {
+      "path": "components/social-icons.json",
+      "sha256": "209941c4d5c1f5902cd1177f87bc7b75922c7bcf5e1c240e6dc4284dcf6846cf",
+      "controlCount": 299
+    },
+    "icon": {
+      "path": "components/icon.json",
+      "sha256": "fc8ac3e44ae3fd0fc255fb53298ded386ed42de8ef33de3814e06f2b0b2fe8ab",
+      "controlCount": 292
+    },
+    "image-box": {
+      "path": "components/image-box.json",
+      "sha256": "03931eb2654b39cb0f89ed622a6923ac795ab6a17d92274dfc4d8fa8ef8c662a",
+      "controlCount": 350
+    },
+    "wd_toggle": {
+      "path": "components/wd_toggle.json",
+      "sha256": "f4204c12dd3f73f532c9d65a3d5d14c285940d575a484d62746d98420e59d4da",
+      "controlCount": 294
+    },
+    "icon-box": {
+      "path": "components/icon-box.json",
+      "sha256": "5d49b0546dda96d003fdf787ff8f0de9e4af5195ea4ec417d7a8121ec861bb79",
+      "controlCount": 332
+    },
+    "breadcrumbs": {
+      "path": "components/breadcrumbs.json",
+      "sha256": "8495a0ef3f33947f282e289082309b0fdb7ce4d71482811f27e9112ce287fe43",
+      "controlCount": 293
+    },
+    "form": {
+      "path": "components/form.json",
+      "sha256": "a4fc9b0562dc474f2fd94352ee26b7571b155da963a2e72336ec4260cd15d1b2",
+      "controlCount": 505
+    },
+    "nested-carousel": {
+      "path": "components/nested-carousel.json",
+      "sha256": "bbcbb44d7f2fdebae8e32439119e8d5e441e3742156806d9b6452f718f8470f7",
+      "controlCount": 462
+    },
+    "button": {
+      "path": "components/button.json",
+      "sha256": "6b7039dc0f1256cfc58ba135966530a080686964315509ea04ae87cafe82bb76",
+      "controlCount": 380
+    },
+    "divider": {
+      "path": "components/divider.json",
+      "sha256": "1156b12ab799e5d914b4c9a1cf48f5957776c5c219b9bb856da8703108ac7c78",
+      "controlCount": 317
+    },
+    "container": {
+      "path": "components/container.json",
+      "sha256": "69908ca796c1f2432b688b16bec0be7d3edf7ae49eae93d83b2d410b4922c46a",
+      "controlCount": 433
+    }
+  },
+  "coverage": {
+    "source": {
+      "schemaVersion": 2,
+      "total": 44,
+      "complete": 44,
+      "ambiguousPrimaryCount": 0,
+      "missingPrimaryCount": 0
+    },
+    "manual": {
+      "schemaVersion": 2,
+      "total": 44,
+      "complete": 44,
+      "controlCount": 15403,
+      "invalidControls": []
+    },
+    "effects": {
+      "schemaVersion": 2,
+      "recordCount": 788,
+      "requiredControlCount": 3968,
+      "inapplicableControlCount": 1002,
+      "coveredControlCount": 3968,
+      "missingRuntimeEvidence": []
+    },
+    "calibration": {
+      "status": "ready",
+      "batchCount": 74,
+      "trialCount": 881,
+      "inapplicableTrialCount": 52,
+      "unsupportedTrialCount": 0,
+      "unsupportedPlanCount": 0
+    },
+    "historicalOnly": true,
+    "targetRuntimeVerified": false
+  },
+  "restrictions": [
+    "日常任务按实际使用组件读取；不运行 Cloneweb 建站或凭据流程",
+    "来源实验资源只作证据，不作为配方默认值",
+    "本地源码合同与目标注册合同须取已验证交集",
+    "设置覆盖不等于所有模式、资源及交互均已验证"
+  ],
+  "fingerprint": "84ab61347930d57695f702e58996002edf6003e947727920684ad74224c6c1de"
+}

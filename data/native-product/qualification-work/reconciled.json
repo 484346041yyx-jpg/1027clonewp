@@ -1,0 +1,253 @@
+{
+  "pageId": 21760,
+  "runId": "core-product-qualification-20261026",
+  "title": "cloneWP 单品组件隔离验证 20261026",
+  "status": "draft",
+  "elements": [
+    {
+      "id": "d8a18d8",
+      "elType": "container",
+      "settings": {
+        "flex_direction": "column",
+        "scroll_y": -80
+      },
+      "elements": [
+        {
+          "id": "29b3568",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_gallery"
+        },
+        {
+          "id": "15bdcc3",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_title"
+        },
+        {
+          "id": "d004700",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_rating"
+        },
+        {
+          "id": "e8774a2",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_short_description"
+        },
+        {
+          "id": "2736c59",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_price"
+        },
+        {
+          "id": "c2dc6b6",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_add_to_cart"
+        },
+        {
+          "id": "610c659",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_meta"
+        },
+        {
+          "id": "7cd5aa3",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_content"
+        },
+        {
+          "id": "40afe77",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_additional_info_table"
+        },
+        {
+          "id": "c63006d",
+          "elType": "widget",
+          "settings": {
+            "enable_reviews": "",
+            "accordion_on_mobile": "yes",
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_tabs"
+        },
+        {
+          "id": "a60d2f6",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_single_product_reviews"
+        },
+        {
+          "id": "9a1cdf5",
+          "elType": "widget",
+          "settings": {
+            "scroll_y": -80
+          },
+          "elements": [],
+          "widgetType": "wd_wc_notices"
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "settings": {
+    "hide_title": "yes",
+    "wd__woodmart_whb_header": "none",
+    "wd__woodmart_open_categories": "",
+    "wd__woodmart_title_off": "",
+    "wd__woodmart_page-title-size": "inherit",
+    "wd__woodmart_title_bg_color": "",
+    "wd__woodmart_title_image": {
+      "url": "",
+      "id": "",
+      "size": ""
+    },
+    "wd__woodmart_title_image_size": "full",
+    "wd__woodmart_title_image_custom_dimension": {
+      "width": "",
+      "height": ""
+    },
+    "wd__woodmart_title_color": "default",
+    "wd__woodmart_main_layout": "default",
+    "wd__woodmart_sidebar_width": "default",
+    "wd__woodmart_custom_sidebar": "none",
+    "wd__woodmart_footer_off": "",
+    "wd__woodmart_prefooter_off": "",
+    "wd__woodmart_copyrights_off": "",
+    "wd__woodmart_mobile_content": "",
+    "margin": {
+      "unit": "px",
+      "top": "",
+      "right": "",
+      "bottom": "",
+      "left": "",
+      "isLinked": true
+    },
+    "padding": {
+      "unit": "px",
+      "top": "",
+      "right": "",
+      "bottom": "",
+      "left": "",
+      "isLinked": true
+    },
+    "background_background": "",
+    "background_color": "",
+    "background_color_stop": {
+      "unit": "%",
+      "size": 0,
+      "sizes": []
+    },
+    "background_color_b": "#f2295b",
+    "background_color_b_stop": {
+      "unit": "%",
+      "size": 100,
+      "sizes": []
+    },
+    "background_gradient_type": "linear",
+    "background_gradient_angle": {
+      "unit": "deg",
+      "size": 180,
+      "sizes": []
+    },
+    "background_gradient_position": "center center",
+    "background_image": {
+      "url": "",
+      "id": "",
+      "size": ""
+    },
+    "background_position": "",
+    "background_xpos": {
+      "unit": "px",
+      "size": 0,
+      "sizes": []
+    },
+    "background_ypos": {
+      "unit": "px",
+      "size": 0,
+      "sizes": []
+    },
+    "background_attachment": "",
+    "background_repeat": "",
+    "background_size": "",
+    "background_bg_width": {
+      "unit": "%",
+      "size": 100,
+      "sizes": []
+    },
+    "background_video_link": "",
+    "background_video_start": "",
+    "background_video_end": "",
+    "background_play_once": "",
+    "background_play_on_mobile": "",
+    "background_privacy_mode": "",
+    "background_video_fallback": {
+      "url": "",
+      "id": "",
+      "size": ""
+    },
+    "background_slideshow_gallery": [],
+    "background_slideshow_loop": "yes",
+    "background_slideshow_slide_duration": 5000,
+    "background_slideshow_slide_transition": "fade",
+    "background_slideshow_transition_duration": 500,
+    "background_slideshow_background_size": "",
+    "background_slideshow_background_position": "",
+    "background_slideshow_lazyload": "",
+    "background_slideshow_ken_burns": "",
+    "background_slideshow_ken_burns_zoom_direction": "in",
+    "custom_css": "",
+    "scroll_snap": "",
+    "scroll_snap_position": "",
+    "scroll_snap_padding": {
+      "unit": "px",
+      "size": "",
+      "sizes": []
+    },
+    "force_stop": "",
+    "preview_type": "single/product",
+    "preview_id": 21594,
+    "page_template": "default",
+    "content_wrapper_html_tag": "div",
+    "preview_search_term": "",
+    "post_title": "cloneWP 单品组件隔离验证 20261026",
+    "post_status": "draft"
+  },
+  "hash": "02223a95d4af0d6dbf8141b90dd1a7ab677257fb6d1d6552db8d62ef53374622"
+}

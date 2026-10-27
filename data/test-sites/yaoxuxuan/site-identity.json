@@ -1,0 +1,30 @@
+{
+  "task": "yaoxuxuan-test-site-identity",
+  "status": "completed",
+  "before": {
+    "title": "外贸 WordPress 建站｜模板建站与参考站定制",
+    "description": "",
+    "url": "https://yaoxuxuan.com",
+    "shopVisibility": "no",
+    "reset": {
+      "baseline": null,
+      "epoch": "uninitialized",
+      "pending": false
+    }
+  },
+  "after": {
+    "title": "cloneWP 固定测试站",
+    "description": "参考网站复刻与组件测试环境",
+    "url": "https://yaoxuxuan.com",
+    "shopVisibility": "no",
+    "reset": {
+      "baseline": null,
+      "epoch": "uninitialized",
+      "pending": false
+    }
+  },
+  "scope": "Only site title and tagline changed",
+  "freshReadback": true,
+  "systemSourceChanged": false,
+  "formalSiteRequests": 0
+}

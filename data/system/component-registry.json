@@ -1,0 +1,3789 @@
+{
+  "version": 1,
+  "kind": "component-registry",
+  "enabledSet": {
+    "id": "native44-v1",
+    "ref": {
+      "path": "config/native44-component-set.json",
+      "sha256": "5c459e861145db6968998aebbb724da274daa1a9a6e8aba54a6363668fa5e5c1"
+    },
+    "widgetTypes": [
+      "text-editor",
+      "html",
+      "heading",
+      "woocommerce-products",
+      "wd_nested_carousel",
+      "wd_text_block",
+      "slides",
+      "wd_products_tabs",
+      "wd_products_brands",
+      "wd_products",
+      "wd_blog",
+      "wd_button",
+      "wd_wc_breadcrumb",
+      "wd_image_or_svg",
+      "accordion",
+      "wd_title",
+      "wd_contact_form_7",
+      "wd_product_categories",
+      "wd_testimonials",
+      "wd_banner_carousel",
+      "wd_wishlist",
+      "wd_page_heading",
+      "wd_compare",
+      "wd_element_breadcrumbs",
+      "wd_infobox_carousel",
+      "wd_infobox",
+      "wd_extra_menu_list",
+      "wd_sidebar",
+      "wd_counter",
+      "wd_list",
+      "wd_social_buttons",
+      "nested-tabs",
+      "nested-accordion",
+      "social-icons",
+      "icon",
+      "image-box",
+      "wd_toggle",
+      "icon-box",
+      "breadcrumbs",
+      "form",
+      "nested-carousel",
+      "button",
+      "divider",
+      "container"
+    ]
+  },
+  "knowledge": {
+    "fingerprint": "84ab61347930d57695f702e58996002edf6003e947727920684ad74224c6c1de",
+    "index": {
+      "path": "data/native44/index.json",
+      "sha256": "ceac8015b96f8818e85425df17bd648030ded4c607e8be362baafe9fc823ccf2"
+    }
+  },
+  "entries": [
+    {
+      "widgetType": "text-editor",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/text-editor.json",
+          "sha256": "c6ba6f038a9d00f32349d8846b9e633202ae8d16a85b8d4486cd388be6b42dec"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/text-editor.json",
+          "sha256": "c6ba6f038a9d00f32349d8846b9e633202ae8d16a85b8d4486cd388be6b42dec"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "正文",
+        "多段富文本"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/text-editor.json",
+              "sha256": "c6ba6f038a9d00f32349d8846b9e633202ae8d16a85b8d4486cd388be6b42dec"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/text-editor.json",
+              "sha256": "c6ba6f038a9d00f32349d8846b9e633202ae8d16a85b8d4486cd388be6b42dec"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "html",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/html.json",
+          "sha256": "bd62b6cf60ca8cc299b68eae06b3de0050911333e993348813df615c7a8a8593"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/html.json",
+          "sha256": "bd62b6cf60ca8cc299b68eae06b3de0050911333e993348813df615c7a8a8593"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "html",
+      "suitableFor": [
+        "有原生能力不足证据的局部静态内容"
+      ],
+      "restrictions": [
+        "必须先记录原生候选和具体不适用证据",
+        "禁止普通标题、单图和图文卡片整体转 HTML",
+        "仅接受已验证模板与槽位产物"
+      ],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/html.json",
+              "sha256": "bd62b6cf60ca8cc299b68eae06b3de0050911333e993348813df615c7a8a8593"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "heading",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/heading.json",
+          "sha256": "00f7e5dbb3a5988afe0d48fed4cded784048aaf52d90fdca359024152d8c8d04"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/heading.json",
+          "sha256": "00f7e5dbb3a5988afe0d48fed4cded784048aaf52d90fdca359024152d8c8d04"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "标题",
+        "标题链接"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/heading.json",
+              "sha256": "00f7e5dbb3a5988afe0d48fed4cded784048aaf52d90fdca359024152d8c8d04"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/heading.json",
+              "sha256": "00f7e5dbb3a5988afe0d48fed4cded784048aaf52d90fdca359024152d8c8d04"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "woocommerce-products",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/woocommerce-products.json",
+          "sha256": "15122f7864c7482c782d84bd378350ac1b55cb438d0a726e4029cad2190b6f84"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/woocommerce-products.json",
+          "sha256": "15122f7864c7482c782d84bd378350ac1b55cb438d0a726e4029cad2190b6f84"
+        }
+      ],
+      "resourceDependencies": [
+        "products",
+        "woocommerce"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "products",
+      "suitableFor": [
+        "现有 WooCommerce 商品集合"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/woocommerce-products.json",
+              "sha256": "15122f7864c7482c782d84bd378350ac1b55cb438d0a726e4029cad2190b6f84"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/woocommerce-products.json",
+              "sha256": "15122f7864c7482c782d84bd378350ac1b55cb438d0a726e4029cad2190b6f84"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_nested_carousel",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_nested_carousel.json",
+          "sha256": "1fd24e22d1e665630e1d4a5deefc2d473d0dba38bdab78776d0b419760b35931"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_nested_carousel.json",
+          "sha256": "1fd24e22d1e665630e1d4a5deefc2d473d0dba38bdab78776d0b419760b35931"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "nested-repeater",
+      "suitableFor": [
+        "包含任意原生内容的幻灯片"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_nested_carousel.json",
+              "sha256": "1fd24e22d1e665630e1d4a5deefc2d473d0dba38bdab78776d0b419760b35931"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_nested_carousel.json",
+              "sha256": "1fd24e22d1e665630e1d4a5deefc2d473d0dba38bdab78776d0b419760b35931"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_text_block",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_text_block.json",
+          "sha256": "1570722556a82937cbb52aeff37157e4c4a7fd089c1fa73f2856883c851fda3d"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_text_block.json",
+          "sha256": "1570722556a82937cbb52aeff37157e4c4a7fd089c1fa73f2856883c851fda3d"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "正文",
+        "带排版设置的富文本"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_text_block.json",
+              "sha256": "1570722556a82937cbb52aeff37157e4c4a7fd089c1fa73f2856883c851fda3d"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_text_block.json",
+              "sha256": "1570722556a82937cbb52aeff37157e4c4a7fd089c1fa73f2856883c851fda3d"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "slides",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/slides.json",
+          "sha256": "1eca51a3025889e3cbde5314bbcb473afd715f850f19a6abebd49ad97f57e6f5"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/slides.json",
+          "sha256": "1eca51a3025889e3cbde5314bbcb473afd715f850f19a6abebd49ad97f57e6f5"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "图片背景、标题、说明和按钮的幻灯片"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/slides.json",
+              "sha256": "1eca51a3025889e3cbde5314bbcb473afd715f850f19a6abebd49ad97f57e6f5"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/slides.json",
+              "sha256": "1eca51a3025889e3cbde5314bbcb473afd715f850f19a6abebd49ad97f57e6f5"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/slides.json",
+              "sha256": "1eca51a3025889e3cbde5314bbcb473afd715f850f19a6abebd49ad97f57e6f5"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_products_tabs",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_products_tabs.json",
+          "sha256": "46538a8158984011410d29752e8d575adaa2941a951b60b42d6c7cb0f39fc3ac"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_products_tabs.json",
+          "sha256": "46538a8158984011410d29752e8d575adaa2941a951b60b42d6c7cb0f39fc3ac"
+        }
+      ],
+      "resourceDependencies": [
+        "products",
+        "woocommerce"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "product-tabs",
+      "suitableFor": [
+        "多个真实商品查询的标签集合"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products_tabs.json",
+              "sha256": "46538a8158984011410d29752e8d575adaa2941a951b60b42d6c7cb0f39fc3ac"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products_tabs.json",
+              "sha256": "46538a8158984011410d29752e8d575adaa2941a951b60b42d6c7cb0f39fc3ac"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products_tabs.json",
+              "sha256": "46538a8158984011410d29752e8d575adaa2941a951b60b42d6c7cb0f39fc3ac"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_products_brands",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_products_brands.json",
+          "sha256": "dcf37b23a8bafcc7061aff854e2d9ae577fc8bb4091870d173d4bde92cd8cdb2"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_products_brands.json",
+          "sha256": "dcf37b23a8bafcc7061aff854e2d9ae577fc8bb4091870d173d4bde92cd8cdb2"
+        }
+      ],
+      "resourceDependencies": [
+        "productBrands"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "resource-query",
+      "suitableFor": [
+        "目标现有品牌目录"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products_brands.json",
+              "sha256": "dcf37b23a8bafcc7061aff854e2d9ae577fc8bb4091870d173d4bde92cd8cdb2"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products_brands.json",
+              "sha256": "dcf37b23a8bafcc7061aff854e2d9ae577fc8bb4091870d173d4bde92cd8cdb2"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products_brands.json",
+              "sha256": "dcf37b23a8bafcc7061aff854e2d9ae577fc8bb4091870d173d4bde92cd8cdb2"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_products",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_products.json",
+          "sha256": "88c072aa4e9c8efa474a4ef4fd0fc5198f5cc59f1c51e44f7b35a7112185bdfb"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_products.json",
+          "sha256": "88c072aa4e9c8efa474a4ef4fd0fc5198f5cc59f1c51e44f7b35a7112185bdfb"
+        }
+      ],
+      "resourceDependencies": [
+        "products",
+        "woocommerce"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "products",
+      "suitableFor": [
+        "目标现有商品集合或商品轮播"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products.json",
+              "sha256": "88c072aa4e9c8efa474a4ef4fd0fc5198f5cc59f1c51e44f7b35a7112185bdfb"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products.json",
+              "sha256": "88c072aa4e9c8efa474a4ef4fd0fc5198f5cc59f1c51e44f7b35a7112185bdfb"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_products.json",
+              "sha256": "88c072aa4e9c8efa474a4ef4fd0fc5198f5cc59f1c51e44f7b35a7112185bdfb"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_blog",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_blog.json",
+          "sha256": "8519e8788d782d2165f00a6a110065187edc18d56e0f6cabbd32351468dbfead"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_blog.json",
+          "sha256": "8519e8788d782d2165f00a6a110065187edc18d56e0f6cabbd32351468dbfead"
+        }
+      ],
+      "resourceDependencies": [
+        "posts"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "resource-query",
+      "suitableFor": [
+        "目标现有文章查询"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_blog.json",
+              "sha256": "8519e8788d782d2165f00a6a110065187edc18d56e0f6cabbd32351468dbfead"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_blog.json",
+              "sha256": "8519e8788d782d2165f00a6a110065187edc18d56e0f6cabbd32351468dbfead"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_blog.json",
+              "sha256": "8519e8788d782d2165f00a6a110065187edc18d56e0f6cabbd32351468dbfead"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_button",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_button.json",
+          "sha256": "aaf91ab46d4e8ad07568e5e5e2707ef7d6d99150dbb6a08d95231c9dbc04f834"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_button.json",
+          "sha256": "aaf91ab46d4e8ad07568e5e5e2707ef7d6d99150dbb6a08d95231c9dbc04f834"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "按钮",
+        "文本链接"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_button.json",
+              "sha256": "aaf91ab46d4e8ad07568e5e5e2707ef7d6d99150dbb6a08d95231c9dbc04f834"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_button.json",
+              "sha256": "aaf91ab46d4e8ad07568e5e5e2707ef7d6d99150dbb6a08d95231c9dbc04f834"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_wc_breadcrumb",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_wc_breadcrumb.json",
+          "sha256": "110526f6919959520acb71f45a9cc8048fbc0d00bfd8fb890979813efc459fbd"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_wc_breadcrumb.json",
+          "sha256": "110526f6919959520acb71f45a9cc8048fbc0d00bfd8fb890979813efc459fbd"
+        }
+      ],
+      "resourceDependencies": [
+        "woocommerce",
+        "page-context"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "WooCommerce 上下文面包屑"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_wc_breadcrumb.json",
+              "sha256": "110526f6919959520acb71f45a9cc8048fbc0d00bfd8fb890979813efc459fbd"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_image_or_svg",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_image_or_svg.json",
+          "sha256": "c831ab82598daf29139e68b806ceecbc11ac9d857cf1ccfa63c8d9cef8706fbe"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_image_or_svg.json",
+          "sha256": "c831ab82598daf29139e68b806ceecbc11ac9d857cf1ccfa63c8d9cef8706fbe"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "普通图片",
+        "Logo",
+        "已有安全 SVG"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_image_or_svg.json",
+              "sha256": "c831ab82598daf29139e68b806ceecbc11ac9d857cf1ccfa63c8d9cef8706fbe"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_image_or_svg.json",
+              "sha256": "c831ab82598daf29139e68b806ceecbc11ac9d857cf1ccfa63c8d9cef8706fbe"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "accordion",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/accordion.json",
+          "sha256": "4a5272c7e6a96ff9d38b06b9f7cc7b0a4ecc1be96f35d114ccbdfb30e76cbee7"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/accordion.json",
+          "sha256": "4a5272c7e6a96ff9d38b06b9f7cc7b0a4ecc1be96f35d114ccbdfb30e76cbee7"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "富文本折叠列表"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/accordion.json",
+              "sha256": "4a5272c7e6a96ff9d38b06b9f7cc7b0a4ecc1be96f35d114ccbdfb30e76cbee7"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/accordion.json",
+              "sha256": "4a5272c7e6a96ff9d38b06b9f7cc7b0a4ecc1be96f35d114ccbdfb30e76cbee7"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/accordion.json",
+              "sha256": "4a5272c7e6a96ff9d38b06b9f7cc7b0a4ecc1be96f35d114ccbdfb30e76cbee7"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_title",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_title.json",
+          "sha256": "0094221088c077fe87bde28bf238df5e37efb40996e013c2b6fb572a2b6f1bea"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_title.json",
+          "sha256": "0094221088c077fe87bde28bf238df5e37efb40996e013c2b6fb572a2b6f1bea"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "组合主副标题",
+        "标题后的说明"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_title.json",
+              "sha256": "0094221088c077fe87bde28bf238df5e37efb40996e013c2b6fb572a2b6f1bea"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_title.json",
+              "sha256": "0094221088c077fe87bde28bf238df5e37efb40996e013c2b6fb572a2b6f1bea"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_contact_form_7",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_contact_form_7.json",
+          "sha256": "785cac8334cbec442b9c6c1fb10232f4ab7c96b4e09c32960a0692060197ee92"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_contact_form_7.json",
+          "sha256": "785cac8334cbec442b9c6c1fb10232f4ab7c96b4e09c32960a0692060197ee92"
+        }
+      ],
+      "resourceDependencies": [
+        "contactForms",
+        "contact-form-7"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "resource-query",
+      "suitableFor": [
+        "已有 Contact Form 7 表单"
+      ],
+      "restrictions": [
+        "不能填假 ID 或创建表单",
+        "研究与比较不得提交邮件或业务数据"
+      ],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_contact_form_7.json",
+              "sha256": "785cac8334cbec442b9c6c1fb10232f4ab7c96b4e09c32960a0692060197ee92"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_contact_form_7.json",
+              "sha256": "785cac8334cbec442b9c6c1fb10232f4ab7c96b4e09c32960a0692060197ee92"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_product_categories",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_product_categories.json",
+          "sha256": "8eb70638e1837ef6bfdff97e7bd5215b703a0ef4d782799c3e895d1b0bc891b8"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_product_categories.json",
+          "sha256": "8eb70638e1837ef6bfdff97e7bd5215b703a0ef4d782799c3e895d1b0bc891b8"
+        }
+      ],
+      "resourceDependencies": [
+        "productCategories"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "resource-query",
+      "suitableFor": [
+        "目标现有商品分类目录"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_product_categories.json",
+              "sha256": "8eb70638e1837ef6bfdff97e7bd5215b703a0ef4d782799c3e895d1b0bc891b8"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_product_categories.json",
+              "sha256": "8eb70638e1837ef6bfdff97e7bd5215b703a0ef4d782799c3e895d1b0bc891b8"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_product_categories.json",
+              "sha256": "8eb70638e1837ef6bfdff97e7bd5215b703a0ef4d782799c3e895d1b0bc891b8"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_testimonials",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_testimonials.json",
+          "sha256": "19da58db0f239e7f23c6bc4baef269dca60a072739b23fd90905bed5e59277fc"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_testimonials.json",
+          "sha256": "19da58db0f239e7f23c6bc4baef269dca60a072739b23fd90905bed5e59277fc"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "有来源的评价卡片集合"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_testimonials.json",
+              "sha256": "19da58db0f239e7f23c6bc4baef269dca60a072739b23fd90905bed5e59277fc"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_testimonials.json",
+              "sha256": "19da58db0f239e7f23c6bc4baef269dca60a072739b23fd90905bed5e59277fc"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_banner_carousel",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_banner_carousel.json",
+          "sha256": "c123f9706afd7d1bdda9e0133e96168010911a02d40d8d468f7ef64675494df6"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_banner_carousel.json",
+          "sha256": "c123f9706afd7d1bdda9e0133e96168010911a02d40d8d468f7ef64675494df6"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "图文促销横幅轮播"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_banner_carousel.json",
+              "sha256": "c123f9706afd7d1bdda9e0133e96168010911a02d40d8d468f7ef64675494df6"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_banner_carousel.json",
+              "sha256": "c123f9706afd7d1bdda9e0133e96168010911a02d40d8d468f7ef64675494df6"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_wishlist",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_wishlist.json",
+          "sha256": "bcce2592700bdb4c26ac3658a37e23ca6c86bd34c054357af2846501eae06d3f"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_wishlist.json",
+          "sha256": "bcce2592700bdb4c26ac3658a37e23ca6c86bd34c054357af2846501eae06d3f"
+        }
+      ],
+      "resourceDependencies": [
+        "wishlist-context"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "目标现有愿望清单服务"
+      ],
+      "restrictions": [
+        "真实服务须已启用；不能由静态外观证明服务有效"
+      ],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_wishlist.json",
+              "sha256": "bcce2592700bdb4c26ac3658a37e23ca6c86bd34c054357af2846501eae06d3f"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_page_heading",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_page_heading.json",
+          "sha256": "706ba8ff30b0bfadb9e0f3e153ea781fd1ca78094502b2201e73aab827ad993c"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_page_heading.json",
+          "sha256": "706ba8ff30b0bfadb9e0f3e153ea781fd1ca78094502b2201e73aab827ad993c"
+        }
+      ],
+      "resourceDependencies": [
+        "page-context"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "使用当前页面上下文的页标题"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_page_heading.json",
+              "sha256": "706ba8ff30b0bfadb9e0f3e153ea781fd1ca78094502b2201e73aab827ad993c"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_compare",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_compare.json",
+          "sha256": "d520f95f34f11068be7dba61db3ba75d2bcb1f1ef7de078899def8abe10ca778"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_compare.json",
+          "sha256": "d520f95f34f11068be7dba61db3ba75d2bcb1f1ef7de078899def8abe10ca778"
+        }
+      ],
+      "resourceDependencies": [
+        "compare-context"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "目标现有商品比较服务"
+      ],
+      "restrictions": [
+        "旧实验中无适用运行证明，使用前须验证现有上下文"
+      ],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_compare.json",
+              "sha256": "d520f95f34f11068be7dba61db3ba75d2bcb1f1ef7de078899def8abe10ca778"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_element_breadcrumbs",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_element_breadcrumbs.json",
+          "sha256": "955c0864e9c77a56927dc04d6a3e55bebda1447e9a64ab124339baff66e616ca"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_element_breadcrumbs.json",
+          "sha256": "955c0864e9c77a56927dc04d6a3e55bebda1447e9a64ab124339baff66e616ca"
+        }
+      ],
+      "resourceDependencies": [
+        "page-context"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "主题页面上下文面包屑"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_element_breadcrumbs.json",
+              "sha256": "955c0864e9c77a56927dc04d6a3e55bebda1447e9a64ab124339baff66e616ca"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_infobox_carousel",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_infobox_carousel.json",
+          "sha256": "93fba9ef0b109f275e573a0cbe108e4aebb9b118c061410a2303940c8dd4cf62"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_infobox_carousel.json",
+          "sha256": "93fba9ef0b109f275e573a0cbe108e4aebb9b118c061410a2303940c8dd4cf62"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "信息卡片轮播"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_infobox_carousel.json",
+              "sha256": "93fba9ef0b109f275e573a0cbe108e4aebb9b118c061410a2303940c8dd4cf62"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_infobox_carousel.json",
+              "sha256": "93fba9ef0b109f275e573a0cbe108e4aebb9b118c061410a2303940c8dd4cf62"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_infobox",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_infobox.json",
+          "sha256": "2ee0da45b11d946a2d806cf02295bcac8ca56032a29e5a9dad64076404ccdbbd"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_infobox.json",
+          "sha256": "2ee0da45b11d946a2d806cf02295bcac8ca56032a29e5a9dad64076404ccdbbd"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "图文信息卡片",
+        "服务卡",
+        "图标和按钮卡片"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_infobox.json",
+              "sha256": "2ee0da45b11d946a2d806cf02295bcac8ca56032a29e5a9dad64076404ccdbbd"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_infobox.json",
+              "sha256": "2ee0da45b11d946a2d806cf02295bcac8ca56032a29e5a9dad64076404ccdbbd"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_extra_menu_list",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_extra_menu_list.json",
+          "sha256": "dce1f8640e05fd14017103e0f6feafbf160cb47f92bfc5f46ef43f03d6824652"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_extra_menu_list.json",
+          "sha256": "dce1f8640e05fd14017103e0f6feafbf160cb47f92bfc5f46ef43f03d6824652"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "多组导航链接",
+        "带图标的菜单列表"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_extra_menu_list.json",
+              "sha256": "dce1f8640e05fd14017103e0f6feafbf160cb47f92bfc5f46ef43f03d6824652"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_extra_menu_list.json",
+              "sha256": "dce1f8640e05fd14017103e0f6feafbf160cb47f92bfc5f46ef43f03d6824652"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_sidebar",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_sidebar.json",
+          "sha256": "de0555886cf2a2bdd9055e7fe1b24ea6dee555242184f03cdb6774b6ef635108"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_sidebar.json",
+          "sha256": "de0555886cf2a2bdd9055e7fe1b24ea6dee555242184f03cdb6774b6ef635108"
+        }
+      ],
+      "resourceDependencies": [
+        "sidebars"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "resource-query",
+      "suitableFor": [
+        "目标已有 Sidebar"
+      ],
+      "restrictions": [
+        "旧实验缺少适用 Sidebar；必须验证目标已有资源"
+      ],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_sidebar.json",
+              "sha256": "de0555886cf2a2bdd9055e7fe1b24ea6dee555242184f03cdb6774b6ef635108"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_counter",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_counter.json",
+          "sha256": "ccd060e68ba4d87d48d18554b89138587d95d6036ed248c6bae38afe45e32e19"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_counter.json",
+          "sha256": "ccd060e68ba4d87d48d18554b89138587d95d6036ed248c6bae38afe45e32e19"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "有来源的数字计数及说明"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_counter.json",
+              "sha256": "ccd060e68ba4d87d48d18554b89138587d95d6036ed248c6bae38afe45e32e19"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_list",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_list.json",
+          "sha256": "3607a19a05d24b75a5a3ad179257fda557e876b159b7a95295ccff7c5c2727b6"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_list.json",
+          "sha256": "3607a19a05d24b75a5a3ad179257fda557e876b159b7a95295ccff7c5c2727b6"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "图标、图片和普通链接列表"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_list.json",
+              "sha256": "3607a19a05d24b75a5a3ad179257fda557e876b159b7a95295ccff7c5c2727b6"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_list.json",
+              "sha256": "3607a19a05d24b75a5a3ad179257fda557e876b159b7a95295ccff7c5c2727b6"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_social_buttons",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_social_buttons.json",
+          "sha256": "b4fac754f618936524617239ffee3b2f0bddcc0d6a2d402c1946bf3672b14b32"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_social_buttons.json",
+          "sha256": "b4fac754f618936524617239ffee3b2f0bddcc0d6a2d402c1946bf3672b14b32"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "社交链接",
+        "已有页面分享入口"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_social_buttons.json",
+              "sha256": "b4fac754f618936524617239ffee3b2f0bddcc0d6a2d402c1946bf3672b14b32"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "nested-tabs",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/nested-tabs.json",
+          "sha256": "c7e381a50636463e15c54bab85e2947abdf4082a043e9c6772adf3238537080c"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/nested-tabs.json",
+          "sha256": "c7e381a50636463e15c54bab85e2947abdf4082a043e9c6772adf3238537080c"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "nested-repeater",
+      "suitableFor": [
+        "含原生内容的标签页"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-tabs.json",
+              "sha256": "c7e381a50636463e15c54bab85e2947abdf4082a043e9c6772adf3238537080c"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-tabs.json",
+              "sha256": "c7e381a50636463e15c54bab85e2947abdf4082a043e9c6772adf3238537080c"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-tabs.json",
+              "sha256": "c7e381a50636463e15c54bab85e2947abdf4082a043e9c6772adf3238537080c"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "nested-accordion",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/nested-accordion.json",
+          "sha256": "6797f239cc6521680d85e3fd312f1f8525c53b75c138c31da72755713ca60b02"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/nested-accordion.json",
+          "sha256": "6797f239cc6521680d85e3fd312f1f8525c53b75c138c31da72755713ca60b02"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "nested-repeater",
+      "suitableFor": [
+        "含原生内容的折叠项目"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-accordion.json",
+              "sha256": "6797f239cc6521680d85e3fd312f1f8525c53b75c138c31da72755713ca60b02"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-accordion.json",
+              "sha256": "6797f239cc6521680d85e3fd312f1f8525c53b75c138c31da72755713ca60b02"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-accordion.json",
+              "sha256": "6797f239cc6521680d85e3fd312f1f8525c53b75c138c31da72755713ca60b02"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "social-icons",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/social-icons.json",
+          "sha256": "209941c4d5c1f5902cd1177f87bc7b75922c7bcf5e1c240e6dc4284dcf6846cf"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/social-icons.json",
+          "sha256": "209941c4d5c1f5902cd1177f87bc7b75922c7bcf5e1c240e6dc4284dcf6846cf"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "社交图标链接"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/social-icons.json",
+              "sha256": "209941c4d5c1f5902cd1177f87bc7b75922c7bcf5e1c240e6dc4284dcf6846cf"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/social-icons.json",
+              "sha256": "209941c4d5c1f5902cd1177f87bc7b75922c7bcf5e1c240e6dc4284dcf6846cf"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "icon",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/icon.json",
+          "sha256": "fc8ac3e44ae3fd0fc255fb53298ded386ed42de8ef33de3814e06f2b0b2fe8ab"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/icon.json",
+          "sha256": "fc8ac3e44ae3fd0fc255fb53298ded386ed42de8ef33de3814e06f2b0b2fe8ab"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "单个图标及链接"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/icon.json",
+              "sha256": "fc8ac3e44ae3fd0fc255fb53298ded386ed42de8ef33de3814e06f2b0b2fe8ab"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/icon.json",
+              "sha256": "fc8ac3e44ae3fd0fc255fb53298ded386ed42de8ef33de3814e06f2b0b2fe8ab"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "image-box",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/image-box.json",
+          "sha256": "03931eb2654b39cb0f89ed622a6923ac795ab6a17d92274dfc4d8fa8ef8c662a"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/image-box.json",
+          "sha256": "03931eb2654b39cb0f89ed622a6923ac795ab6a17d92274dfc4d8fa8ef8c662a"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "图片、标题及说明卡片"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/image-box.json",
+              "sha256": "03931eb2654b39cb0f89ed622a6923ac795ab6a17d92274dfc4d8fa8ef8c662a"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/image-box.json",
+              "sha256": "03931eb2654b39cb0f89ed622a6923ac795ab6a17d92274dfc4d8fa8ef8c662a"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "wd_toggle",
+      "provider": "woodmart",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/wd_toggle.json",
+          "sha256": "f4204c12dd3f73f532c9d65a3d5d14c285940d575a484d62746d98420e59d4da"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/wd_toggle.json",
+          "sha256": "f4204c12dd3f73f532c9d65a3d5d14c285940d575a484d62746d98420e59d4da"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "nested-fixed",
+      "suitableFor": [
+        "单个开关控制的嵌套内容"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_toggle.json",
+              "sha256": "f4204c12dd3f73f532c9d65a3d5d14c285940d575a484d62746d98420e59d4da"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_toggle.json",
+              "sha256": "f4204c12dd3f73f532c9d65a3d5d14c285940d575a484d62746d98420e59d4da"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/wd_toggle.json",
+              "sha256": "f4204c12dd3f73f532c9d65a3d5d14c285940d575a484d62746d98420e59d4da"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "icon-box",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/icon-box.json",
+          "sha256": "5d49b0546dda96d003fdf787ff8f0de9e4af5195ea4ec417d7a8121ec861bb79"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/icon-box.json",
+          "sha256": "5d49b0546dda96d003fdf787ff8f0de9e4af5195ea4ec417d7a8121ec861bb79"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "图标、标题及说明卡片"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/icon-box.json",
+              "sha256": "5d49b0546dda96d003fdf787ff8f0de9e4af5195ea4ec417d7a8121ec861bb79"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/icon-box.json",
+              "sha256": "5d49b0546dda96d003fdf787ff8f0de9e4af5195ea4ec417d7a8121ec861bb79"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "breadcrumbs",
+      "provider": "provider-requires-target-contract",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/breadcrumbs.json",
+          "sha256": "8495a0ef3f33947f282e289082309b0fdb7ce4d71482811f27e9112ce287fe43"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/breadcrumbs.json",
+          "sha256": "8495a0ef3f33947f282e289082309b0fdb7ce4d71482811f27e9112ce287fe43"
+        }
+      ],
+      "resourceDependencies": [
+        "seo-breadcrumb-provider",
+        "page-context"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "已启用的 SEO 插件页面面包屑"
+      ],
+      "restrictions": [
+        "本地源文件与旧运行身份存在不同提供器，须以当前真实注册类型验证",
+        "无真实上下文不可假装完成"
+      ],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/breadcrumbs.json",
+              "sha256": "8495a0ef3f33947f282e289082309b0fdb7ce4d71482811f27e9112ce287fe43"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "form",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/form.json",
+          "sha256": "a4fc9b0562dc474f2fd94352ee26b7571b155da963a2e72336ec4260cd15d1b2"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/form.json",
+          "sha256": "a4fc9b0562dc474f2fd94352ee26b7571b155da963a2e72336ec4260cd15d1b2"
+        }
+      ],
+      "resourceDependencies": [
+        "form-action-configuration"
+      ],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "repeater",
+      "suitableFor": [
+        "已明确授权的表单结构"
+      ],
+      "restrictions": [
+        "不带入旧实验收件人、API Key、Webhook 或默认动作",
+        "研究与比较不得触发表单提交"
+      ],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/form.json",
+              "sha256": "a4fc9b0562dc474f2fd94352ee26b7571b155da963a2e72336ec4260cd15d1b2"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/form.json",
+              "sha256": "a4fc9b0562dc474f2fd94352ee26b7571b155da963a2e72336ec4260cd15d1b2"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "nested-carousel",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/nested-carousel.json",
+          "sha256": "bbcbb44d7f2fdebae8e32439119e8d5e441e3742156806d9b6452f718f8470f7"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/nested-carousel.json",
+          "sha256": "bbcbb44d7f2fdebae8e32439119e8d5e441e3742156806d9b6452f718f8470f7"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "nested-repeater",
+      "suitableFor": [
+        "含任意原生内容的幻灯片"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-carousel.json",
+              "sha256": "bbcbb44d7f2fdebae8e32439119e8d5e441e3742156806d9b6452f718f8470f7"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-carousel.json",
+              "sha256": "bbcbb44d7f2fdebae8e32439119e8d5e441e3742156806d9b6452f718f8470f7"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "historical-qualified",
+          "scope": "historical-interaction-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/nested-carousel.json",
+              "sha256": "bbcbb44d7f2fdebae8e32439119e8d5e441e3742156806d9b6452f718f8470f7"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "button",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/button.json",
+          "sha256": "6b7039dc0f1256cfc58ba135966530a080686964315509ea04ae87cafe82bb76"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/button.json",
+          "sha256": "6b7039dc0f1256cfc58ba135966530a080686964315509ea04ae87cafe82bb76"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "按钮",
+        "普通文字链接"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/button.json",
+              "sha256": "6b7039dc0f1256cfc58ba135966530a080686964315509ea04ae87cafe82bb76"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/button.json",
+              "sha256": "6b7039dc0f1256cfc58ba135966530a080686964315509ea04ae87cafe82bb76"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "divider",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/divider.json",
+          "sha256": "1156b12ab799e5d914b4c9a1cf48f5957776c5c219b9bb856da8703108ac7c78"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/divider.json",
+          "sha256": "1156b12ab799e5d914b4c9a1cf48f5957776c5c219b9bb856da8703108ac7c78"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "settings",
+      "suitableFor": [
+        "装饰分隔线",
+        "带文字的分隔线"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/divider.json",
+              "sha256": "1156b12ab799e5d914b4c9a1cf48f5957776c5c219b9bb856da8703108ac7c78"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "unverified",
+          "scope": "historical-effect-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    },
+    {
+      "widgetType": "container",
+      "provider": "elementor",
+      "activation": "enabled",
+      "contractRefs": [
+        {
+          "path": "data/native44/components/container.json",
+          "sha256": "69908ca796c1f2432b688b16bec0be7d3edf7ae49eae93d83b2d410b4922c46a"
+        }
+      ],
+      "recipeRefs": [
+        {
+          "path": "data/native44/components/container.json",
+          "sha256": "69908ca796c1f2432b688b16bec0be7d3edf7ae49eae93d83b2d410b4922c46a"
+        }
+      ],
+      "resourceDependencies": [],
+      "adapterRefs": [
+        "native44-desktop-v1"
+      ],
+      "contentModel": "container",
+      "suitableFor": [
+        "Grid 和 Flex 布局",
+        "视觉模块及普通组合"
+      ],
+      "restrictions": [],
+      "qualifications": {
+        "source": {
+          "status": "source-studied",
+          "scope": "frozen-source-contract",
+          "evidence": [
+            {
+              "path": "data/native44/components/container.json",
+              "sha256": "69908ca796c1f2432b688b16bec0be7d3edf7ae49eae93d83b2d410b4922c46a"
+            }
+          ],
+          "limitations": [
+            "Research baseline is separate from the current target contract."
+          ]
+        },
+        "save": {
+          "status": "unverified",
+          "scope": "save-receipts-not-independently-imported",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "render": {
+          "status": "historical-qualified",
+          "scope": "historical-effect-records",
+          "evidence": [
+            {
+              "path": "data/native44/components/container.json",
+              "sha256": "69908ca796c1f2432b688b16bec0be7d3edf7ae49eae93d83b2d410b4922c46a"
+            }
+          ],
+          "limitations": [
+            "Historical environment only: Core 1.1.6; current target must be checked separately.",
+            "Record coverage does not prove all modes or interactions."
+          ]
+        },
+        "interaction": {
+          "status": "unverified",
+          "scope": "historical-interaction-records",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        },
+        "resources": {
+          "status": "unverified",
+          "scope": "current-task-only",
+          "evidence": [],
+          "limitations": [
+            "Knowledge does not certify the current target, resource availability or every mode."
+          ]
+        }
+      }
+    }
+  ],
+  "adapters": [
+    {
+      "id": "native44-desktop-v1",
+      "executionStrategy": "native44-css-handoff",
+      "replicationProfile": "desktop-browser-v1",
+      "widgetTypes": [
+        "text-editor",
+        "html",
+        "heading",
+        "woocommerce-products",
+        "wd_nested_carousel",
+        "wd_text_block",
+        "slides",
+        "wd_products_tabs",
+        "wd_products_brands",
+        "wd_products",
+        "wd_blog",
+        "wd_button",
+        "wd_wc_breadcrumb",
+        "wd_image_or_svg",
+        "accordion",
+        "wd_title",
+        "wd_contact_form_7",
+        "wd_product_categories",
+        "wd_testimonials",
+        "wd_banner_carousel",
+        "wd_wishlist",
+        "wd_page_heading",
+        "wd_compare",
+        "wd_element_breadcrumbs",
+        "wd_infobox_carousel",
+        "wd_infobox",
+        "wd_extra_menu_list",
+        "wd_sidebar",
+        "wd_counter",
+        "wd_list",
+        "wd_social_buttons",
+        "nested-tabs",
+        "nested-accordion",
+        "social-icons",
+        "icon",
+        "image-box",
+        "wd_toggle",
+        "icon-box",
+        "breadcrumbs",
+        "form",
+        "nested-carousel",
+        "button",
+        "divider",
+        "container"
+      ],
+      "implemented": [
+        "settings",
+        "html",
+        "products",
+        "nested-repeater",
+        "repeater",
+        "product-tabs",
+        "nested-fixed",
+        "container"
+      ],
+      "resourceAdapters": [
+        "target-woocommerce-products"
+      ],
+      "unavailableDependencies": {
+        "wd_products_brands": [
+          "brands"
+        ],
+        "wd_blog": [
+          "posts"
+        ],
+        "wd_wc_breadcrumb": [
+          "page-context"
+        ],
+        "wd_contact_form_7": [
+          "form"
+        ],
+        "wd_product_categories": [
+          "categories"
+        ],
+        "wd_wishlist": [
+          "wishlist"
+        ],
+        "wd_page_heading": [
+          "page-context"
+        ],
+        "wd_compare": [
+          "compare"
+        ],
+        "wd_element_breadcrumbs": [
+          "page-context"
+        ],
+        "wd_sidebar": [
+          "sidebar"
+        ],
+        "breadcrumbs": [
+          "page-context"
+        ],
+        "form": [
+          "form"
+        ]
+      },
+      "writeBoundary": "owned-draft-page-only",
+      "sourceRefs": [
+        {
+          "path": "src/native44/adapters.ts",
+          "sha256": "efbb34fc900f2557f07a68fa284621610b4fa46ee40282c63549459851617b1d"
+        },
+        {
+          "path": "src/native44/compiler.ts",
+          "sha256": "464e8ae4193f17c9cb6ba70cb40bd1e9d808fa730593f55f3d8532445bb72cc3"
+        },
+        {
+          "path": "src/native44/settings.ts",
+          "sha256": "273efaa3ac2b4c547ee4100bbf1c112ac9d8b61bb441fcd845a0ef668ee9ceb2"
+        },
+        {
+          "path": "src/native44/recipes.ts",
+          "sha256": "ee4ef0e995fbb762e19c4d78fc35ed3ae9aeca4a8b21717d103ae2e55c37c6ca"
+        },
+        {
+          "path": "src/native44/compatibility.ts",
+          "sha256": "c226a4ad33d518c5b6ee41b7ad66f582d7b5a0a92f756536feb1fb97c93b1ec1"
+        },
+        {
+          "path": "src/native44/profile.ts",
+          "sha256": "4cfbd062f60070898648eb2c4b59cc79dda581f39ee0dcdc15dc25c82324d975"
+        },
+        {
+          "path": "src/native44/catalog-check.ts",
+          "sha256": "c6c8e77a0d6a34cc465730e336ff07d8159aad1ad47b9ae6383823c9878c85ef"
+        },
+        {
+          "path": "src/native44/interaction-check.ts",
+          "sha256": "5ecbe5ebf2671077cd0038fcd881de37cd93a3ba2e8a2d728725c0ad57279224"
+        },
+        {
+          "path": "src/wordpress/editor-serialization.ts",
+          "sha256": "3fcc8e35f5bb3aa158878f9d3b7d72f256e61638f3fd9407f34217a03a0bc83d"
+        },
+        {
+          "path": "src/native44/local-task.ts",
+          "sha256": "6a905005ab26ef52b8c93c5c6545be420ab4260c05fbb18b80c58df4e48cb1ff"
+        },
+        {
+          "path": "src/native44/target-context.ts",
+          "sha256": "ccb6c145797cbe0a5e9262d27a9f22a66f217ff139289db560fe2b1b7c806ecb"
+        },
+        {
+          "path": "src/native44/release-lock.ts",
+          "sha256": "3267868c90ac61077fa8b40a4203931e68ae23920a7f7b0b2c7e045bedcc05bb"
+        },
+        {
+          "path": "src/native44/runtime.ts",
+          "sha256": "3f23af9453e1fa5b6e2473e43567b4e6cbd8aed88cc0c64644a70d33cee8564a"
+        },
+        {
+          "path": "src/native44/lifecycle.ts",
+          "sha256": "8cc9fed711b7512917b8cc29d382e1465ae58d4f0f15ef819db04bf091347f57"
+        },
+        {
+          "path": "src/wordpress/client.ts",
+          "sha256": "200198ac79fd47ad7754aae8a22c51d090210492a017848f3a88ddb7bc929ff0"
+        },
+        {
+          "path": "src/wordpress/canvas-shell.ts",
+          "sha256": "792c7955bb2690da6973dbc008608c76711919f13ea384c37457a545a927612a"
+        }
+      ]
+    }
+  ],
+  "learningReleases": [],
+  "pagePatterns": {
+    "total": 0,
+    "entries": [],
+    "additionalRecordRefs": []
+  },
+  "fingerprint": "eefd1be61433a6cedfd6f5f805656d84e9d3c298da1172dededf6a752c61e3da"
+}

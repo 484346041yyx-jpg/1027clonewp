@@ -1,0 +1,34 @@
+{
+  "siteKey": "yaoxuxuan",
+  "targetUrl": "https://yaoxuxuan.com/",
+  "credentialsFile": "config/credentials.yaoxuxuan.local.json",
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "name": "tablet",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "maxCorrectionRounds": 3,
+  "maxSourceSections": 35,
+  "maxSourceElements": 4000,
+  "maxElements": 700,
+  "maxAssets": 80,
+  "maxAssetBytes": 20971520,
+  "maxPageHeight": 35000,
+  "pageStatus": "publish",
+  "pageTemplate": "elementor_canvas",
+  "agentTimeoutMs": 1200000,
+  "maxTotalMs": 3600000,
+  "wordpressNetworkRoute": "direct"
+}
