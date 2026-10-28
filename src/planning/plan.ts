@@ -120,6 +120,32 @@ function validateControl(name: string, value: unknown, control: ControlSchema, o
   }
 }
 
+/** Elementor Pro 3.35.1 editor.js updateReplyToOptions derives this select
+ * from the current Form's labeled email fields; the PHP registry intentionally
+ * exposes only its blank option (modules/forms/actions/email.php). This is a
+ * per-validation projection, never a mutation of the registered schema. */
+function contextualFormReplyToControl(type: string, name: string, value: unknown, control: ControlSchema, settings: Record<string, unknown>, controls: Record<string, ControlSchema>): ControlSchema {
+  if (type !== 'form' || name !== 'email_reply_to' || value === '') return control;
+  const invalid = (): never => { throw new Error('Invalid dynamic select context form.email_reply_to'); };
+  const condition = control.condition;
+  if (control.type !== 'select' || control.default !== '' || control.render_type !== 'none' || !control.options || Array.isArray(control.options) || Object.keys(control.options).length !== 1 || !Object.hasOwn(control.options, '') || control.options[''] !== '' || !condition || typeof condition !== 'object' || Array.isArray(condition) || Object.keys(condition).length !== 1 || (condition as Record<string, unknown>).submit_actions !== 'email') return invalid();
+  const repeater = controls.form_fields;
+  if (repeater?.type !== 'form-fields-repeater' || !repeater.fields || typeof repeater.fields !== 'object') return invalid();
+  const declarations = Array.isArray(repeater.fields)
+    ? Object.fromEntries((repeater.fields as Array<ControlSchema & { name: string }>).map(field => [field.name, field]))
+    : repeater.fields as Record<string, ControlSchema>;
+  if (declarations.field_type?.type !== 'select' || !declarations.field_type.options || !Object.hasOwn(declarations.field_type.options, 'email') || declarations.custom_id?.type !== 'text' || declarations.field_label?.type !== 'text' || !Array.isArray(settings.form_fields) || settings.form_fields.length > 100) return invalid();
+  const options: Record<string, unknown> = { '': '' }, ids = new Set<string>();
+  for (const row of settings.form_fields) {
+    if (!row || typeof row !== 'object' || Array.isArray(row)) return invalid();
+    const field = row as Record<string, unknown>, id = field.custom_id;
+    if (typeof id !== 'string' || !/^[A-Za-z][A-Za-z0-9_]{0,49}$/.test(id) || ids.has(id)) return invalid();
+    ids.add(id);
+    if (field.field_type === 'email' && typeof field.field_label === 'string' && field.field_label.trim()) options[id] = `${field.field_label} Field`;
+  }
+  return { ...control, options };
+}
+
 /** Identical registered-control validation before import and after media resolution. */
 export function validateRegisteredSettings(type: string, settings: Record<string, unknown>, schema: WidgetSchemas[string], options: RegisteredControlValidationOptions = {}): void {
   if (!schema?.controls) throw new Error(`Undiscovered widget controls: ${type}`);
@@ -130,7 +156,7 @@ export function validateRegisteredSettings(type: string, settings: Record<string
     const control = Object.hasOwn(schema.controls, name) ? schema.controls[name] : undefined;
     if (!control) throw new Error(`Undiscovered setting ${type}.${name}`);
     if (declaredConditionIsFalse(control, settings, schema.controls)) throw new Error(`Inactive setting ${type}.${name}; use its declared activation conditions`);
-    validateControl(`${type}.${name}`, value, control, options);
+    validateControl(`${type}.${name}`, value, contextualFormReplyToControl(type, name, value, control, settings, schema.controls), options);
   }
 }
 

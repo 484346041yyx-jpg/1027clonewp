@@ -3,18 +3,20 @@ import { assertReplicaSourceSlug } from '../core/replica-url.js';
 import { validatePreparationPlan } from './contract.js';
 import { assertWorkspaceAccess } from '../workspace/service.js';
 import { fileURLToPath } from 'node:url';
-import { initializePreparation, preparationPath, preparationRead, startPreparationJob, completePreparationJob, failPreparationJob, mergePreparationDirectory, preparationStatus, comparePreparationPresentation, readPreparationNativeSettings, readPreparationProductionGuide } from './io.js';
-import { EXTENDED_NATIVE_TYPES as NATIVE44_ALL_TYPES } from '../native44/catalog.js';
-import { recordPreparationPhase, readPreparationPhases, PREPARATION_PHASE_STAGES, type PreparationPhaseStage, type PreparationPhaseEvent } from './phase-events.js';
+import { initializePreparation, preparationPath, preparationRead, startPreparationJob, nextPreparationJob, requestPreparationRework, readPreparationCoordination, inspectPreparationBrowserWorkspace, completePreparationJob, failPreparationJob, mergePreparationDirectory, preparationStatus, comparePreparationPresentation, readPreparationNativeSettings, readPreparationProductionGuide } from './io.js';
+import { isPreparationJobId } from './execution-policy.js';
+import { preparationWorkerSchema } from './queue-runtime.js';
+import { RELATED_EXTENDED_NATIVE_TYPES as NATIVE44_ALL_TYPES } from '../native44/catalog.js';
+import { recordPreparationPhase, readPreparationPhases, summarizePreparationPhases, PREPARATION_PHASE_STAGES, type PreparationPhaseStage, type PreparationPhaseEvent } from './phase-events.js';
 
-type PreparationCommand = 'dispatch' | 'start' | 'complete' | 'fail' | 'merge' | 'status' | 'phase' | 'phases' | 'compare-presentation' | 'read-native-settings' | 'read-production-guide';
-export interface PreparationArgs { command: PreparationCommand; input?: string; runDirectory?: string; directory?: string; job?: string; result?: string; evidence?: string; widget?: string; section?: string; device?: 'desktop' | 'phone'; stage?: PreparationPhaseStage; event?: PreparationPhaseEvent; marker?: string }
-export const PREPARATION_HELP = 'Default new replicas: create:replica -- PREPARATION.json [--run-dir FINAL_RUN_DIR]\nNative collaboration jobs: replica:prepare -- start|complete|fail --directory DIR --job JOB [--result FILE]\nCoordinator: replica:prepare -- merge|status --directory DIR\nPhase timing: replica:prepare -- phase --directory TASK_MATERIAL_DIR --stage STAGE --event start|succeeded|failed|cancelled [--marker ID]\nPhase history: replica:prepare -- phases --directory TASK_MATERIAL_DIR';
+type PreparationCommand = 'dispatch' | 'coordination' | 'check-browser-workspace' | 'start' | 'next' | 'rework' | 'complete' | 'fail' | 'merge' | 'status' | 'phase' | 'phases' | 'compare-presentation' | 'read-native-settings' | 'read-production-guide';
+export interface PreparationArgs { command: PreparationCommand; input?: string; runDirectory?: string; directory?: string; job?: string; worker?: string; pageId?: number; result?: string; evidence?: string; widget?: string; section?: string; device?: 'desktop' | 'phone'; stage?: PreparationPhaseStage; event?: PreparationPhaseEvent; marker?: string }
+export const PREPARATION_HELP = 'Default new replicas: create:replica -- PREPARATION.json [--run-dir FINAL_RUN_DIR]\nNative collaboration jobs: replica:prepare -- start|complete|fail --directory DIR --job JOB [--result FILE]\nCoordinator: replica:prepare -- merge|status --directory DIR\nQueue claim: replica:prepare -- next --directory DIR --worker WORKER\nPre-merge batched rework: replica:prepare -- rework --directory DIR --evidence FILE\nPhase timing: replica:prepare -- phase --directory TASK_MATERIAL_DIR --stage STAGE --event start|succeeded|failed|cancelled [--marker ID]\nPhase history: replica:prepare -- phases --directory TASK_MATERIAL_DIR';
 function fail(): never { throw Error('replica_preparation_arguments'); }
 
 export function parsePreparationArgs(args: string[]): PreparationArgs {
   const command = args[0] as PreparationCommand;
-  const flags: Record<PreparationCommand, string[]> = { dispatch: ['--input', '--run-dir'], start: ['--directory', '--job'], complete: ['--directory', '--job', '--result'], fail: ['--directory', '--job'], merge: ['--directory'], status: ['--directory'], phase: ['--directory', '--stage', '--event', '--marker'], phases: ['--directory'], 'compare-presentation': ['--directory', '--evidence'], 'read-native-settings': ['--directory', '--widget'], 'read-production-guide': ['--directory', '--job', '--section', '--device'] };
+  const flags: Record<PreparationCommand, string[]> = { dispatch: ['--input', '--run-dir'], coordination: ['--directory'], 'check-browser-workspace': ['--directory','--evidence','--page-id'], start: ['--directory', '--job', '--worker'], next: ['--directory', '--worker'], rework: ['--directory', '--evidence'], complete: ['--directory', '--job', '--result'], fail: ['--directory', '--job'], merge: ['--directory'], status: ['--directory'], phase: ['--directory', '--stage', '--event', '--marker'], phases: ['--directory'], 'compare-presentation': ['--directory', '--evidence'], 'read-native-settings': ['--directory', '--widget'], 'read-production-guide': ['--directory', '--job', '--section', '--device'] };
   if (!Object.hasOwn(flags, command)) fail();
   const values = new Map<string, string>();
   for (let index = 1; index < args.length; index += 2) {
@@ -23,13 +25,16 @@ export function parsePreparationArgs(args: string[]): PreparationArgs {
     values.set(flag, value);
   }
   if (command === 'dispatch' ? !values.has('--input') : !values.has('--directory')) fail();
-  if (['start', 'complete', 'fail'].includes(command) && !['header', 'body-1', 'body-2'].includes(values.get('--job') ?? '')) fail();
+  if (['start', 'complete', 'fail'].includes(command) && !isPreparationJobId(values.get('--job') ?? '')) fail();
+  if (command === 'next' && !values.has('--worker') || values.has('--worker') && !preparationWorkerSchema.safeParse(values.get('--worker')).success) fail();
+  if (command === 'rework' && !values.has('--evidence')) fail();
+  if (command === 'check-browser-workspace' && (!values.has('--evidence') || !/^[1-9][0-9]{0,14}$/.test(values.get('--page-id') ?? '') || !Number.isSafeInteger(Number(values.get('--page-id'))))) fail();
   if (command === 'complete' && !values.has('--result')) fail();
   if (command === 'compare-presentation' && !values.has('--evidence')) fail();
   if (command === 'read-native-settings' && !(NATIVE44_ALL_TYPES as readonly string[]).includes(values.get('--widget') ?? '')) fail();
-  if (command === 'read-production-guide' && (!['body-1', 'body-2', 'merged'].includes(values.get('--job') ?? '') || !/^[A-Za-z][A-Za-z0-9_-]{0,79}$/.test(values.get('--section') ?? '') || !['desktop', 'phone'].includes(values.get('--device') ?? ''))) fail();
+  if (command === 'read-production-guide' && (!(values.get('--job') === 'merged' || isPreparationJobId(values.get('--job') ?? '') && values.get('--job') !== 'header') || !/^[A-Za-z][A-Za-z0-9_-]{0,79}$/.test(values.get('--section') ?? '') || !['desktop', 'phone'].includes(values.get('--device') ?? ''))) fail();
   if (command === 'phase' && (!(PREPARATION_PHASE_STAGES as readonly string[]).includes(values.get('--stage') ?? '') || !['start', 'succeeded', 'failed', 'cancelled'].includes(values.get('--event') ?? '') || (values.get('--event') === 'start' ? values.has('--marker') : !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(values.get('--marker') ?? '')))) fail();
-  return { command, ...(values.has('--section') ? { section: values.get('--section')! } : {}), ...(values.has('--device') ? { device: values.get('--device')! as 'desktop' | 'phone' } : {}), ...(values.has('--widget') ? { widget: values.get('--widget')! } : {}), ...(values.has('--evidence') ? { evidence: values.get('--evidence')! } : {}), ...(values.has('--input') ? { input: values.get('--input')! } : {}), ...(values.has('--run-dir') ? { runDirectory: values.get('--run-dir')! } : {}), ...(values.has('--directory') ? { directory: values.get('--directory')! } : {}), ...(values.has('--job') ? { job: values.get('--job')! } : {}), ...(values.has('--result') ? { result: values.get('--result')! } : {}), ...(values.has('--stage') ? { stage: values.get('--stage')! as PreparationPhaseStage } : {}), ...(values.has('--event') ? { event: values.get('--event')! as PreparationPhaseEvent } : {}), ...(values.has('--marker') ? { marker: values.get('--marker')! } : {}) };
+  return { command, ...(values.has('--page-id') ? { pageId: Number(values.get('--page-id')) } : {}), ...(values.has('--worker') ? { worker: values.get('--worker')! } : {}), ...(values.has('--section') ? { section: values.get('--section')! } : {}), ...(values.has('--device') ? { device: values.get('--device')! as 'desktop' | 'phone' } : {}), ...(values.has('--widget') ? { widget: values.get('--widget')! } : {}), ...(values.has('--evidence') ? { evidence: values.get('--evidence')! } : {}), ...(values.has('--input') ? { input: values.get('--input')! } : {}), ...(values.has('--run-dir') ? { runDirectory: values.get('--run-dir')! } : {}), ...(values.has('--directory') ? { directory: values.get('--directory')! } : {}), ...(values.has('--job') ? { job: values.get('--job')! } : {}), ...(values.has('--result') ? { result: values.get('--result')! } : {}), ...(values.has('--stage') ? { stage: values.get('--stage')! as PreparationPhaseStage } : {}), ...(values.has('--event') ? { event: values.get('--event')! as PreparationPhaseEvent } : {}), ...(values.has('--marker') ? { marker: values.get('--marker')! } : {}) };
 }
 
 /** Resolve only hash-bound file references; business URLs and text stay literal data. */
@@ -43,9 +48,9 @@ function resolveRefs(value: unknown, directory: string): unknown {
 }
 
 export async function runPreparationCLI(args: string[]): Promise<unknown> {
-  if (!args.length || args.length === 1 && args[0] === '--help') return { help: PREPARATION_HELP + '\nRead-only native settings: replica:prepare -- read-native-settings --directory PREPARATION_DIR --widget WIDGET_TYPE\nRead-only section guide: replica:prepare -- read-production-guide --directory PREPARATION_DIR --job body-1|body-2|merged --section SECTION_KEY --device desktop|phone\nRead-only presentation differences: replica:prepare -- compare-presentation --directory PREPARATION_DIR --evidence REVIEW.json (not visual approval or publishing)', remoteWrites: 0 };
+  if (!args.length || args.length === 1 && args[0] === '--help') return { help: PREPARATION_HELP + '\nRead-only coordination: replica:prepare -- coordination --directory DIR\nRead-only browser check: replica:prepare -- check-browser-workspace --directory DIR --evidence FILE --page-id ID\nRead-only native settings: replica:prepare -- read-native-settings --directory PREPARATION_DIR --widget WIDGET_TYPE\nRead-only section guide: replica:prepare -- read-production-guide --directory PREPARATION_DIR --job body-N|merged --section SECTION_KEY --device desktop|phone\nRead-only presentation differences: replica:prepare -- compare-presentation --directory PREPARATION_DIR --evidence REVIEW.json (not visual approval or publishing)', remoteWrites: 0 };
   const parsed = parsePreparationArgs(args);
-  if (!['status', 'phases', 'read-production-guide', 'read-native-settings', 'compare-presentation'].includes(parsed.command)) await assertWorkspaceAccess('D:/cloneWP');
+  if (!['status', 'phases', 'coordination', 'check-browser-workspace', 'read-production-guide', 'read-native-settings', 'compare-presentation'].includes(parsed.command)) await assertWorkspaceAccess('D:/cloneWP');
   if (parsed.command === 'dispatch') {
     const filename = await preparationPath(parsed.input!);
     const plan = validatePreparationPlan(resolveRefs(await preparationRead(filename), path.dirname(filename)));
@@ -53,17 +58,21 @@ export async function runPreparationCLI(args: string[]): Promise<unknown> {
     return initializePreparation(plan, parsed.runDirectory ? { finalRunDirectory: parsed.runDirectory } : {});
   }
   const directory = await preparationPath(parsed.directory!);
+  if (parsed.command === 'coordination') return readPreparationCoordination(directory);
+  if (parsed.command === 'check-browser-workspace') return inspectPreparationBrowserWorkspace(directory, parsed.evidence!, parsed.pageId!);
   if (parsed.command === 'read-production-guide') return readPreparationProductionGuide(directory, parsed.job!, parsed.section!, parsed.device!);
   if (parsed.command === 'compare-presentation') return comparePreparationPresentation(directory, parsed.evidence!);
   if (parsed.command === 'read-native-settings') return readPreparationNativeSettings(directory, parsed.widget!);
   switch (parsed.command) {
-    case 'start': return startPreparationJob(directory, parsed.job!);
+    case 'start': return startPreparationJob(directory, parsed.job!, parsed.worker);
+    case 'next': return nextPreparationJob(directory, parsed.worker!);
+    case 'rework': return requestPreparationRework(directory, parsed.evidence!);
     case 'complete': return completePreparationJob(directory, parsed.job!, parsed.result!);
     case 'fail': return failPreparationJob(directory, parsed.job!);
     case 'merge': return mergePreparationDirectory(directory);
     case 'status': return preparationStatus(directory);
     case 'phase': return recordPreparationPhase(directory, parsed.stage!, parsed.event!, parsed.marker);
-    case 'phases': return { timing: await readPreparationPhases(directory), remoteWrites: 0 };
+    case 'phases': { const timing = await readPreparationPhases(directory); return { timing, summary: summarizePreparationPhases(timing), remoteWrites: 0 }; }
   }
 }
 

@@ -38,7 +38,7 @@ function htmlForm(value: string) {
   const formNodes = new Set<any>(); const contained = (node: any) => { formNodes.add(node); for (const child of node.childNodes ?? []) contained(child); }; contained(forms[0]);
   if (controls.some(node => !formNodes.has(node))) fail('form_html_ownership');
   const options = (node: any) => { const rows: Array<{ text: string; value: string }> = []; const collect = (item: any) => { if (item.tagName === 'option') rows.push({ text: text(item).trim(), value: attrs(item).value ?? text(item).trim() }); for (const child of item.childNodes ?? []) collect(child); }; collect(node); return rows; };
-  const semantic = controls.map(node => ({ tag: node.tagName, attributes: Object.fromEntries(semanticAttributes.map(key => [key, attrs(node)[key] ?? null])), ...(node.tagName === 'select' ? { options: options(node) } : {}), ...(node.tagName === 'button' || attrs(node).type === 'submit' ? { text: normalized(text(node)), value: attrs(node).value ?? null } : {}) }));
+  const semantic = controls.map(node => ({ tag: node.tagName, attributes: Object.fromEntries([...semanticAttributes,'notnull'].map(key => [key, attrs(node)[key] ?? null])), ...(node.tagName === 'select' ? { options: options(node) } : {}), ...(node.tagName === 'button' || attrs(node).type === 'submit' ? { text: normalized(text(node)), value: attrs(node).value ?? null } : {}) }));
   const label = (node: any) => {
     const matching = labels.filter(candidate => attrs(node).id && attrs(candidate).for === attrs(node).id); if (matching.length) return matching.map(text).join(' ').trim();
     const labelled = String(attrs(node)['aria-labelledby'] ?? '').split(/\s+/).filter(Boolean).map(id => nodes.find(candidate => attrs(candidate).id === id)); if (labelled.length && labelled.every(Boolean)) return labelled.map(text).join(' ').trim();
@@ -80,7 +80,9 @@ export async function verifySourceFormLiveState(root: string, item: Reference, e
   for (const nodeId of expected.factNodeIds) {
     const raw = packet.nodes[nodeId], row = raw && bySelector.get(raw.selector);
     if (!raw || !row || row.tag !== raw.tag || semanticAttributes.some(key => (raw.attributes?.[key] ?? null) !== (row.attributes[key] ?? null))) fail('control_binding');
-    if (raw.attributes?.type === 'submit' && (raw.attributes?.value ?? null) !== (row.attributes.value ?? null)) fail('submit_changed');
+    // Older source packet attribute projections omit input.value. In that case
+    // baselineHTML.semantic above still binds the actual submit value exactly.
+    if (raw.attributes?.type === 'submit' && Object.hasOwn(raw.attributes,'value') && raw.attributes.value !== (row.attributes.value ?? null)) fail('submit_changed');
     order.push(state.controls.indexOf(row));
     const presentation = expected.presentations.find(binding => binding.fieldNodeId === nodeId), proxy = presentation && packet.nodes[presentation.presentationNodeId];
     const footprint = proxy && bySelector.get(proxy.selector) || row;

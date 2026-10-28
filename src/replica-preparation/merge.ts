@@ -1,4 +1,5 @@
 import * as cssTree from 'css-tree';
+import { assertPreparationBoundaries, assertBoundaryFragment, boundaryCSS } from './boundaries.js';
 import { parseFragment } from 'parse5';
 import { native44ModuleClass } from '../native44/adapters.js';
 import { native44Children, walkNative44, type Native44Component } from '../native44/types.js';
@@ -103,6 +104,7 @@ export function mergePreparationResults(planInput: PreparationPlan, jobInputs: P
     const sourceFacts = validateSourceFactsV2(clone(inputs.sourceFacts)), sourceUnits = BodySourceUnitsSchema.parse(clone(inputs.sourceUnits));
     if (sourceFacts.sourceUrl !== plan.sourceUrl || sourceUnits.sourceUrl !== plan.sourceUrl || sourceUnits.taskId !== plan.taskId || !sameSet(sourceUnits.units.map(item => item.id), plan.sourcePartition.allUnits)) fail('source_identity');
     verifyPreparationVisualTargets(plan, sourceFacts);
+    assertPreparationBoundaries(plan, sourceFacts);
     const physicalUnits = new Map(sourceUnits.units.map(item => [item.id, item])), factOwner = new Map<string, string>();
     for (const unit of sourceUnits.units) {
       if (new Set(unit.sourceFactIds).size !== unit.sourceFactIds.length || new Set(unit.nodeIds).size !== unit.nodeIds.length) fail('source_unit_duplicate');
@@ -152,6 +154,7 @@ export function mergePreparationResults(planInput: PreparationPlan, jobInputs: P
       const fragment = fragments.get(section.key)!;
       if (fragment.blocks.length !== 1 || fragment.blocks[0].kind !== 'composite' || fragment.blocks[0].key !== section.key) fail('section_root');
       assertPreparationSectionCSS(fragment.css, section.key);
+      if (plan.boundaryTable) assertBoundaryFragment(fragment);
       if (plan.responsive ? fragment.responsive?.key !== section.key : fragment.responsive !== undefined) fail('responsive_section_required');
       const nodes = walkNative44(fragment.blocks), seenFacts = new Set<string>();
       for (const node of nodes) {
@@ -179,14 +182,20 @@ export function mergePreparationResults(planInput: PreparationPlan, jobInputs: P
     assertInquirySourceCoverage(sourceFacts,program,plan.navigationForms);
     assertComponentModelExecutable(program, plan.sections.flatMap(section => fragments.get(section.key)!.responsive ? [fragments.get(section.key)!.responsive!] : []));
     assertComponentModelSource(program, sourceFacts);
-    const mergedCSS = [plan.shared.css, ...plan.sections.map(section => fragments.get(section.key)!.css)].filter(Boolean).join('\n');
+    const mergedCSS = [boundaryCSS(plan), plan.shared.css, ...plan.sections.map(section => fragments.get(section.key)!.css)].filter(Boolean).join('\n');
     assertNativeImageCSS(plan.nativeImagePolicy, program, mergedCSS);
     for (const form of plan.navigationForms ?? []) {
       const slot = walkNative44(blocks).find(node => node.key === form.slotComponentKey);
       if (!slot || slot.kind !== 'composite' || !slot.children.length || !form.sourceFactIds.every(id => slot.sourceFactIds?.includes(id))) fail('navigation_form_slot');
     }
+    if (plan.configurator) {
+      const nodes = walkNative44(blocks), slot = nodes.find(node => node.key === plan.configurator!.slotComponentKey), form = nodes.find(node => node.key === plan.configurator!.formComponentKey);
+      if (!slot || slot.kind !== 'composite' || !form || form.kind !== 'native' || form.widgetType !== 'form' ||
+        nodes.some(node => node.key === plan.configurator!.widgetKey) ||
+        !plan.configurator.sourceFactIds.every(id => effectiveFacts(slot).includes(id) || effectiveFacts(form).includes(id))) fail('configurator_native_owners');
+    }
     const modules = plan.sections.map(section => ({ key: section.key, sourceUnitIds: [...section.sourceUnitIds], sourceFactIds: [...section.sourceFactIds], componentKeys: walkNative44(fragments.get(section.key)!.blocks).map(node => node.key) }));
     for (const unit of sourceUnits.units) { unit.componentKeys = [...actualMappings.get(unit.id)!]; if (plan.sourcePartition.bodyUnits.includes(unit.id) && !unit.componentKeys.length || [...plan.sourcePartition.headerUnits, ...(plan.sourcePartition.footerUnits ?? []), ...(plan.sourcePartition.unselectedBodyUnits ?? [])].includes(unit.id) && unit.componentKeys.length) fail('component_mapping'); }
-    return { header, program, css: mergedCSS, sourceUnits, buildDiagnostics: plan.version >= 6 ? [...diagnosePreparationBuild(sourceFacts, program), ...diagnoseSectionRelationships(sourceFacts, plan.sections, program), ...diagnosePresentationAssignments(sourceFacts, plan.sections, program)] : [], ...(plan.responsive ? { responsive: { ...plan.responsive, sections: plan.sections.map(s => fragments.get(s.key)!.responsive!) } } : {}), ...(plan.navigationForms ? { navigationForms: clone(plan.navigationForms) } : {}), ...(plan.nativeImagePolicy ? { nativeImagePolicy: clone(plan.nativeImagePolicy) } : {}), componentPlan: { version: 1, kind: 'task-native-body-component-plan', taskId: plan.taskId, sourceUrl: plan.sourceUrl, headerExcluded: true, modules }, contractHash, sharedHash };
+    return { header, program, css: mergedCSS, sourceUnits, buildDiagnostics: plan.version >= 6 ? [...diagnosePreparationBuild(sourceFacts, program), ...diagnoseSectionRelationships(sourceFacts, plan.sections, program), ...diagnosePresentationAssignments(sourceFacts, plan.sections, program)] : [], ...(plan.responsive ? { responsive: { ...plan.responsive, sections: plan.sections.map(s => fragments.get(s.key)!.responsive!) } } : {}), ...(plan.navigationForms ? { navigationForms: clone(plan.navigationForms) } : {}), ...(plan.configurator ? { configurator: clone(plan.configurator) } : {}), ...(plan.nativeImagePolicy ? { nativeImagePolicy: clone(plan.nativeImagePolicy) } : {}), componentPlan: { version: 1, kind: 'task-native-body-component-plan', taskId: plan.taskId, sourceUrl: plan.sourceUrl, headerExcluded: true, modules }, contractHash, sharedHash };
   } catch (error) { if (error instanceof Error && error.message.startsWith('replica_preparation_')) throw error; return fail('merge_invalid'); }
 }

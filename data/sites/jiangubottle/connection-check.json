@@ -1,0 +1,372 @@
+{
+  "version": 1,
+  "kind": "clonewp-site-connection-check",
+  "checkedAt": "2026-10-28T02:32:17.647Z",
+  "targetOrigin": "https://jiangubottle.com",
+  "access": "read-only",
+  "remoteContentWrites": 0,
+  "identity": {
+    "siteUrl": "https://jiangubottle.com",
+    "home": "https://jiangubottle.com"
+  },
+  "authenticated": true,
+  "credentialStorage": {
+    "status": "integrated",
+    "method": "Windows DPAPI CurrentUser",
+    "separateProductionFile": true,
+    "readbackVerified": true,
+    "authenticatedWithSavedCredentials": true
+  },
+  "sites": [
+    {
+      "site": "jiangubottle",
+      "targetUrl": "https://jiangubottle.com/",
+      "authenticated": true,
+      "wordpress": "7.1.3",
+      "php": "8.3.22",
+      "plugins": [
+        {
+          "plugin": "woo-advanced-shipment-tracking/woocommerce-advanced-shipment-tracking",
+          "version": "4.0.1",
+          "status": "active"
+        },
+        {
+          "plugin": "akismet/akismet",
+          "version": "5.3.7",
+          "status": "inactive"
+        },
+        {
+          "plugin": "all-in-one-wp-migration/all-in-one-wp-migration",
+          "version": "6.77",
+          "status": "active"
+        },
+        {
+          "plugin": "better-search-replace/better-search-replace",
+          "version": "1.4.11",
+          "status": "active"
+        },
+        {
+          "plugin": "clonewp-test-reset/clonewp-test-reset",
+          "version": "0.1.1",
+          "status": "active"
+        },
+        {
+          "plugin": "contact-form-7/wp-contact-form-7",
+          "version": "6.1.6",
+          "status": "inactive"
+        },
+        {
+          "plugin": "doubly/doubly",
+          "version": "1.0.47",
+          "status": "active"
+        },
+        {
+          "plugin": "duplicator-pro/duplicator-pro",
+          "version": "4.5.25.3",
+          "status": "active"
+        },
+        {
+          "plugin": "elementor/elementor",
+          "version": "3.35.4",
+          "status": "active"
+        },
+        {
+          "plugin": "elementor-pro/elementor-pro",
+          "version": "3.35.1",
+          "status": "active"
+        },
+        {
+          "plugin": "hello",
+          "version": "1.7.2",
+          "status": "inactive"
+        },
+        {
+          "plugin": "magic-export-import/class-magic-ex-im-setup",
+          "version": "2.0.7",
+          "status": "active"
+        },
+        {
+          "plugin": "mailchimp-for-wp/mailchimp-for-wp",
+          "version": "4.14.1",
+          "status": "inactive"
+        },
+        {
+          "plugin": "novamira/novamira",
+          "version": "1.12.12",
+          "status": "active"
+        },
+        {
+          "plugin": "seo-by-rank-math/rank-math",
+          "version": "1.0.257",
+          "status": "active"
+        },
+        {
+          "plugin": "seo-by-rank-math-pro/rank-math-pro",
+          "version": "3.0.100",
+          "status": "active"
+        },
+        {
+          "plugin": "safe-svg/safe-svg",
+          "version": "2.4.0",
+          "status": "active"
+        },
+        {
+          "plugin": "woocommerce/woocommerce",
+          "version": "10.9.4",
+          "status": "active"
+        },
+        {
+          "plugin": "woodmart-core/woodmart-core",
+          "version": "1.1.7",
+          "status": "active"
+        },
+        {
+          "plugin": "woodmart-images-optimizer/woodmart-images-optimizer",
+          "version": "1.4.0",
+          "status": "inactive"
+        },
+        {
+          "plugin": "wordpress-importer/wordpress-importer",
+          "version": "0.9.5",
+          "status": "inactive"
+        },
+        {
+          "plugin": "wp-mail-smtp/wp_mail_smtp",
+          "version": "4.9.0",
+          "status": "inactive"
+        }
+      ],
+      "themes": [
+        {
+          "stylesheet": "woodmart-child",
+          "template": "woodmart",
+          "version": "1.0.0",
+          "status": "active"
+        },
+        {
+          "stylesheet": "woodmart",
+          "template": "woodmart",
+          "version": "8.5.0",
+          "status": "inactive"
+        }
+      ],
+      "mcpRegistered": false,
+      "capabilityCheck": {
+        "status": "not-verified",
+        "error": {
+          "code": "mcp_connection_failed",
+          "message": "Could not establish the configured Novamira MCP connection."
+        }
+      },
+      "failedRequests": [
+        {
+          "method": "POST",
+          "path": "/wp-json/mcp/novamira",
+          "status": 404,
+          "errorCode": null
+        }
+      ],
+      "diagnostics": {
+        "httpAttempts": 6,
+        "httpCompleted": 6,
+        "httpFailed": 0,
+        "httpDurationMs": 12215,
+        "restCalls": 5,
+        "abilityCalls": 0,
+        "phpCalls": 0,
+        "documentReads": 0,
+        "documentSaves": 0,
+        "documentRestores": 0,
+        "pagePublications": 0,
+        "mediaImportCalls": 0,
+        "mediaUploadBytes": 0,
+        "capabilityDiscoveries": 1,
+        "registryCacheHits": 0,
+        "schemaCacheHits": 0
+      }
+    },
+    {
+      "site": "yaoxuxuan",
+      "targetUrl": "https://yaoxuxuan.com/",
+      "authenticated": true,
+      "wordpress": "7.1.3",
+      "php": "8.3.31",
+      "plugins": [
+        {
+          "plugin": "woo-advanced-shipment-tracking/woocommerce-advanced-shipment-tracking",
+          "version": "4.0.1",
+          "status": "active"
+        },
+        {
+          "plugin": "akismet/akismet",
+          "version": "5.3.7",
+          "status": "inactive"
+        },
+        {
+          "plugin": "all-in-one-wp-migration/all-in-one-wp-migration",
+          "version": "6.77",
+          "status": "active"
+        },
+        {
+          "plugin": "better-search-replace/better-search-replace",
+          "version": "1.4.11",
+          "status": "active"
+        },
+        {
+          "plugin": "clonewp-test-reset/clonewp-test-reset",
+          "version": "0.1.1",
+          "status": "active"
+        },
+        {
+          "plugin": "contact-form-7/wp-contact-form-7",
+          "version": "6.1.6",
+          "status": "inactive"
+        },
+        {
+          "plugin": "doubly/doubly",
+          "version": "1.0.47",
+          "status": "active"
+        },
+        {
+          "plugin": "duplicator-pro/duplicator-pro",
+          "version": "4.5.25.3",
+          "status": "active"
+        },
+        {
+          "plugin": "elementor/elementor",
+          "version": "3.35.4",
+          "status": "active"
+        },
+        {
+          "plugin": "elementor-pro/elementor-pro",
+          "version": "3.35.1",
+          "status": "active"
+        },
+        {
+          "plugin": "hello",
+          "version": "1.7.2",
+          "status": "inactive"
+        },
+        {
+          "plugin": "magic-export-import/class-magic-ex-im-setup",
+          "version": "2.0.7",
+          "status": "active"
+        },
+        {
+          "plugin": "mailchimp-for-wp/mailchimp-for-wp",
+          "version": "4.14.1",
+          "status": "inactive"
+        },
+        {
+          "plugin": "novamira/novamira",
+          "version": "1.12.12",
+          "status": "active"
+        },
+        {
+          "plugin": "seo-by-rank-math/rank-math",
+          "version": "1.0.257",
+          "status": "active"
+        },
+        {
+          "plugin": "seo-by-rank-math-pro/rank-math-pro",
+          "version": "3.0.100",
+          "status": "active"
+        },
+        {
+          "plugin": "safe-svg/safe-svg",
+          "version": "2.4.0",
+          "status": "active"
+        },
+        {
+          "plugin": "woocommerce/woocommerce",
+          "version": "10.9.4",
+          "status": "active"
+        },
+        {
+          "plugin": "woodmart-core/woodmart-core",
+          "version": "1.1.7",
+          "status": "active"
+        },
+        {
+          "plugin": "woodmart-images-optimizer/woodmart-images-optimizer",
+          "version": "1.4.0",
+          "status": "inactive"
+        },
+        {
+          "plugin": "wordpress-importer/wordpress-importer",
+          "version": "0.9.5",
+          "status": "inactive"
+        },
+        {
+          "plugin": "wp-mail-smtp/wp_mail_smtp",
+          "version": "4.9.0",
+          "status": "inactive"
+        }
+      ],
+      "themes": [
+        {
+          "stylesheet": "woodmart-child",
+          "template": "woodmart",
+          "version": "1.0.0",
+          "status": "active"
+        },
+        {
+          "stylesheet": "woodmart",
+          "template": "woodmart",
+          "version": "8.5.0",
+          "status": "inactive"
+        }
+      ],
+      "mcpRegistered": true,
+      "capabilityCheck": {
+        "status": "not-verified",
+        "error": {
+          "code": "mcp_call_failed",
+          "message": "The authenticated WordPress MCP request failed."
+        }
+      },
+      "failedRequests": [
+        {
+          "method": "GET",
+          "path": "/wp-json/mcp/novamira",
+          "status": 405,
+          "errorCode": null
+        },
+        {
+          "method": "POST",
+          "path": "/wp-json/mcp/novamira",
+          "status": 500,
+          "errorCode": "wp_die"
+        }
+      ],
+      "diagnostics": {
+        "httpAttempts": 15,
+        "httpCompleted": 15,
+        "httpFailed": 0,
+        "httpDurationMs": 21031,
+        "restCalls": 5,
+        "abilityCalls": 1,
+        "phpCalls": 1,
+        "documentReads": 0,
+        "documentSaves": 0,
+        "documentRestores": 0,
+        "pagePublications": 0,
+        "mediaImportCalls": 0,
+        "mediaUploadBytes": 0,
+        "capabilityDiscoveries": 1,
+        "registryCacheHits": 5,
+        "schemaCacheHits": 0
+      }
+    }
+  ],
+  "limitations": [
+    "Current component schemas, responsive breakpoints and core source contracts were not verified because the configured MCP capability pathway failed.",
+    "Production MCP namespace and route were absent from the actual REST route index.",
+    "Existing page ownership and frontend appearance were not inspected; this check grants no page modification permission.",
+    "The production copy has the test-reset plugin active; no reset, plugin or site setting action was performed."
+  ],
+  "defaultReplicaSite": "yaoxuxuan",
+  "defaultConfigUnchanged": true,
+  "connectionStatus": "authenticated",
+  "maintenanceCapabilityStatus": "blocked-mcp-route-missing"
+}

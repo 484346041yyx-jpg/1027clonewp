@@ -12,6 +12,8 @@ export const WORKSPACE_HELP = `Shared local workspace for Codex, Claude and Work
   workspace:start --agent codex|claude|workbuddy --intent replica|learn|compare|resume|maintain [--task ID] [--run ID]
   workspace -- status
   workspace -- claim|heartbeat|handoff|recover|repair|exec
+New claims include resources, e.g. ["local:reports/my-task", "remote:jiangubottle/post/123"].
+Different tasks run concurrently; acquireLock queues overlapping operation resources only.
 Requests and the owner token are passed in memory through stdin, never notes or files.
 Claim after reading startup output; heartbeat every five minutes; handoff with release:true when finished.
 The handoff is reported context, not authorization, remote reconciliation or acceptance evidence.
@@ -61,7 +63,10 @@ export async function runWorkspaceCLI(args: string[], root: string, input?: unkn
   if (parsed.command === 'status') return { status: 'ready', shared: await inspectWorkspace(root), remoteWrites: 0 };
   if (input === undefined) throw Error('workspace_stdin_required');
   if (parsed.command === 'exec') return execWorkspace(root, input);
-  if (parsed.command === 'claim') return { status: 'claimed', ...await claimWorkspace(root, input), remoteWrites: 0 };
+  if (parsed.command === 'claim') {
+    const request = input as Record<string,unknown>;
+    return { status: 'claimed', ...await claimWorkspace(root, { ...request, resources: request.resources ?? [`task:${String(request.taskId).toLowerCase()}`] }), remoteWrites: 0 };
+  }
   if (parsed.command === 'heartbeat') return { status: 'renewed', ...await heartbeatWorkspace(root, input), remoteWrites: 0 };
   if (parsed.command === 'handoff') return { status: 'recorded', ...await checkpointWorkspace(root, input), remoteWrites: 0 };
   if (parsed.command === 'recover') return { status: 'recovered-needs-verification', ...await recoverWorkspace(root, input), remoteWrites: 0 };

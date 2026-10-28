@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { headerJsonHash } from '../contract.js';
 import { headerModuleElementId } from './compiler.js';
+import { assertNativeHeaderMenuBindings } from './menu-binding.js';
 import { compileAdaptiveHeaderModule as compileHeaderModule, adaptiveHeaderCSS, adaptiveHeaderEnvironmentCSS, splitResponsiveHeaderStyles, responsiveHeaderPageCSS } from '../../replica-responsive/header.js';
 import { modulePlanHash, orderHeaderMenuItems } from './contract.js';
 import { compileHeaderModuleStyles } from './styles.js';
@@ -54,6 +55,8 @@ function checkObservation(bundle: HeaderBundle, observation: HeaderModuleInspect
   if (observation.contract.targetOrigin !== bundle.plan.targetOrigin || observation.resources.targetOrigin !== bundle.plan.targetOrigin) fail('target_changed');
   if (observation.snapshot.module && !same(observation.snapshot.module.identity, bundle.state.identity)) fail('ownership_changed');
   if (observation.snapshot.defaultHeaderId === bundle.state.identity.headerId || observation.snapshot.presetReferences.length || observation.snapshot.otherReferences.length) fail('header_not_isolated');
+  if (bundle.plan.menuBindingPolicy && observation.contract.menuBindingVersion !== 1) fail('menu_native_contract_required');
+  if (observation.snapshot.module?.header) assertNativeHeaderMenuBindings(bundle.plan, observation.snapshot.module.header, observation.contract, observation.resources, key => headerModuleElementId(bundle.plan.moduleKey, key));
 }
 function checkCurrentBase(bundle: HeaderBundle, observation: HeaderModuleInspection): void {
   if (bundle.state.pending) fail('reconciliation_required');

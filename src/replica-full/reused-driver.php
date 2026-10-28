@@ -63,6 +63,22 @@ try {
   };
   $before=$inspect();if($input['action']==='inspect')return ['ok'=>true,'value'=>$before];
   if(!hash_equals($input['expectedHash'],$before['hash'])||$before['resources']!==$input['resources'])throw new RuntimeException('reuse_snapshot_changed');
+  if($input['action']==='recover-style-before'){
+    $payload=$input['payload'];$receiptId=$payload['receiptId']??'';$receipt=$before['receipts']->$receiptId??null;$page=$before['page'];
+    if(!is_string($receiptId)||!preg_match('/^[a-f0-9-]{36}$/D',$receiptId)||!$page||$page['status']!=='draft'||$page['headerId']!==null||$page['bodyHash']!==($payload['bodyHash']??null)||($page['settings']['custom_css']??'')!==''||!is_array($receipt)||($receipt['action']??null)!=='style'||($receipt['state']??null)!=='started'||($receipt['payloadHash']??null)!==($payload['payloadHash']??null))throw new RuntimeException('reuse_recovery_boundary');
+    foreach((array)$before['receipts'] as $key=>$row)if($key!==$receiptId&&($row['state']??null)!=='complete')throw new RuntimeException('reuse_recovery_other_pending');
+    $lock='clonewp_reused_body_lock_'.hash('sha256',$run);if(!add_option($lock,$input['operationId'],'','no'))throw new RuntimeException('reuse_locked');
+    try{$fresh=$inspect();if($fresh['hash']!==$before['hash'])throw new RuntimeException('reuse_snapshot_changed');$receipts=(array)$before['receipts'];unset($receipts[$receiptId]);update_option($option,$receipts,false);return ['ok'=>true,'value'=>['snapshot'=>$inspect(),'result'=>['pageId'=>$page['pageId']]]];}
+    finally{if(get_option($lock)===$input['operationId'])delete_option($lock);}
+  }
+  if($input['action']==='recover-style-after'){
+    $payload=$input['payload'];$receiptId=$payload['receiptId']??'';$receipt=$before['receipts']->$receiptId??null;$page=$before['page'];
+    if(!is_string($receiptId)||!preg_match('/^[a-f0-9-]{36}$/D',$receiptId)||!$page||$page['status']!=='draft'||$page['headerId']!==$hid||$page['bodyHash']!==($payload['bodyHash']??null)||$page['documentHash']!==($payload['documentHash']??null)||hash('sha256',(string)($page['settings']['custom_css']??''))!==($payload['cssHash']??null)||!is_array($receipt)||($receipt['action']??null)!=='style'||($receipt['state']??null)!=='started'||($receipt['payloadHash']??null)!==($payload['payloadHash']??null))throw new RuntimeException('reuse_recovery_boundary');
+    foreach((array)$before['receipts'] as $key=>$row)if($key!==$receiptId&&($row['state']??null)!=='complete')throw new RuntimeException('reuse_recovery_other_pending');
+    $lock='clonewp_reused_body_lock_'.hash('sha256',$run);if(get_option($lock,false)===$receiptId)delete_option($lock);if(!add_option($lock,$input['operationId'],'','no'))throw new RuntimeException('reuse_locked');
+    try{$fresh=$inspect();if($fresh['hash']!==$before['hash'])throw new RuntimeException('reuse_snapshot_changed');$receipts=(array)$before['receipts'];$receipts[$receiptId]=['action'=>'style','payloadHash'=>$receipt['payloadHash'],'state'=>'complete','result'=>['pageId'=>$page['pageId']]];update_option($option,$receipts,false);return ['ok'=>true,'value'=>['snapshot'=>$inspect(),'result'=>['pageId'=>$page['pageId']]]];}
+    finally{if(get_option($lock)===$input['operationId'])delete_option($lock);}
+  }
   $action=$input['action'];$operation=$input['operationId'];$payload=$input['payload'];if(isset($before['receipts']->$operation))throw new RuntimeException('reuse_operation_exists');
   foreach((array)$before['receipts'] as $receipt)if(!is_array($receipt)||($receipt['state']??null)!=='complete')throw new RuntimeException('reuse_reconcile_required');
   $lock='clonewp_reused_body_lock_'.hash('sha256',$run);if(!add_option($lock,$operation,'','no'))throw new RuntimeException('reuse_locked');
@@ -74,7 +90,7 @@ try {
       if(!$page||$page['pageId']!==$payload['pageId']||$page['status']!=='draft')throw new RuntimeException('reuse_owned_draft');if(!function_exists('wp_check_post_lock'))require_once ABSPATH.'wp-admin/includes/post.php';if(wp_check_post_lock($page['pageId']))throw new RuntimeException('reuse_edit_lock');
       if($action==='style'&&(!is_string($payload['css']??null)||strlen($payload['css'])>1048576||str_contains($payload['css'],'<')||str_contains($payload['css'],"\0")))throw new RuntimeException('reuse_css_invalid');
       if($action==='publish'&&!current_user_can('publish_pages'))throw new RuntimeException('reuse_publish_permission');
-      if($action==='bind'&&$page['headerId']!==null||$action==='publish'&&($page['headerId']!==$hid||!(isset($input['publicationAuthorizationHash']) ? (($run==='huaqi-about-20261023-body'||$run==='huaqi-perfume-20261024-body'||$run==='huaqi-cosmetic-20261024-body')&&$hid==='header_39589520821341414'&&$origin==='https://vapeversse.com'&&preg_match('/^[a-f0-9]{64}$/D',$input['publicationAuthorizationHash'])&&($payload['publicationAuthorizationHash']??null)===$input['publicationAuthorizationHash']) : preg_match('/^[a-f0-9]{64}$/D',$payload['reviewHash']??''))))throw new RuntimeException('reuse_binding_precondition');
+      if($action==='bind'&&$page['headerId']!==null||$action==='publish'&&($page['headerId']!==$hid||!(isset($input['publicationAuthorizationHash']) ? ((($run==='huaqi-about-20261023-body'||$run==='huaqi-perfume-20261024-body'||$run==='huaqi-cosmetic-20261024-body')&&$hid==='header_39589520821341414'&&$origin==='https://vapeversse.com'||$run==='huaqi-product-layout-jiangubottle-20261028'&&$hid==='header_196552'&&$origin==='https://jiangubottle.com')&&preg_match('/^[a-f0-9]{64}$/D',$input['publicationAuthorizationHash'])&&($payload['publicationAuthorizationHash']??null)===$input['publicationAuthorizationHash']) : preg_match('/^[a-f0-9]{64}$/D',$payload['reviewHash']??''))))throw new RuntimeException('reuse_binding_precondition');
     }
     $receipts=(array)$before['receipts'];$receipts[$operation]=['action'=>$action,'payloadHash'=>$digest($payload),'state'=>'started'];update_option($option,$receipts,false);
     if($action==='create-page'){
@@ -84,17 +100,27 @@ try {
       if($action==='style')$settings['custom_css']=$payload['css'];
       if(in_array($action,['style','bind'],true)){
         $stack=$doc->get_stack();$controls=array_merge($stack['controls']??[],$stack['style_controls']??[]);$switcher=\Elementor\Plugin::$instance->controls_manager->get_control('switcher');
-        foreach(['wd__woodmart_title_off','wd__woodmart_footer_off','wd__woodmart_prefooter_off','wd__woodmart_copyrights_off'] as $key){$control=$controls[$key]??null;$enabled=$control['return_value']??($switcher?$switcher->get_settings('return_value'):null);if(($control['type']??'')!=='switcher'||!is_string($enabled)||$enabled==='')throw new RuntimeException('reuse_shell_control');$settings[$key]=$bodyOnly&&$key!=='wd__woodmart_title_off'?'':$enabled;}
-        if($action==='style'&&($controls['custom_css']['type']??'')!=='code')throw new RuntimeException('reuse_css_control');if(($controls['wd__woodmart_main_layout']['type']??'')!=='select'||!array_key_exists('full-width',$controls['wd__woodmart_main_layout']['options']??[]))throw new RuntimeException('reuse_shell_layout');$settings['wd__woodmart_main_layout']='full-width';$settings['wd__woodmart_whb_header']=$hid;
+        if(!$nativeProduct){
+          foreach(['wd__woodmart_title_off','wd__woodmart_footer_off','wd__woodmart_prefooter_off','wd__woodmart_copyrights_off'] as $key){$control=$controls[$key]??null;$enabled=$control['return_value']??($switcher?$switcher->get_settings('return_value'):null);if(($control['type']??'')!=='switcher'||!is_string($enabled)||$enabled==='')throw new RuntimeException('reuse_shell_control');$settings[$key]=$bodyOnly&&$key!=='wd__woodmart_title_off'?'':$enabled;}
+          if(($controls['wd__woodmart_main_layout']['type']??'')!=='select'||!array_key_exists('full-width',$controls['wd__woodmart_main_layout']['options']??[]))throw new RuntimeException('reuse_shell_layout');$settings['wd__woodmart_main_layout']='full-width';$settings['wd__woodmart_whb_header']=$hid;
+        }
+        if($action==='style'&&($controls['custom_css']['type']??'')!=='code')throw new RuntimeException('reuse_css_control');
       }
-      if(!$doc->save(['settings'=>$settings]))throw new RuntimeException('reuse_save_unknown');update_post_meta($id,'_wp_page_template','elementor_header_footer');if($action==='bind')update_post_meta($id,'_woodmart_whb_header',$hid);
+      $expectedElements=$page['elements'];
+      if($action==='style'&&$nativeProduct)delete_post_meta($id,'_elementor_element_cache');
+      if(!$doc->save(['elements'=>$expectedElements,'settings'=>$settings]))throw new RuntimeException('reuse_save_unknown');
+      update_post_meta($id,'_wp_page_template','elementor_header_footer');if($action==='bind')update_post_meta($id,'_woodmart_whb_header',$hid);
       // Elementor Pro's CSS hook reads the document manager; the saved instance
       // may still hold parsed settings from before this settings-only save.
       $doc=$plugin->documents->get($id,false);
       if(!$doc||($doc->get_settings('custom_css')??'')!==($settings['custom_css']??''))throw new RuntimeException('reuse_css_fresh_document');
       if(class_exists('\Elementor\Core\Files\CSS\Post'))(new \Elementor\Core\Files\CSS\Post($id))->update();
-      $check=$inspect();if($digest($check['page']['elements'])!==$digest($page['elements'])||$digest($check['page']['settings'])!==$digest($settings))throw new RuntimeException('reuse_document_readback');
-      if($action==='bind')foreach(['_woodmart_whb_header'=>$hid,'_woodmart_title_off'=>$settings['wd__woodmart_title_off'],'_woodmart_main_layout'=>'full-width','_woodmart_prefooter_off'=>$settings['wd__woodmart_prefooter_off'],'_woodmart_footer_off'=>$settings['wd__woodmart_footer_off'],'_woodmart_copyrights_off'=>$settings['wd__woodmart_copyrights_off']] as $key=>$wanted)if(!function_exists('woodmart_get_post_meta_value')||woodmart_get_post_meta_value($id,$key)!==$wanted)throw new RuntimeException('reuse_effective_shell');
+      $check=$inspect();if($digest($check['page']['elements'])!==$digest($expectedElements)||$digest($check['page']['settings'])!==$digest($settings))throw new RuntimeException('reuse_document_readback');
+      if($action==='bind'){
+        $shell=['_woodmart_whb_header'=>$hid];
+        if(!$nativeProduct)$shell+=['_woodmart_title_off'=>$settings['wd__woodmart_title_off'],'_woodmart_main_layout'=>'full-width','_woodmart_prefooter_off'=>$settings['wd__woodmart_prefooter_off'],'_woodmart_footer_off'=>$settings['wd__woodmart_footer_off'],'_woodmart_copyrights_off'=>$settings['wd__woodmart_copyrights_off']];
+        foreach($shell as $key=>$wanted)if(!function_exists('woodmart_get_post_meta_value')||woodmart_get_post_meta_value($id,$key)!==$wanted)throw new RuntimeException('reuse_effective_shell');
+      }
       $result=['pageId'=>$id];
     }elseif($action==='publish'){$id=$page['pageId'];$updated=wp_update_post(['ID'=>$id,'post_status'=>'publish'],true);if(is_wp_error($updated))throw new RuntimeException('reuse_publish_unknown');$result=['pageId'=>$id,'publicUrl'=>get_permalink($id)];}
     else throw new RuntimeException('reuse_action');

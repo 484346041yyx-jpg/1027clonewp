@@ -29,7 +29,7 @@ export const responsiveDecisionsSchema = z.object({
     views: z.array(z.object({ ...viewport, ...owner, iconNodeId: z.string().min(1), textNodeId: z.string().min(1), arrangement: z.enum(['row', 'column']), gap: z.number().finite().nonnegative(), iconVisible: z.literal(true) }).strict()).length(2),
   }).strict()).max(2000),
   carousels: z.array(z.object({
-    componentKey: key, sectionKey: key, nativeField: z.enum(['slides_per_view_mobile', 'columns_mobile']),
+    componentKey: key, sectionKey: key, nativeField: z.enum(['slides_per_view_mobile', 'columns_mobile', 'thumbnails_bottom_columns_mobile']),
     presentation: z.literal('grid').optional(), conditional: z.literal(true).optional(),
     views: z.array(z.object({ ...viewport, ...owner, interactionId: z.string().min(1), visibleItems: z.number().int().min(0).max(12), columns: z.number().int().min(1).max(6).optional(), override: z.object({ ...override, visibleItems: z.number().int().min(1).max(12) }).strict().optional() }).strict()).length(2),
   }).strict()).max(2000),
@@ -64,7 +64,7 @@ export function assertDecisionViewports(decisions: ResponsiveDecisionPlan, views
   for (const row of rows) if (new Set(row.views.map(v => `${v.width}x${v.height}`)).size !== views.length || views.some(v => !row.views.some(r => r.width === v.width && r.height === v.height))) fail('decision_viewport_coverage');
   for (const values of [decisions.layouts.map(r => r.key), decisions.carousels.map(r => r.componentKey)]) if (new Set(values).size !== values.length) fail('decision_duplicate');
   for (const d of decisions.carousels) {
-    if (d.presentation === 'grid' ? d.nativeField !== 'columns_mobile' || d.views.some(v => !v.columns || v.override || v.visibleItems === 0 && !d.conditional) : d.nativeField !== 'slides_per_view_mobile' || d.conditional || d.views.some(v => v.columns !== undefined || v.visibleItems < 1)) fail('product_presentation_contract');
+    if (d.presentation === 'grid' ? d.nativeField !== 'columns_mobile' || d.views.some(v => !v.columns || v.override || v.visibleItems === 0 && !d.conditional) : d.conditional || d.views.some(v => v.columns !== undefined || v.visibleItems < 1)) fail('product_presentation_contract');
   }
 }
 function gap(a: { x: number; y: number; width: number; height: number }, b: typeof a, arrangement: 'row' | 'column') { return arrangement === 'row' ? b.x - a.x - a.width : b.y - a.y - a.height; }
@@ -157,18 +157,25 @@ export function assertDecisionProgram(program: Native44Program, decisions: Respo
   const declared = new Set(decisions.carousels.map(c => c.componentKey));
   // Product grids opt in to their own registered column field and observed
   // navigation-item geometry. Historical carousel decisions keep their meaning.
-  for (const n of phoneNodes) if (n.kind === 'native-products' && !declared.has(n.key)) fail('product_count_decision_missing');
+  for (const n of phoneNodes) if ((n.kind === 'native-products' || n.kind === 'native-related-products' || n.kind === 'native' && n.widgetType === 'wd_single_product_gallery') && !declared.has(n.key)) fail('product_count_decision_missing');
   for (const carousel of decisions.carousels) {
     const n = byKey.get(carousel.componentKey);
-    if (!n || n.kind !== 'native-products') return fail('carousel_target_owner');
+    if (!n || !(n.kind === 'native-products' || n.kind === 'native-related-products' || n.kind === 'native' && n.widgetType === 'wd_single_product_gallery')) return fail('carousel_target_owner');
     if (!walkNative44([program.blocks.find(b => b.key === carousel.sectionKey)!]).includes(n)) fail('carousel_target_owner');
     const grid = carousel.presentation === 'grid';
-    if (grid && (n.widgetType !== 'wd_products' || n.widgetSettings.layout !== 'grid') || !grid && n.widgetSettings.layout === 'grid') fail('product_native_layout_mismatch');
-    if (grid && carousel.conditional && n.query?.ids.length !== 1) fail('grid_conditional_single_product_required');
+    if (n.kind === 'native-products') {
+      if (grid && (n.widgetType !== 'wd_products' || n.widgetSettings.layout !== 'grid') || !grid && n.widgetSettings.layout === 'grid') fail('product_native_layout_mismatch');
+      if (!grid && carousel.nativeField !== 'slides_per_view_mobile') fail('product_native_layout_mismatch');
+      if (grid && carousel.conditional && n.query?.ids.length !== 1) fail('grid_conditional_single_product_required');
+    } else if (n.kind === 'native-related-products') {
+      // The separately qualified Pro widget is rendered by the target theme's
+      // related.php carousel; its registered responsive field is columns.
+      if (grid || carousel.nativeField !== 'columns_mobile') fail('product_native_layout_mismatch');
+    } else if (grid || !(n.widgetSettings.thumbnails_position === 'bottom' && carousel.nativeField === 'thumbnails_bottom_columns_mobile' || n.widgetSettings.thumbnails_position === 'without' && carousel.nativeField === 'slides_per_view_mobile')) fail('product_native_layout_mismatch');
     const desired = carousel.views.map(v => grid ? v.columns! : expectedItems(v));
     if (new Set(desired).size !== 1) fail('carousel_count_native_adapter_required');
     const value = n.widgetSettings[carousel.nativeField];
-    const count = typeof value === 'number' ? value : value && typeof value === 'object' ? (value as { size?: unknown }).size : undefined;
+    const count = typeof value === 'number' || typeof value === 'string' && /^[1-9][0-9]*$/.test(value) ? value : value && typeof value === 'object' ? (value as { size?: unknown }).size : undefined;
     if (Number(count) !== desired[0]) fail('carousel_count_plan_mismatch');
   }
   const containers = phoneNodes.filter(n => n.kind === 'composite');

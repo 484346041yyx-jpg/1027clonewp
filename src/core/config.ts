@@ -43,16 +43,50 @@ export async function decodeStoredCredentials(input: unknown, runtime: { platfor
 export async function readJson<T = unknown>(file: string): Promise<T> {
   return JSON.parse((await readFile(file, 'utf8')).replace(/^\uFEFF/, '')) as T;
 }
-export async function loadConfig(root = process.cwd()): Promise<{ root: string; config: ProjectConfig; credentials: Credentials }> {
+const siteRegistrySchema = z.object({
+  version: z.literal(1), defaultSite: z.string().regex(/^[a-z0-9-]+$/),
+  sites: z.record(z.string().regex(/^[a-z0-9-]+$/), z.object({
+    configFile: z.string().regex(/^config\/[a-zA-Z0-9./-]+\.json$/),
+    targetOrigin: z.url(), role: z.enum(['test', 'production']),
+  }).strict()),
+}).strict();
+
+/** Local selection only. Never changes the default file or authenticates a site. */
+export async function loadProjectConfig(root = process.cwd(), selectedSite = process.env.CLONEWP_SITE) {
   root = path.resolve(root);
-  const config = projectSchema.parse(await readJson(path.join(root, 'config/project.json')));
+  let registry: z.infer<typeof siteRegistrySchema> | undefined;
+  try { registry = siteRegistrySchema.parse(await readJson(path.join(root, 'config/sites.json'))); }
+  catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+  if (selectedSite !== undefined && !/^[a-z0-9-]+$/.test(selectedSite)) throw Error('site_selection_invalid');
+  const site = selectedSite ?? registry?.defaultSite;
+  const profile = site && registry && Object.hasOwn(registry.sites, site) ? registry.sites[site] : undefined;
+  if ((selectedSite && !registry) || (registry && !profile)) throw Error('site_selection_unknown');
+  if (registry && registry.sites[registry.defaultSite]?.role !== 'test') throw Error('site_default_must_be_test');
+  const configFile = profile?.configFile ?? 'config/project.json';
+  const configPath = path.resolve(root, configFile);
+  if (!configPath.startsWith(root + path.sep)) throw Error('site_config_outside_project');
+  const config = projectSchema.parse(await readJson(configPath));
+  if (new URL(config.targetUrl).protocol !== 'https:') throw Error('Target must use HTTPS');
+  if (profile && (config.siteKey !== site || new URL(config.targetUrl).origin !== profile.targetOrigin)) throw Error('site_profile_identity_conflict');
+  if (profile?.role === 'production') {
+    if (!selectedSite) throw Error('production_requires_explicit_selection');
+    const defaultConfig = projectSchema.parse(await readJson(path.resolve(root, registry!.sites[registry!.defaultSite].configFile)));
+    if (path.resolve(root, config.credentialsFile) === path.resolve(root, defaultConfig.credentialsFile)) throw Error('production_credentials_must_be_separate');
+  }
+  return { root, config, configFile, role: profile?.role ?? 'test' as 'test' | 'production' };
+}
+
+export async function loadConfig(root = process.cwd()): Promise<{ root: string; config: ProjectConfig; credentials: Credentials }> {
+  const selected = await loadProjectConfig(root);
+  ({ root } = selected);
+  const { config } = selected;
   const credentialPath = path.resolve(root, config.credentialsFile);
   if (!credentialPath.startsWith(root + path.sep)) throw new Error('Credentials path must stay inside the project');
   const credentialsFromEnvironment = process.env.CLONEWP_WP_USER !== undefined || process.env.CLONEWP_WP_APP_PASSWORD !== undefined;
+  if (credentialsFromEnvironment && selected.role === 'production' && process.env.CLONEWP_WP_SITE !== config.siteKey) throw Error('production_environment_credentials_require_site_binding');
   const credentials = credentialsFromEnvironment
     ? credentialsSchema.parse({ wp_user: process.env.CLONEWP_WP_USER, wp_app_password: process.env.CLONEWP_WP_APP_PASSWORD })
     : await decodeStoredCredentials(await readJson(credentialPath));
-  if (new URL(config.targetUrl).protocol !== 'https:') throw new Error('Target must use HTTPS');
   return { root, config, credentials };
 }
 export function redactor(credentials?: Credentials) {

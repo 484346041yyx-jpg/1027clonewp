@@ -27,6 +27,10 @@ const sameRef = (a: FileRef, b: FileRef) => a.path === b.path && a.sha256 === b.
 const widgetType = (node: Native44Component) => node.kind === 'composite' ? 'container' : node.kind === 'html-static' ? 'html' : node.widgetType;
 const contentKinds = new Set(['text', 'media', 'interaction']);
 const isPostQueryBinding=(node:Native44Component,path:string)=>node.kind==='native-posts'&&path==='query';
+const isCategoriesQueryBinding=(node:Native44Component,path:string)=>node.kind==='native-categories'&&path==='query';
+function assertCategoriesQuerySlot(unit:Native44SourceUnit,slot:Native44SourceUnit['slots'][number],plan:ComponentPlanV2):void {
+  if(!['navigation-list','data-query'].includes(unit.role)||!['text','link'].includes(slot.kind)||slot.factIds.some(id=>plan.requirements.find(r=>r.factIds.includes(id))?.disposition!=='adapt'))throw Error(`Source unit ${unit.id}/${slot.id}: categories require scoped target taxonomy navigation adaptation`);
+}
 /** Only the repeated article body can substitute target post data. Headings,
  * adjacent copy and controls remain ordinary exact source bindings. */
 function assertPostQuerySlot(program:Native44Program,unit:Native44SourceUnit,slot:Native44SourceUnit['slots'][number],plan:ComponentPlanV2):void{
@@ -209,7 +213,9 @@ export function assertNative44SelectedContentBindings(program: Native44Program, 
         if (!withinTargetOwner(node.key, requirement.componentId)) throw Error(`Source unit ${unit.id}/${slot.id}: setting is outside its required component owner`);
         const postQuery=isPostQueryBinding(node,binding.settingPath);
         if(postQuery)assertPostQuerySlot(program,unit,slot,plan);
-        const query = postQuery||node.kind === 'native-products' && /^(?:query|tabs\.\d+\.query)$/.test(binding.settingPath);
+        const categoryQuery=isCategoriesQueryBinding(node,binding.settingPath);
+        if(categoryQuery)assertCategoriesQuerySlot(unit,slot,plan);
+        const query = postQuery||categoryQuery||node.kind === 'native-related-products' && binding.settingPath==='query'||node.kind === 'native-products' && /^(?:query|tabs\.\d+\.query)$/.test(binding.settingPath);
         if (query) { covered.add(id); continue; }
         if (slot.kind === 'text' && requirement.disposition === 'preserve') {
           const key = JSON.stringify([unit.snapshotId, node.key, binding.settingPath]);
@@ -280,15 +286,15 @@ function semanticDecision(unit: Native44SourceUnit, decision: Native44SelectionD
   if (unit.role === 'heading' && !content.some(type => NATIVE44_SELECTION_RULES.headings.includes(type as 'heading'))) throw Error(`Source unit ${unit.id}: heading requires its native heading component`);
   if (unit.role === 'image' && !content.some(type => type === 'wd_image_or_svg')) throw Error(`Source unit ${unit.id}: a plain image requires its native image component`);
   if (['marketing-card', 'image-card', 'image-advertisement', 'information-card', 'image'].includes(unit.role) && content.some(type => NATIVE44_SELECTION_RULES.staticMarketingForbiddenQueries.includes(type as 'wd_products'))) throw Error(`Source unit ${unit.id}: static marketing cannot use a target catalog query`);
-  if (unit.role === 'query' && !nodes.some(node => node.kind === 'native-products')) throw Error(`Source unit ${unit.id}: actual catalog requires a native-products query`);
-  if (unit.role === 'data-query' && !nodes.some(node => node.kind === 'native-posts'||node.kind === 'native' && node.resources?.length)) throw Error(`Source unit ${unit.id}: data query requires an explicit existing target resource binding`);
+  if (unit.role === 'query' && !nodes.some(node => node.kind === 'native-products' || node.kind === 'native-related-products')) throw Error(`Source unit ${unit.id}: actual catalog requires a native-products query`);
+  if (unit.role === 'data-query' && !nodes.some(node => node.kind === 'native-posts'||node.kind === 'native-categories'||node.kind === 'native' && node.resources?.length)) throw Error(`Source unit ${unit.id}: data query requires an explicit existing target resource binding`);
   if(nodes.some(node=>node.kind==='native-posts')&&unit.role!=='data-query')throw Error(`Source unit ${unit.id}: native posts require an article data-query source responsibility`);
   const posts=nodes.filter(node=>node.kind==='native-posts');
   if(posts.length){
     if(posts.length!==1||!unit.repeatedItems?.length)throw Error(`Source unit ${unit.id}: one article-list body requires one native blog query`);
     for(const slotId of unit.repeatedItems.flatMap(item=>item.slotIds))if(!decision.slotBindings.some(binding=>binding.slotId===slotId&&binding.componentKey===posts[0].key&&binding.settingPath==='query'))throw Error(`Source unit ${unit.id}: article items must use the native blog query rather than manually copied cards`);
   }
-  if (unit.role === 'navigation-list' && !content.some(type => NATIVE44_SELECTION_RULES.navigation.includes(type as 'wd_list'))) throw Error(`Source unit ${unit.id}: navigation list requires a list or semantic rich-text component`);
+  if (unit.role === 'navigation-list' && !content.some(type => type==='wd_product_categories'||NATIVE44_SELECTION_RULES.navigation.includes(type as 'wd_list'))) throw Error(`Source unit ${unit.id}: navigation list requires a list or semantic rich-text component`);
   const preferred = unit.role === 'image-card' ? 'image-box' : unit.role === 'information-card' ? 'wd_infobox' : undefined;
   if (preferred && !content.includes(preferred)) {
     if (!decision.compositionReason || !decision.candidates.some(candidate => candidate.conclusion === 'unsuitable' && candidate.widgetTypes.includes(preferred))) throw Error(`Source unit ${unit.id}: native combination must explain why the complete ${preferred} card is unsuitable`);
@@ -309,7 +315,7 @@ export function validateNative44Selection(program: Native44Program, plan: Compon
   const source = validateSourceFactsV2(facts); assertSourceUnits(plan, source); assertReview(plan, source);
   for (const item of plan.catalogDeferrals ?? []) {
     const nodes = walkNative44(program.blocks), placeholder = nodes.find(node => node.key === item.componentId);
-    if (!placeholder || placeholder.kind !== 'composite' || walkNative44([placeholder]).some(node => node.kind === 'native-products' || node.kind === 'native-posts' || node.kind === 'html-static' || node.kind === 'native' && !['text-editor', 'heading', 'divider'].includes(node.widgetType))) throw Error('Deferred catalog can only render an editable structural placeholder, never product cards');
+    if (!placeholder || placeholder.kind !== 'composite' || walkNative44([placeholder]).some(node => node.kind === 'native-products' || node.kind === 'native-related-products' || node.kind === 'native-posts' || node.kind === 'html-static' || node.kind === 'native' && !['text-editor', 'heading', 'divider'].includes(node.widgetType))) throw Error('Deferred catalog can only render an editable structural placeholder, never product cards');
   }
   const units = new Map(plan.sourceUnits!.map(unit => [unit.id, unit])), components = new Map(walkNative44(program.blocks).map(node => [node.key, node]));
   const covered = new Set<string>(), decisions = plan.selectionDecisions!;
@@ -341,8 +347,10 @@ export function validateNative44Selection(program: Native44Program, plan: Compon
       if (dispositions.some(value => !value)) throw Error(`Source unit ${unit.id}/${slot.id}: missing source requirement`);
       const postQuery=isPostQueryBinding(node,binding.settingPath);
       if(postQuery)assertPostQuerySlot(program,unit,slot,plan);
-      const query = postQuery||node.kind === 'native-products' && /^(?:query|tabs\.\d+\.query)$/.test(binding.settingPath);
-      if (query && unit.role !== (postQuery?'data-query':'query')) throw Error(`Source unit ${unit.id}/${slot.id}: static content cannot bind to a query`);
+      const categoryQuery=isCategoriesQueryBinding(node,binding.settingPath);
+        if(categoryQuery)assertCategoriesQuerySlot(unit,slot,plan);
+        const query = postQuery||categoryQuery||node.kind === 'native-related-products' && binding.settingPath==='query'||node.kind === 'native-products' && /^(?:query|tabs\.\d+\.query)$/.test(binding.settingPath);
+      if (query && !categoryQuery && unit.role !== (postQuery?'data-query':'query')) throw Error(`Source unit ${unit.id}/${slot.id}: static content cannot bind to a query`);
       if (!query && dispositions.every(value => value === 'preserve')) {
         if (slot.kind === 'link') { const href = typeof value === 'string' ? value : value && typeof value === 'object' ? (value as { url?: unknown }).url : undefined; if (actualFacts.some(fact => href !== fact.value.href && !inlineLinkMatches(node, binding.settingPath, value, fact.value.href))) throw Error(`Source unit ${unit.id}/${slot.id}: link binding differs from source`); }
         if (slot.kind === 'media' && !(value && typeof value === 'object' && (typeof (value as { $asset?: unknown }).$asset === 'string' || typeof (value as { assetKey?: unknown }).assetKey === 'string'))) throw Error(`Source unit ${unit.id}/${slot.id}: media must bind a task asset slot`);

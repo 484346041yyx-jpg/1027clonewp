@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "defaultSite": "yaoxuxuan",
+  "sites": {
+    "yaoxuxuan": {
+      "configFile": "config/project.json",
+      "targetOrigin": "https://yaoxuxuan.com",
+      "role": "test"
+    },
+    "jiangubottle": {
+      "configFile": "config/sites/jiangubottle.json",
+      "targetOrigin": "https://jiangubottle.com",
+      "role": "production"
+    }
+  }
+}

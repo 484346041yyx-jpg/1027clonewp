@@ -1,10 +1,24 @@
 import test from 'node:test';import assert from 'node:assert/strict';import path from 'node:path';import {readFile,writeFile,mkdir,unlink,readdir} from 'node:fs/promises';
 import {assertBodyStyleMetadataOnly,assertUnwrittenBodyStyleState,assertUnwrittenBodyStyleReadback,readUnwrittenBodyStyleRequest,loadBodyStyleAmendment,installBodyStyleAmendment,readBodyStyleAmendmentMedia,verifyBodyStyleAmendmentMedia} from '../src/replica-full/unwritten-body-style-amendment.js';
-import {createHash} from 'node:crypto';
+import {createHash,randomUUID} from 'node:crypto';
 import {acquireLock} from '../src/core/files.js';
+import {claimWorkspace,checkpointWorkspace,inspectWorkspace} from '../src/workspace/service.js';
 import {fullReplicaHash,validateFullReplicaManifest} from '../src/replica-full/contract.js';import {parseFullReplicaArguments,runFullReplicaCLI} from '../src/replica-full/cli.js';import {preparationIOFixture} from './helpers/preparation-io-fixture.js';
 import type {FullReplicaManifest,FullReplicaRunState,FullReplicaDependencies} from '../src/replica-full/types.js';
 import {assertPhoneTypographyWithdrawal,assertPhoneTypographyWithdrawalSource} from '../src/replica-full/phone-typography-withdrawal.js';
+const ROOT='D:/cloneWP';
+async function withWorkspaceClaim<T>(work:()=>Promise<T>):Promise<T>{
+ const taskId=`unwritten-body-style-test-${randomUUID()}`,before=await inspectWorkspace(ROOT);
+ const owner=await claimWorkspace(ROOT,{agent:'codex',sessionId:`test-${randomUUID()}`,taskId,resources:[`task:${taskId}`],expectedRevision:before.revision,expectedFingerprint:before.fingerprint});
+ const previous=process.env.CLONEWP_WORKSPACE_TOKEN;process.env.CLONEWP_WORKSPACE_TOKEN=owner.token;
+ let completed=false;
+ try{const value=await work();completed=true;return value;}
+ finally{
+  if(previous===undefined)delete process.env.CLONEWP_WORKSPACE_TOKEN;else process.env.CLONEWP_WORKSPACE_TOKEN=previous;
+  const current=await inspectWorkspace(ROOT);
+  await checkpointWorkspace(ROOT,{token:owner.token,expectedRevision:owner.revision,expectedFingerprint:current.fingerprint,release:true,notes:{goal:'Exercise unwritten body style CLI under a real scoped workspace claim',summary:completed?'Local CLI fixture completed':'Local CLI fixture failed',progress:completed?'completed':'blocked',decisions:[],changes:[],checks:[{command:'unwritten-body-style-amendment.test.ts',status:completed?'passed':'failed'}],openItems:completed?[]:['Inspect the failing test assertion.'],nextSteps:completed?['No fixture follow-up.']:['Review the failing test output.']}});
+ }
+}
 const plain=()=>({blocks:[{kind:'composite',key:'global',children:[{kind:'native',key:'global_title',widgetType:'heading',widgetSettings:{title:'Original'},sourceFactIds:['wide:text:hero'],styleBindings:[{sourceFactId:'wide:text:hero',selector:' .elementor-heading-title',minWidth:769,maxWidth:10000,properties:['font-size']}]}]},{kind:'composite',key:'hero',sourceFactIds:['wide:text:hero'],children:[{kind:'native',key:'hero_title',widgetType:'heading',widgetSettings:{title:'Other responsibility'},sourceFactIds:['wide:text:hero']}]}]}) as any;
 function changed(){const p=plain();p.blocks[0].children[0].styleBindings[0].minWidth=1441;return p;}
 test('only body2 authoring metadata can differ, without changing runtime/business control values',()=>{
@@ -21,7 +35,7 @@ test('installed body, unresolved operation, active amendment and unrelated page 
 test('fresh snapshot guards reject written body, shared-resource drift, header, CSS, publication and body receipts',async()=>{const f=await fixture();try{for(const change of [(v:any)=>v.snapshot.page.elements=[{}],(v:any)=>v.snapshot.resources={headerId:'changed'},(v:any)=>v.snapshot.page.headerId='header_1',(v:any)=>v.snapshot.page.settings.custom_css='body{}',(v:any)=>v.snapshot.page.status='publish',(v:any)=>v.snapshot.receipts.x={state:'started',action:'style'},(v:any)=>v.styleResolution.renderedVerified=true]){const value=structuredClone(f.readback);change(value);assert.throws(()=>assertUnwrittenBodyStyleReadback(value,f.manifest,f.state),/readonly_empty_draft_proof/);}}finally{await f.cleanup();}});
 test('a changed candidate, evidence hash or stale expected revision is rejected before remote preparation',async()=>{const f=await fixture();try{await writeFile(f.request.program.path,'{}');await assert.rejects(readUnwrittenBodyStyleRequest(f.requestRef.path,f.manifest,f.state),/file_hash/);assert.deepEqual(f.calls,[]);const request={...f.request,expectedStateRevision:99};await f.put('request.json',request);await assert.rejects(readUnwrittenBodyStyleRequest(f.requestRef.path,f.manifest,f.state));}finally{await f.cleanup();}});
 
-test('real CLI amendment command owns timing and lock, installs through readonly dependency, and replays on the next command',async()=>{
+test('real CLI amendment command owns timing and lock, installs through readonly dependency, and replays on the next command',async()=>withWorkspaceClaim(async()=>{
  const f=await fixture();try{
   await unlink(path.join(f.finalRunDirectory,'.lock'));await writeFile(path.join(f.finalRunDirectory,'manifest.json'),JSON.stringify(f.manifest));
   let loaded=0,acquired=0,released=0;const originalInspect=f.dependencies.inspectUnwrittenBodyStyle!;f.dependencies.inspectUnwrittenBodyStyle=async(...args)=>{const lock=JSON.parse(await readFile(path.join(f.directory,'.cache','clone.lock'),'utf8'));assert.equal(lock.pid,process.pid);assert.equal(typeof lock.token,'string');return originalInspect(...args);};
@@ -30,7 +44,7 @@ test('real CLI amendment command owns timing and lock, installs through readonly
   const files=await readdir(f.finalRunDirectory);assert.equal(files.includes('.lock'),false);assert.ok(files.some(name=>name.startsWith('timings-'))||files.includes('timings'));
   const state=JSON.parse(await readFile(path.join(f.finalRunDirectory,'state.json'),'utf8'));assert.ok(state.bodyStyleAmendment);const restored=await loadBodyStyleAmendment(f.finalRunDirectory,state.bodyStyleAmendment,f.manifest);assert.equal(restored.effectiveProgramHash,result.effectiveProgramHash);
  }finally{await f.cleanup();}
-});
+}));
 
 function workshopSection(){return {key:'workshops',mode:'shared',reason:'Synthetic two observed phone widths retain their exact independent CSS ranges.',evidence:[{snapshotId:'phone390',nodeId:'phone390-n691'},{snapshotId:'phone430',nodeId:'phone430-n691'}],settings:[],childOrders:[],css:'',styleBindings:[390,430].map((width,index)=>({componentKey:'workshops_heading',binding:{sourceFactId:`phone${width}:text:phone${width}-t367`,selector:' .elementor-heading-title',minWidth:index?410:1,maxWidth:index?768:409,properties:['font-size','line-height']}})),nativeStyleSettings:[['typography_font_size_mobile',20],['typography_line_height_mobile',28],['align_mobile','center']].map(([controlId,size])=>({componentKey:'workshops_heading',setting:{controlId,minWidth:1,maxWidth:768,value:typeof size==='number'?{size,unit:'px'}:size,sourceFactIds:['phone390:text:phone390-t367'],reason:'Synthetic original plan retained as explicitly withdrawn evidence.'}}))} as any;}
 function withdrawalSource(){return {snapshots:[390,430].map(width=>({id:`phone${width}`,viewport:{width}})),facts:Object.fromEntries([390,430].map((width,index)=>[`phone${width}:text:phone${width}-t367`,{kind:'text',snapshotId:`phone${width}`,nodeId:`phone${width}-n691`,value:{style:{'font-size':index?'24px':'20px','line-height':index?'33.6px':'28px'}}}]))};}
@@ -62,7 +76,7 @@ test('literal withdrawal changes exactly two mobile plans, preserves source rang
  assert.doesNotThrow(()=>assertPhoneTypographyWithdrawalSource(withdrawalSource()));const fake=withdrawalSource();fake.facts['phone430:text:phone430-t367'].value.style['font-size']='20px';assert.throws(()=>assertPhoneTypographyWithdrawalSource(fake),/actual_phone_source/);
 });
 
-test('second amendment real CLI keeps prior bundle/program immutable, verifies all media and loads exactly a two-link chain',async()=>{
+test('second amendment real CLI keeps prior bundle/program immutable, verifies all media and loads exactly a two-link chain',async()=>withWorkspaceClaim(async()=>{
  const f=await withdrawalFixture();try{
   const old=await readFile(f.prior.bundle.path),program=await readFile(f.request.program.path);await unlink(path.join(f.finalRunDirectory,'.lock'));
   const result:any=await runFullReplicaCLI(['amend-unwritten-body-style','--run-dir',f.finalRunDirectory,'--request',f.requestRef.path],{async acquireRemoteLock(){return acquireLock(f.directory);},async createDependencies(options){assert.equal(options.bodyStyleAmendment?.request.version,2);return f.dependencies;}});
@@ -71,7 +85,7 @@ test('second amendment real CLI keeps prior bundle/program immutable, verifies a
   const loaded=await loadBodyStyleAmendment(f.finalRunDirectory,state.bodyStyleAmendment,f.manifest);assert.equal(loaded.request.version,2);assert.equal(loaded.previous!.request.version,1);assert.equal(loaded.effectiveProgramHash,loaded.previous!.effectiveProgramHash);assert.equal((await readBodyStyleAmendmentMedia(f.finalRunDirectory,loaded.request)).proof.count,26);
   const request={...f.request,previousAmendment:state.bodyStyleAmendment,expectedStateRevision:3};const third=await f.put('third.json',request);await assert.rejects(readUnwrittenBodyStyleRequest(third.path,f.manifest,state,f.finalRunDirectory),/withdrawal_chain/);
  }finally{await f.cleanup();}
-});
+}));
 
 for(const variant of ['pending','previous','media','intent','source','readback'] as const)test(`second amendment rejects ${variant} before installing`,async()=>{
  const f=await withdrawalFixture();try{

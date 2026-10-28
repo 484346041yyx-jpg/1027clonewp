@@ -1,3 +1,4 @@
+import { runResources } from '../workspace/operation-resources.js';
 import path from 'node:path';
 import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises';
 import { z } from 'zod';
@@ -127,7 +128,7 @@ async function validate(root: string, request: Native44CurrentNativeRevisionRequ
 
 export async function prepareNative44CurrentNativeRevision(rootInput: string, input: unknown) {
   if (Native44CurrentNativeRevisionRequestSchema.parse(input).version === 2) return prepareNative44CurrentNativeV2(rootInput, input);
-  const root = await realpath(rootInput), request = Native44CurrentNativeV1RevisionRequestSchema.parse(input); noSecrets(request); const reader = new VerifiedEvidenceReader(root), unlock = await acquireLock(root);
+  const root = await realpath(rootInput), request = Native44CurrentNativeV1RevisionRequestSchema.parse(input); noSecrets(request); const reader = new VerifiedEvidenceReader(root), unlock = await acquireLock(root, await runResources(root, request.runId));
   try {
     await ensureDiskSpaceV2(root); const data = await validate(root, request, reader); await reader.revalidateAll();
     await mkdir(path.dirname(data.folder), { recursive: true }); await mkdir(data.folder);
@@ -144,7 +145,7 @@ export async function prepareNative44CurrentNativeRevision(rootInput: string, in
 export async function applyNative44CurrentNativeRevision(rootInput: string, runId: string, operationId: string, deps: Native44CurrentNativeRevisionDependencies, mode: 'apply' | 'reconcile' = 'apply') {
   const dispatchRoot = await realpath(rootInput), dispatchLocation = await paths(dispatchRoot, runId, operationId), dispatch = JSON.parse(await readFile(path.join(dispatchLocation.folder, 'bundle.json'), 'utf8'));
   if (dispatch.version === 2) return applyNative44CurrentNativeV2(dispatchRoot, runId, operationId, deps, mode);
-  const root = await realpath(rootInput), reader = new VerifiedEvidenceReader(root), unlock = await acquireLock(root); let remote: Native44CurrentNativeRemote | undefined;
+  const root = await realpath(rootInput), reader = new VerifiedEvidenceReader(root), unlock = await acquireLock(root, await runResources(root, runId)); let remote: Native44CurrentNativeRemote | undefined;
   try {
     await ensureDiskSpaceV2(root); const location = await paths(root, runId, operationId), bundleBytes = await readFile(path.join(location.folder, 'bundle.json')), bundle = JSON.parse(bundleBytes.toString('utf8')) as Bundle;
     if (bundle.version !== 1 || bundle.kind !== 'native44-current-native-bundle') fail('bundle_invalid');

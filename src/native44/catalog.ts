@@ -17,9 +17,11 @@ export type Native44WidgetType = typeof NATIVE44_ALL_TYPES[number];
 /** Additive identities; this list alone does not grant an old task permission. */
 export const CORE_SINGLE_PRODUCT_TYPES = ['wd_single_product_gallery','wd_single_product_title','wd_single_product_rating','wd_single_product_short_description','wd_single_product_price','wd_single_product_add_to_cart','wd_single_product_meta','wd_single_product_content','wd_single_product_additional_info_table','wd_single_product_tabs','wd_single_product_reviews','wd_wc_notices'] as const;
 export const EXTENDED_NATIVE_TYPES = [...NATIVE44_ALL_TYPES, ...CORE_SINGLE_PRODUCT_TYPES] as const;
-export type KnownNativeWidgetType = typeof EXTENDED_NATIVE_TYPES[number];
+/** Separate additive set; original 44 and qualified 12 never change implicitly. */
+export const RELATED_EXTENDED_NATIVE_TYPES = [...EXTENDED_NATIVE_TYPES, 'woocommerce-product-related'] as const;
+export type KnownNativeWidgetType = typeof RELATED_EXTENDED_NATIVE_TYPES[number];
 export function assertKnownNativeWidget(type: string): asserts type is KnownNativeWidgetType {
-  if (!(EXTENDED_NATIVE_TYPES as readonly string[]).includes(type)) throw Error(`native44_component_not_allowed: ${type}`);
+  if (!(RELATED_EXTENDED_NATIVE_TYPES as readonly string[]).includes(type)) throw Error(`native44_component_not_allowed: ${type}`);
 }
 export const NATIVE44_WIDGETS = NATIVE44_ALL_TYPES.filter(type => type !== 'container');
 export const NATIVE44_CATALOG_HASH = '5c459e861145db6968998aebbb724da274daa1a9a6e8aba54a6363668fa5e5c1';

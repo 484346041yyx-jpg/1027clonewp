@@ -4,7 +4,7 @@ import path from 'node:path';
 import { assertAllowedWidget, NATIVE44_ALL_TYPES, NATIVE44_CATALOG_HASH, NATIVE44_REQUIRED_ENVIRONMENT } from './catalog.js';
 import type { Native44NestedRelation, Native44Usage } from './recipes.js';
 import { assertNative44RegisteredSettings, assertNative44Settings, expandedNative44Controls } from './settings.js';
-import { currentProductExtension, readProductExtension } from './product-extension.js';
+import { currentProductExtension, readProductExtension, assertProgramNativeWidget } from './product-extension.js';
 import type { FileRef } from '../replica-v2/types.js';
 import { assertKnownNativeWidget } from './catalog.js';
 
@@ -56,7 +56,7 @@ async function verifiedJson<T>(root: string, ref: { path: string; sha256: string
 /** Daily use reads only the index, shared contract and components actually used by a page. */
 export async function loadNative44Knowledge(usedTypes: readonly string[] = NATIVE44_ALL_TYPES, root = DEFAULT_NATIVE44_KNOWLEDGE_DIR, extension?: FileRef): Promise<Native44Knowledge> {
   if (new Set(usedTypes).size !== usedTypes.length) throw new Error('native44_duplicate_component_request');
-  for (const type of usedTypes) extension ? assertKnownNativeWidget(type) : assertAllowedWidget(type);
+  for (const type of usedTypes) assertProgramNativeWidget(type, extension);
   const extended = extension ? await readProductExtension(extension, path.resolve(root,'../..')) : undefined;
   const index = JSON.parse(await readFile(path.join(root, 'index.json'), 'utf8')) as Native44KnowledgeIndex;
   if (index.schemaVersion !== 1 || index.artifactType !== 'native44-knowledge' || index.catalogHash !== NATIVE44_CATALOG_HASH) throw new Error('native44_knowledge_index_invalid');

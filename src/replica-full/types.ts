@@ -5,6 +5,16 @@ import type { NativeImagePolicy, NativeImageCheck } from './native-image-policy.
 import type { ResponsivePlan } from '../replica-responsive/contract.js';
 
 export interface FullReplicaFileRef { path: string; sha256: string }
+/** A task-owned, source-bound extension added only after the ordinary native body save. */
+export interface FullReplicaConfiguratorSpec {
+  version: 1; kind: 'clonewp-bottle-configurator'; widgetType: 'clonewp_bottle_configurator';
+  sourceUrl: string; sourceUnitIds: string[]; sourceFactIds: string[];
+  slotComponentKey: string; formComponentKey: string; widgetKey: string;
+  catalogTemplate: FullReplicaFileRef; imageManifest: FullReplicaFileRef;
+  mediaKeys: string[]; sourceEvidence: FullReplicaFileRef[];
+  packageManifest: FullReplicaFileRef; registrationEvidence: FullReplicaFileRef;
+  packageFiles: { php: string; js: string; css: string };
+}
 export interface FullReplicaSourcePartition { allUnits: string[]; headerUnits: string[]; bodyUnits: string[]; footerUnits?: string[]; unselectedBodyUnits?: string[]; selection?: { version: 1; userInstruction: string; targetSlug?: string; evidence: FullReplicaFileRef } }
 export interface FullReplicaManifest {
   componentExtension?: FullReplicaFileRef;
@@ -24,7 +34,7 @@ export interface FullReplicaManifest {
   sourceEvidence: FullReplicaFileRef;
   sourcePartition: FullReplicaSourcePartition;
   header?: { plan: HeaderModulePlan; bundleDirectory: string; assets: FullReplicaFileRef };
-  body: { program: FullReplicaFileRef; css: FullReplicaFileRef; sourceUnits: FullReplicaFileRef; navigationForms?: NavigationFormSpec[] };
+  body: { program: FullReplicaFileRef; css: FullReplicaFileRef; sourceUnits: FullReplicaFileRef; navigationForms?: NavigationFormSpec[]; configurator?: FullReplicaConfiguratorSpec };
 }
 export interface FullReplicaPreparedHeader { planHash: string; moduleKey: string; bundleDirectory: string; payload: unknown }
 export interface FullReplicaPreparedBody {
@@ -74,7 +84,7 @@ export interface FullReplicaReview {
 export interface FullReplicaPublishedCheckpoint extends Omit<FullReplicaBoundCheckpoint, 'previewUrl'> {
   status: 'publish'; publicUrl: string;
 }
-export type FullReplicaRemotePhase = 'header' | 'page' | 'body' | 'binding' | 'publish' | 'style-revision' | 'header-style-revision' | 'motion-revision' | 'layout-revision' | 'navigation-return-revision';
+export type FullReplicaRemotePhase = 'header' | 'page' | 'body' | 'binding' | 'publish' | 'style-revision' | 'header-style-revision' | 'motion-revision' | 'layout-revision' | 'navigation-return-revision' | 'catalog-revision';
 export interface FullReplicaOperation {
   operationId: string; taskId: string; runId: string; phase: FullReplicaRemotePhase;
   expectedCheckpointHash: string; createdAt: string;
@@ -113,6 +123,7 @@ export interface FullReplicaDependencies {
   reviseLayout?(prepared: FullReplicaPrepared, bound: FullReplicaBoundCheckpoint, plan: FullReplicaFileRef, operation: FullReplicaOperation): Promise<FullReplicaBoundCheckpoint>;
   rebaseCurrentDraft?(bound: FullReplicaBoundCheckpoint, operation: FullReplicaOperation, currentBodyHash: string, currentDocumentHash: string): Promise<FullReplicaBoundCheckpoint>;
   reviseNavigationReturn?(prepared: FullReplicaPrepared, bound: FullReplicaBoundCheckpoint, operation: FullReplicaOperation): Promise<FullReplicaBoundCheckpoint>;
+  reviseConfiguratorCatalog?(prepared: FullReplicaPrepared, bound: FullReplicaBoundCheckpoint, catalog: import('../configurator/contract.js').Catalog, packageManifest: FullReplicaFileRef, operation: FullReplicaOperation): Promise<FullReplicaBoundCheckpoint>;
   /** Read-only remote reconciliation. `before` confirms no mutation occurred; it never retries. */
   reconcileOperation?(prepared: FullReplicaPrepared, operation: FullReplicaOperation, checkpoints: FullReplicaRunState['checkpoints']): Promise<FullReplicaReconciliation>;
 }

@@ -201,7 +201,10 @@ test('a later healthy read-only page wins and every losing owned tab is closed',
       requests++;
       return route.fulfill({ status: requests === 1 ? 503 : 200, contentType: 'text/html', body: requests === 1 ? 'Unavailable' : '<main>Actual reference page</main>' });
     });
-    const result = await openReadOnlyPage(context, 'https://reference.example/shop/', { staggerMs: 10, budgetMs: 3000 });
+    // This integration checks selection/cleanup, not browser startup performance.
+    // Other concurrent workspace tasks can consume the original 3s budget.
+    // Deterministic deadline/late-cleanup tests above still enforce short hard bounds.
+    const result = await openReadOnlyPage(context, 'https://reference.example/shop/', { staggerMs: 10, budgetMs: 10000 });
     assert.ok(result.attempts >= 2 && result.attempts <= 3);
     assert.equal(await result.page.locator('main').innerText(), 'Actual reference page');
     assert.deepEqual(context.pages(), [result.page]);

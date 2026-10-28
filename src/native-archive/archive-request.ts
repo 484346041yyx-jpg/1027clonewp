@@ -1,0 +1,8 @@
+/** Execute trusted native document code in a temporary WooCommerce category query.
+ * This supplies a request context, not evidence that a widget renders correctly.
+ * Callers must use read-only code and independently verify the target runtime.
+ */
+export function nativeArchiveRequestPHP(termId: number, page: number, perPage: number, code: string): string {
+  if (!Number.isSafeInteger(termId) || termId < 1 || !Number.isSafeInteger(page) || page < 1 || page > 10000 || !Number.isSafeInteger(perPage) || perPage < 1 || perPage > 100 || typeof code !== 'string' || !code.trim()) throw Error('native_archive_request_input');
+  return `$archivePrior=[];foreach(['post','product','wp_query','wp_the_query'] as $name)$archivePrior[$name]=['present'=>array_key_exists($name,$GLOBALS),'value'=>$GLOBALS[$name]??null];try{$term=get_term(${termId},'product_cat');if(!$term||is_wp_error($term)||$term->taxonomy!=='product_cat'||(int)$term->term_id!==${termId})throw new \\RuntimeException('native_archive_request_term');$archiveQuery=new \\WP_Query();$GLOBALS['wp_query']=$archiveQuery;$GLOBALS['wp_the_query']=$archiveQuery;$archiveQuery->query(['post_type'=>'product','product_cat'=>$term->slug,'paged'=>${page},'posts_per_page'=>${perPage}]);if(!$archiveQuery->is_tax('product_cat')||(int)$archiveQuery->get_queried_object_id()!==${termId}||(int)$archiveQuery->get('paged')!==${page})throw new \\RuntimeException('native_archive_request_context');unset($GLOBALS['post'],$GLOBALS['product']);return (static function(){${code}})();}finally{foreach($archivePrior as $name=>$prior){if($prior['present'])$GLOBALS[$name]=$prior['value'];else unset($GLOBALS[$name]);}}`;
+}

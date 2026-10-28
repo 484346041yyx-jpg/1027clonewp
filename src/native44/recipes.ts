@@ -66,7 +66,7 @@ const rows: Record<Native44WidgetType, Recipe> = {
 };
 export function native44Usage(type: string, repeaterKeys: string[] = []): Native44Usage {
   assertAllowedWidget(type);
-  const row = (rows as Record<string,Recipe>)[type] ?? ((CORE_SINGLE_PRODUCT_TYPES as readonly string[]).includes(type) ? { suitableFor: ['当前商品原生字段与服务'], primaryContentFields: [], contentModel: 'resource-query' as const, resourceDependencies: ['current-product'], restrictions: ['同一已绑定原生商品文档；数据来自当前 WooCommerce 商品，不静态替代'] } : undefined);
+  const row = (rows as Record<string,Recipe>)[type] ?? ((CORE_SINGLE_PRODUCT_TYPES as readonly string[]).includes(type) || type === 'woocommerce-product-related' ? { suitableFor: ['当前商品原生字段与服务'], primaryContentFields: [], contentModel: 'resource-query' as const, resourceDependencies: ['current-product'], restrictions: ['同一已绑定原生商品文档；数据来自当前 WooCommerce 商品，不静态替代'] } : undefined);
   return {
     unsuitableFor: ['需要未验证业务服务或来源事实的内容'],
     contentModel: 'settings', repeaterKeys,

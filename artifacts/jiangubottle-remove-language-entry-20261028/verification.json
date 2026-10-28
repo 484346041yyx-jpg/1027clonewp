@@ -1,0 +1,14 @@
+{
+  "headerId": "header_196552",
+  "removedIds": [
+    "cw-b6b2768ffb26-languageDesktop",
+    "cw-b6b2768ffb26-languageMobile"
+  ],
+  "desktopWidth": 1920,
+  "mobileWidth": 390,
+  "independentReadback": true,
+  "menuRecordsUnchanged": true,
+  "otherHeaderAndThemeOptionsUnchanged": true,
+  "testSiteRequests": 0,
+  "newResources": 0
+}

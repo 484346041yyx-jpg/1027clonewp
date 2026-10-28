@@ -132,7 +132,7 @@ export async function reconcileFullReplica(input: unknown, dependencies: FullRep
   const operation = current.pending, checkpoints = current.checkpoints;
   if (operation.taskId !== manifest.taskId || operation.runId !== manifest.runId || operation.expectedCheckpointHash !== fullReplicaHash(checkpoints)) fail('reconciliation_intent_conflict');
   const expected: FullReplicaRemotePhase = !checkpoints.page ? 'page' : manifest.headerProvider !== 'reused-woodmart-header' && !checkpoints.header ? 'header' : !checkpoints.body ? 'body' : !checkpoints.bound ? 'binding' : 'publish';
-  if (operation.phase !== expected && !(['style-revision', 'header-style-revision', 'motion-revision', 'layout-revision', 'navigation-return-revision'].includes(operation.phase) && checkpoints.bound && !checkpoints.published)) fail('reconciliation_phase_conflict');
+  if (operation.phase !== expected && !(['style-revision', 'header-style-revision', 'motion-revision', 'layout-revision', 'navigation-return-revision', 'catalog-revision'].includes(operation.phase) && checkpoints.bound && !checkpoints.published)) fail('reconciliation_phase_conflict');
   let result;
   try { const prepared = await prepareFullReplica(manifest, dependencies); result = await dependencies.reconcileOperation(prepared, operation, structuredClone(checkpoints)); }
   catch (error) { await dependencies.writeState({ ...structuredClone(current), updatedAt: new Date().toISOString(), lastError: { phase: operation.phase, operationId: operation.operationId, code: safeFailure(error) } }); throw error; }
@@ -149,6 +149,7 @@ export async function reconcileFullReplica(input: unknown, dependencies: FullRep
     else if (operation.phase === 'motion-revision') { if ((value as FullReplicaBoundCheckpoint).cssHash !== state.checkpoints.bound!.cssHash) fail('native_motion_css_changed'); acceptStyleRevision(state, value as FullReplicaBoundCheckpoint, manifest); }
     else if (operation.phase === 'layout-revision') { if ((value as FullReplicaBoundCheckpoint).cssHash !== state.checkpoints.bound!.cssHash) fail('layout_css_changed'); acceptStyleRevision(state, value as FullReplicaBoundCheckpoint, manifest); }
     else if (operation.phase === 'navigation-return-revision') { if ((value as FullReplicaBoundCheckpoint).cssHash !== state.checkpoints.bound!.cssHash) fail('navigation_return_css_changed'); acceptStyleRevision(state, value as FullReplicaBoundCheckpoint, manifest); }
+    else if (operation.phase === 'catalog-revision') { if ((value as FullReplicaBoundCheckpoint).cssHash !== state.checkpoints.bound!.cssHash) fail('catalog_css_changed'); acceptStyleRevision(state, value as FullReplicaBoundCheckpoint, manifest); }
     else if (operation.phase === 'header-style-revision') { acceptHeaderStyleRevision(state, value as FullReplicaHeaderStyleRevision, manifest); }
     else { if (!manifest.reviewSkipPolicy && (!state.review || state.review.decision !== 'approved')) fail('reconciliation_review_missing'); validatePublished(value as FullReplicaPublishedCheckpoint, checkpoints.bound!, manifest); state.checkpoints.published = value as FullReplicaPublishedCheckpoint; }
     state.revision++;
@@ -280,5 +281,33 @@ export async function reviseFullReplicaNavigationReturn(input: unknown, dependen
   state.pending = operation; state.review = null; state.status = 'building'; state.updatedAt = new Date().toISOString(); await dependencies.writeState(structuredClone(state));
   try { const result = await dependencies.reviseNavigationReturn(prepared, state.checkpoints.bound!, operation); if (result.cssHash !== state.checkpoints.bound!.cssHash) fail('navigation_return_css_changed'); acceptStyleRevision(state, result, manifest); state.pending = null; state.revision++; state.status = 'awaiting-review'; clearFailure(state); }
   catch (error) { state.status = 'write-unknown'; state.lastError = { phase: operation.phase, operationId: operation.operationId, code: safeFailure(error) }; }
+  state.updatedAt = new Date().toISOString(); await dependencies.writeState(structuredClone(state)); return state;
+}
+
+/** Task-owned catalog revision. The frozen manifest and source inputs remain unchanged. */
+export async function reviseFullReplicaConfiguratorCatalog(input: unknown, dependencies: FullReplicaDependencies,
+  current: FullReplicaRunState, catalog: import('../configurator/contract.js').Catalog,
+  packageManifest: import('./types.js').FullReplicaFileRef, expectedFingerprint: string): Promise<FullReplicaRunState> {
+  const manifest = validateFullReplicaManifest(input); validateResume(current, manifest);
+  if (current.pending) fail('reconciliation_required');
+  if (!manifest.body.configurator || !current.checkpoints.bound || !current.checkpoints.body || current.checkpoints.published)
+    fail('catalog_revision_owned_draft_required');
+  if (fullReplicaFingerprint(current.checkpoints.bound) !== expectedFingerprint) fail('catalog_revision_stale');
+  if (!dependencies.reviseConfiguratorCatalog) fail('catalog_revision_adapter_missing');
+  let prepared;
+  try { prepared = await prepareFullReplica(manifest, dependencies); }
+  catch (error) { await dependencies.writeState({ ...structuredClone(current), updatedAt: new Date().toISOString(),
+    lastError: { phase: 'preparation', code: safeFailure(error) } }); throw error; }
+  const operation: FullReplicaOperation = { operationId: randomUUID(), taskId: manifest.taskId, runId: manifest.runId,
+    phase: 'catalog-revision', expectedCheckpointHash: fullReplicaHash(current.checkpoints), createdAt: new Date().toISOString() };
+  const state = structuredClone(current); state.pending = operation; state.review = null; state.status = 'building';
+  state.updatedAt = new Date().toISOString(); await dependencies.writeState(structuredClone(state));
+  try {
+    const result = await dependencies.reviseConfiguratorCatalog(prepared, state.checkpoints.bound!, catalog, packageManifest, operation);
+    if (result.cssHash !== state.checkpoints.bound!.cssHash) fail('catalog_css_changed');
+    acceptStyleRevision(state, result, manifest); state.pending = null; state.revision++; state.status = 'awaiting-review'; clearFailure(state);
+  } catch (error) {
+    state.status = 'write-unknown'; state.lastError = { phase: operation.phase, operationId: operation.operationId, code: safeFailure(error) };
+  }
   state.updatedAt = new Date().toISOString(); await dependencies.writeState(structuredClone(state)); return state;
 }

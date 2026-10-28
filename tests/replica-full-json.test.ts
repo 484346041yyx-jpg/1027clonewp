@@ -9,6 +9,7 @@ import { fullReplicaHash, validateFullReplicaManifest } from '../src/replica-ful
 import { runFullReplicaCLI } from '../src/replica-full/cli.js';
 import { WordPressFullReplicaDriver } from '../src/replica-full/driver.js';
 import { NATIVE44_ADAPTER_SOURCE_PATHS } from '../src/components/capabilities.js';
+import { claimWorkspace, checkpointWorkspace, inspectWorkspace } from '../src/workspace/service.js';
 
 test('full JSON preserves exact historical canonical bytes and hashes for valid small inputs', () => {
   const golden = '{"a":[0,1e+21,"\\ud800"],"b":true}', input = { b: true, a: [-0, 1e21, '\ud800'] };
@@ -48,9 +49,13 @@ test('full domain remains bounded independently while the header limits stay unc
 });
 
 test('a whole responsive manifest above 20000 values can enter the local CLI and keep its exact persisted hash', async () => {
-  const cache = await realpath('D:/cloneWP/.cache'), directory = path.join(cache, `full-json-${randomUUID()}`);
-  await mkdir(directory);
+  const cache = await realpath('D:/cloneWP/.cache'), name = `full-json-${randomUUID()}`, directory = path.join(cache, name);
+  const status = await inspectWorkspace('D:/cloneWP');
+  const owner = await claimWorkspace('D:/cloneWP', { agent: 'codex', sessionId: name, taskId: name, expectedRevision: status.revision, expectedFingerprint: status.fingerprint, resources: [`local:cache/${name}`] });
+  const originalToken = process.env.CLONEWP_WORKSPACE_TOKEN;
+  process.env.CLONEWP_WORKSPACE_TOKEN = owner.token;
   try {
+    await mkdir(directory);
     const bytes = '{}', sha256 = createHash('sha256').update(bytes).digest('hex'), ref = { path: path.join(directory, 'evidence.json'), sha256 };
     await writeFile(ref.path, bytes);
     const sections = Array.from({ length: 19 }, (_, sectionIndex) => ({ key: `section_${sectionIndex}`, mode: 'shared', reason: 'Synthetic source-owned phone settings exercise whole-page serialization.', evidence: [{ snapshotId: 'phone-390', nodeId: 'root' }, { snapshotId: 'phone-430', nodeId: 'root' }], settings: Array.from({ length: 120 }, (_, itemIndex) => ({ componentKey: `section_${sectionIndex}_item_${itemIndex}`, values: { padding_mobile: { unit: 'px', top: 0, right: 0, bottom: 0, left: 0, isLinked: false } } })), childOrders: [], css: '' }));
@@ -68,9 +73,20 @@ test('a whole responsive manifest above 20000 values can enter the local CLI and
     const status = await runFullReplicaCLI(['status', '--run-dir', run], { async createDependencies() { assert.fail('Read-only status must not create remote dependencies'); } }) as { remoteWrites: number };
     assert.equal(status.remoteWrites, 0);
   } finally {
-    const actual = await realpath(directory);
-    assert.equal(actual, directory); assert.ok(path.relative(cache, actual).startsWith('full-json-'));
-    await rm(actual, { recursive: true, force: true });
+    try {
+      const actual = await realpath(directory);
+      assert.equal(actual, directory); assert.ok(path.relative(cache, actual).startsWith('full-json-'));
+      await rm(actual, { recursive: true, force: true });
+    } finally {
+      if (originalToken === undefined) delete process.env.CLONEWP_WORKSPACE_TOKEN;
+      else process.env.CLONEWP_WORKSPACE_TOKEN = originalToken;
+      const current = await inspectWorkspace('D:/cloneWP');
+      await checkpointWorkspace('D:/cloneWP', {
+        token: owner.token, expectedRevision: owner.revision, expectedFingerprint: current.fingerprint,
+        notes: { goal: 'Full JSON CLI fixture', summary: 'Validated local full replica JSON behavior', progress: 'completed', decisions: [], changes: [], checks: [], openItems: [], nextSteps: ['Continue project testing'] },
+        release: true,
+      });
+    }
   }
 });
 

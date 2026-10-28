@@ -7,6 +7,9 @@ import { validateNative44Program } from './validate.js';
 import { prepareCoreProductBindings, assertCoreProductPageRuntime } from './current-product.js';
 import { assertProgramNativeWidget } from './product-extension.js';
 import { assertProductRuntimeCapability } from '../wordpress/current-product-runtime.js';
+import { adaptNative44Categories } from './native-categories.js';
+import { adaptNativeRelatedProductComponent } from './native-related-products.js';
+import { relatedProductsQueryKey } from '../wordpress/related-products.js';
 import type { ControlInfo, LegacySchema } from '../wordpress/types.js';
 import { createHash } from 'node:crypto';
 import { canvasShellCSS, type CanvasShellProof } from '../wordpress/canvas-shell.js';
@@ -14,7 +17,7 @@ import { pendingFormValidationProjection, assertNative44PendingFormCapability, a
 
 const compiledProofs=new WeakMap<object,string>();
 const compiledPendingForms=new WeakMap<object,Array<{capability:PendingFormCapability;authorization:PendingFormAttributeAuthorization}>>();
-const compilationDigest=(proof:Native44Compiled,composition:unknown)=>createHash('sha256').update(JSON.stringify({composition,replicationProfile:proof.replicationProfile,selectionRulesHash:proof.selectionRulesHash,editorNaming:proof.editorNaming,editorLabels:proof.editorLabels,pendingFormBindings:proof.pendingFormBindings,articleListPolicy:proof.articleListPolicy,postQueryReceipts:proof.postQueryReceipts,currentProductBinding:proof.currentProductBinding})).digest('hex');
+const compilationDigest=(proof:Native44Compiled,composition:unknown)=>createHash('sha256').update(JSON.stringify({composition,replicationProfile:proof.replicationProfile,selectionRulesHash:proof.selectionRulesHash,editorNaming:proof.editorNaming,editorLabels:proof.editorLabels,pendingFormBindings:proof.pendingFormBindings,articleListPolicy:proof.articleListPolicy,postQueryReceipts:proof.postQueryReceipts,categoryQueryReceipts:proof.categoryQueryReceipts,relatedProductBindings:proof.relatedProductBindings,currentProductBinding:proof.currentProductBinding})).digest('hex');
 function assertPendingCompilation(proof:Native44Compiled,schemas?:Record<string,LegacySchema>):void{
   const permits=compiledPendingForms.get(proof)??[],elements=new Map<string,ElementorElement>();
   const walk=(nodes:ElementorElement[])=>{for(const node of nodes){elements.set(node.id,node);walk(node.elements);}};walk(proof.composition.elements);
@@ -89,6 +92,12 @@ export function compileNative44(input: Native44Program, options: Native44Compile
   if(program.currentRecord && options.currentProductRuntime) { const runtime=assertProductRuntimeCapability(options.currentProductRuntime,program.currentRecord,options.targetOrigin!);out.currentProductBinding={productId:runtime.productId,contextKey:program.currentRecord.contextKey,targetOrigin:runtime.targetOrigin,pageId:runtime.pageId,runId:runtime.runId}; }
   if(program.articleListPolicy)out.articleListPolicy=program.articleListPolicy;
   if(walkNative44(program.blocks).some(node=>node.kind==='native-posts'))out.postQueryReceipts=[];
+  if(walkNative44(program.blocks).some(node=>node.kind==='native-categories'))out.categoryQueryReceipts=[];
+  const relatedNodes=walkNative44(program.blocks).filter(node=>node.kind==='native-related-products');
+  if(relatedNodes.length){
+    if(!program.currentRecord||!options.targetOrigin||!options.relatedQualification||options.relatedQualification.extensionSha256!==program.componentExtension?.sha256)throw Error('native_related_product_current_qualification_required');
+    assertProductRuntimeCapability(options.currentProductRuntime,program.currentRecord,options.targetOrigin);out.relatedProductBindings=[];
+  }else if(options.relatedProducts?.length)throw Error('native_related_product_provider_unused');
   const ids=new Set<string>(),used=new Set<string>(),queried=new Set<number>();
   const resolve=(value:unknown):unknown=>{if(Array.isArray(value))return value.map(resolve);if(value&&typeof value==='object'){const r=value as Record<string,unknown>;if(Object.hasOwn(r,'$asset')){const asset=typeof r.$asset==='string'?assetMap.get(r.$asset):undefined;if(!asset||Object.keys(r).length!==1)throw new Error('Malformed or unresolved native44 media slot');return{id:asset.attachmentId,url:asset.url};}return Object.fromEntries(Object.entries(r).map(([key,v])=>[key,resolve(v)]));}return value;};
   const native=(key:string,type:string,inputSettings:Record<string,unknown>,children:ElementorElement[],depth:number,componentKey=key):ElementorElement=>{
@@ -165,6 +174,17 @@ export function compileNative44(input: Native44Program, options: Native44Compile
       const adapted=adaptNative44Products(node,schema,catalog,queried,program.taskId,native44Id(program.taskId,node.key));
       widget=native(node.key,node.widgetType,moduleSettings(node,node.widgetType,resolve(adapted.settings)as Record<string,unknown>),[],depth);out.queryReceipts.push(...adapted.receipts);
       bindNativeSettings(node.key,widget.id,widget.settings,schema.controls);
+    }else if(node.kind==='native-related-products'){
+      const schema=schemas['woocommerce-product-related'],provider=options.relatedProducts?.find(p=>p.queryKey===relatedProductsQueryKey(node.query));
+      if(!schema||!provider||!options.relatedQualification||!program.currentRecord||!options.targetOrigin)throw Error('native_related_product_adapter_inputs_required');
+      const adapted=adaptNativeRelatedProductComponent(node,{provider,selection:program.currentRecord,query:node.query,targetOrigin:options.targetOrigin,schema,qualification:options.relatedQualification});
+      widget=native(node.key,node.widgetType,moduleSettings(node,node.widgetType,adapted.settings),[],depth);out.relatedProductBindings!.push(adapted);
+      bindNativeSettings(node.key,widget.id,widget.settings,schema.controls);
+    }else if(node.kind==='native-categories'){
+      const schema=schemas.wd_product_categories;if(!schema)throw Error(`Registered categories adapter unavailable: ${node.key}`);
+      const adapted=adaptNative44Categories(node,schema,options.categories,native44Id(program.taskId,node.key),options.targetOrigin);
+      widget=native(node.key,node.widgetType,moduleSettings(node,node.widgetType,adapted.settings),[],depth);out.categoryQueryReceipts!.push(adapted.receipt);
+      bindNativeSettings(node.key,widget.id,widget.settings,schema.controls);
     }else if(node.kind==='native-posts'){
       const schema=schemas.wd_blog;if(!schema)throw Error(`Registered blog adapter unavailable: ${node.key}`);
       const adapted=adaptNative44Posts(node,schema,options.posts,native44Id(program.taskId,node.key),options.targetOrigin);
@@ -195,6 +215,10 @@ export function compileNative44(input: Native44Program, options: Native44Compile
       const adapted=adaptNative44Products(node,schema,catalog,queried,program.taskId,native44Id(program.taskId,key));content=[native(key,node.widgetType,resolve(adapted.settings)as Record<string,unknown>,[],depth+1,node.key)];out.queryReceipts.push(...adapted.receipts);out.widgetTargets[node.key]=content[0].id;
     }else if(node.kind==='native-posts'){
       throw Error('Native posts cannot reinterpret a historical wrapper program');
+    }else if(node.kind==='native-categories'){
+      throw Error('Native categories cannot reinterpret a historical wrapper program');
+    }else if(node.kind==='native-related-products'){
+      throw Error('Native related products cannot reinterpret a historical wrapper program');
     }else{
       const schema=schemas[node.widgetType];if(!schema)throw new Error(`Registered native component unavailable: ${node.widgetType}`);
       if(node.kind==='native-carousel')validateNative44Carousel(node,schema);

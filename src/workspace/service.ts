@@ -2,6 +2,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { WORKSPACE_LEASE_MS, initialState, stateSchema, handoffSchema, claimSchema, ownedSchema, checkpointSchema, recoverSchema, type WorkspaceState, type SharedHandoff } from './contracts.js';
 import { STATE, hash, fail, readLocal, atomicJson, transaction, captureWorkspace, changedFiles, inspectTransaction, verifySnapshot } from './files.js';
+import { claimResourceWorkspace, resourceOwner, inspectResourceWorkspace, heartbeatResourceWorkspace, checkpointResourceWorkspace, recoverResourceWorkspace, hasResourceOperations } from './resources.js';
 
 export async function readWorkspaceState(root: string): Promise<WorkspaceState> {
   try { const state = stateSchema.parse(JSON.parse((await readLocal(root, STATE)).toString())); if (state.lock) verifySnapshot(state.lock.baseline); return state; }
@@ -42,6 +43,7 @@ export async function inspectWorkspace(root: string, now = Date.now()) {
   }
   const lock = state.lock ? (({ tokenHash: _token, baseline, ...owner }) => ({ ...owner, baselineFingerprint: baseline.fingerprint, expired: Date.parse(owner.expiresAt) <= now }))(state.lock) : null;
   return {
+    ...await inspectResourceWorkspace(root, now),
     authority: 'reported-context-not-authorization' as const, revision: state.revision, fence: state.fence, lock,
     fingerprint: snapshot.fingerprint, rulesFingerprint: snapshot.rulesFingerprint,
     handoff, handoffFresh: handoff ? handoff.snapshot.fingerprint === snapshot.fingerprint && (!handoff.runId || run?.sha256 === handoff.runStateHash) : null,
@@ -67,6 +69,11 @@ function owned(state: WorkspaceState, token: string) {
 function lease(lock: NonNullable<WorkspaceState['lock']>, now: number) { if (Date.parse(lock.expiresAt) <= now) fail('lease_expired_heartbeat_or_recover'); }
 
 export async function claimWorkspace(root: string, input: unknown, now = Date.now()) {
+  if (input && typeof input === 'object' && 'resources' in input) {
+    const legacy = await readWorkspaceState(root);
+    if (legacy.lock && legacy.lock.taskId === (input as {taskId?:string}).taskId) fail('task_already_owned_explicit_recovery_required');
+    return claimResourceWorkspace(root, input, now);
+  }
   const request = claimSchema.parse(input);
   return transaction(root, async () => {
     const state = await readWorkspaceState(root); revision(state, request.expectedRevision);
@@ -83,6 +90,7 @@ export async function claimWorkspace(root: string, input: unknown, now = Date.no
 }
 export async function heartbeatWorkspace(root: string, input: unknown, now = Date.now()) {
   const request = ownedSchema.parse(input);
+  if (await resourceOwner(root, request.token)) return heartbeatResourceWorkspace(root, request, now);
   return transaction(root, async () => {
     const state = await readWorkspaceState(root); revision(state, request.expectedRevision);
     const lock = owned(state, request.token);
@@ -93,10 +101,12 @@ export async function heartbeatWorkspace(root: string, input: unknown, now = Dat
 }
 export async function checkpointWorkspace(root: string, input: unknown, now = Date.now()) {
   const request = checkpointSchema.parse(input);
+  if (await resourceOwner(root, request.token)) return checkpointResourceWorkspace(root, request, now);
   return transaction(root, async () => {
     const state = await readWorkspaceState(root); revision(state, request.expectedRevision);
     if (state.head) await readHandoff(root, state.head);
     const lock = owned(state, request.token); lease(lock, now);
+    if (request.release && await hasResourceOperations(root, lock.tokenHash)) fail('task_has_running_or_queued_operation');
     if (request.release) await noRunningOperation(root);
     const snapshot = await fingerprint(root, request.expectedFingerprint);
     const run = await runObservation(root, lock.runId, lock.taskId);
@@ -116,12 +126,14 @@ export async function checkpointWorkspace(root: string, input: unknown, now = Da
 }
 export async function recoverWorkspace(root: string, input: unknown, now = Date.now()) {
   const request = recoverSchema.parse(input);
+  if ((await inspectResourceWorkspace(root, now)).tasks.some(o => o.taskId === request.taskId)) return recoverResourceWorkspace(root, request, now);
   return transaction(root, async () => {
     const state = await readWorkspaceState(root); revision(state, request.expectedRevision);
     if (state.head) await readHandoff(root, state.head);
     const old = state.lock;
     if (!old || old.fence !== request.expectedFence || Date.parse(old.expiresAt) > now) fail('recovery_requires_exact_expired_owner');
     if (old.taskId !== request.taskId || old.runId !== request.runId) fail('recovery_task_identity_changed');
+    if (await hasResourceOperations(root, old.tokenHash)) fail('task_has_running_or_queued_operation_reconcile_required');
     await noRunningOperation(root);
     const snapshot = await fingerprint(root, request.expectedFingerprint), token = randomBytes(32).toString('hex');
     const record = handoffSchema.parse({ version: 1, kind: 'clonewp-shared-handoff', authority: 'reported-context-not-authorization', id: randomUUID(), revision: state.revision + 1, createdAt: new Date(now).toISOString(), agent: request.agent, sessionId: request.sessionId, taskId: request.taskId, ...(request.runId ? { runId: request.runId } : {}), fence: state.fence + 1, previous: state.head, snapshot, changedFiles: changedFiles(old.baseline, snapshot), notes: { goal: 'Recover an explicitly stopped local session', summary: request.reason, progress: 'blocked', decisions: ['No remote reconciliation or permission is granted by this recovery.'], changes: [], checks: [], openItems: ['Recheck current files and any pending remote operations before continuing.'], nextSteps: ['Read the previous handoff and actual task state.'] }, recovery: { previousAgent: old.agent, previousSession: old.sessionId, reason: request.reason } });
@@ -141,8 +153,10 @@ export async function recoverWorkspace(root: string, input: unknown, now = Date.
 /** Supplemental gate. An uninitialized/idle workspace preserves existing CLI behavior.
  * It does not replace the site's operation lock, ownership, CAS, or readback. */
 export async function assertWorkspaceAccess(root: string, token = process.env.CLONEWP_WORKSPACE_TOKEN, now = Date.now()) {
+  const scoped = await resourceOwner(root, token);
+  if (scoped) { lease(scoped, now); return; }
   const state = await readWorkspaceState(root);
-  if (!state.lock) return;
+  if (!state.lock && !(await inspectResourceWorkspace(root, now)).tasks.length) return;
   if (!token || !/^[a-f0-9]{64}$/.test(token)) fail('writer_token_required');
   lease(owned(state, token), now);
 }

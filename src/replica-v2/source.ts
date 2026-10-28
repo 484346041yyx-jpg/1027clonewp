@@ -121,13 +121,14 @@ export interface PreparedReplicaJobV2 {
   status: 'awaiting-component-plan' | 'blocked'; error?: string; observationPath: string; sourceFactsPath: string; sourceCompletenessPath?: string; componentPlanPath: string; assetsManifestPath: string; programPath: string;
 }
 /** Read-only source intake. The current desktop is sufficient; responsive evidence can be appended in a new facts revision later. */
-export async function prepareObservedReferenceV2(url: string, observedDirectory: string, options: { root?: string; finalDeliveryPolicy?: FinalDeliveryPolicy } = {}): Promise<PreparedReplicaJobV2> {
+export async function prepareObservedReferenceV2(url: string, observedDirectory: string, options: { root?: string; jobId?: string; finalDeliveryPolicy?: FinalDeliveryPolicy } = {}): Promise<PreparedReplicaJobV2> {
+  if (options.jobId !== undefined && (typeof options.jobId !== 'string' || options.jobId.length > 120 || !/^reference-v2-[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?$/.test(options.jobId))) throw new Error('Observed reference jobId must be a bounded reference-v2 directory name (lowercase letters, digits, hyphens or underscores; at most 120 characters)');
   const finalDeliveryPolicy = options.finalDeliveryPolicy === undefined ? undefined : FinalDeliveryPolicySchema.parse(options.finalDeliveryPolicy);
   const root = await realpath(path.resolve(options.root ?? process.cwd())), observationDir = insideProject(root, observedDirectory);
   const validated = await readObservationDirectoryV2(observationDir, url);
   if (!validated.sceneInventories?.length || validated.packets.some(packet => !validated.sceneInventories!.some(item => item.ref.snapshotId === packet.snapshot.id))) throw new Error('New replica v2 jobs require an independently captured whole-page scene inventory for every source snapshot');
   if (validated.packets.some(packet => !packet.commerceEvidence)) throw new Error('New replica v2 jobs require source-commerce observation evidence for every captured packet; use the current collector before authoring renderer decisions');
-  const jobId = `reference-v2-${makeRunId(url)}`, jobDir = path.join(root, 'references', jobId);
+  const jobId = options.jobId ?? `reference-v2-${makeRunId(url)}`, jobDir = path.join(root, 'references', jobId);
   await mkdir(path.join(root, 'references'), { recursive: true });
   if ((await realpath(path.join(root, 'references'))).toLowerCase() !== path.join(root, 'references').toLowerCase()) throw new Error('Reference jobs must stay in the real project directory');
   await mkdir(jobDir);

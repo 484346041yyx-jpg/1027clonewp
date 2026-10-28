@@ -1,4 +1,4 @@
-export const SOURCE_OBSERVER_TOOLS = ['cua_repl', 'claude_browser'] as const;
+export const SOURCE_OBSERVER_TOOLS = ['cua_repl', 'claude_browser', 'playwright'] as const;
 export type SourceObserverTool = typeof SOURCE_OBSERVER_TOOLS[number];
 export type SourceObservationMethod = 'user-opened-browser' | 'agent-opened-browser';
 export type SourceObserverBrowser = 'chrome' | 'edge' | 'iab' | 'chromium';
@@ -7,5 +7,6 @@ export type SourceObserverBrowser = 'chrome' | 'edge' | 'iab' | 'chromium';
 export function sourceObserverProvenanceAllowed(method: string, tool: string, browser: string): boolean {
   if (tool === 'cua_repl') return (method === 'user-opened-browser' || method === 'agent-opened-browser') && ['chrome', 'edge', 'iab'].includes(browser);
   if (tool === 'claude_browser') return method === 'agent-opened-browser' && ['chrome', 'edge', 'chromium'].includes(browser);
+  if (tool === 'playwright') return method === 'agent-opened-browser' && browser === 'chromium';
   return false;
 }

@@ -5,6 +5,8 @@ import { compileHeaderModule, type NativeHeaderContract, type ResolvedHeaderReso
 import type { WhbLayoutNode } from '../woodmart-header/layout.js';
 import { responsiveFail as fail } from './contract.js';
 import { compileHeaderModuleStyles } from '../woodmart-header/generic/styles.js';
+import { assertNativeHeaderMenuBindings } from '../woodmart-header/generic/menu-binding.js';
+import { headerModuleElementId } from '../woodmart-header/generic/compiler.js';
 import { responsiveOwnedHeaderDecisionSchema, expectedHeader, type ResponsiveDecisions } from './decisions.js';
 
 const mobileSchema = z.object({ version: z.union([z.literal(1), z.literal(2)]), scroll: responsiveOwnedHeaderDecisionSchema.optional(), mobileMaxWidth: z.number().int().min(600).max(900), tablet: z.literal('desktop'), rows: z.array(z.unknown()).min(1).max(3), css: z.string().max(262144), menuCSS: z.string().max(131072).optional() }).strict();
@@ -39,6 +41,7 @@ function mobileColumns(row: WhbLayoutNode): WhbLayoutNode[] {
 /** Same WHB object and native resource bindings. Never assigns a global menu
  * location: mobile uses the native mainmenu icon with its own selected menu. */
 export function compileAdaptiveHeaderModule(plan: HeaderModulePlan, id: string, contract: NativeHeaderContract, resources: ResolvedHeaderResources) {
+  if (plan.menuBindingPolicy && !plan.layout.mobile) fail('header_menu_mobile_plan_required');
   if (!plan.layout.mobile) return compileHeaderModule(plan, id, contract, resources);
   const { mobile, ...desktop } = plan.layout;
   const base = { ...plan, layout: desktop }, raw = compileHeaderModule(base, id, contract, resources), tree = nodes(raw.structure);
@@ -69,6 +72,7 @@ export function compileAdaptiveHeaderModule(plan: HeaderModulePlan, id: string, 
   // A later desktop menu must never replace the phone panel's own menu.
   const phoneMenu = mobile.rows.flatMap(r => Object.values(r.columns).flat()).find(e => e.type === 'mainmenu' && e.params.style === 'icon' && e.params.full_screen === true)!;
   if (!lastMenu || lastMenu.params?.full_screen?.value !== true || lastMenu.params?.menu_id?.value !== resources.menus[phoneMenu.menuKey!].slug) fail('header_phone_menu_aggregation');
+  assertNativeHeaderMenuBindings(plan, raw, contract, resources, key => headerModuleElementId(plan.moduleKey, key));
   return raw;
 }
 /** Scoped bridge keeps tablets on desktop presentation without changing any

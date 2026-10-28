@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { WORKSPACE_LEASE_MS, ownedSchema } from './contracts.js';
 import { localPath, fail } from './files.js';
 import { assertWorkspaceAccess, heartbeatWorkspace, readWorkspaceState } from './service.js';
+import { resourceOwner } from './resources.js';
 
 const entries = {
   test: 'tools/test.mjs', build: 'tools/build.mjs',
@@ -26,7 +27,8 @@ export const execSchema = z.object({
 /** No shell and no token in argv or files. Only an in-memory child environment. */
 export async function execWorkspace(root: string, input: unknown) {
   const request = execSchema.parse(input), state = await readWorkspaceState(root);
-  if (!state.lock) fail('not_lock_owner');
+  const scoped = await resourceOwner(root, request.token);
+  if (!state.lock && !scoped) fail('not_lock_owner');
   await assertWorkspaceAccess(root, request.token);
   if (request.args.some(arg => arg.includes(request.token))) fail('token_in_arguments');
   const filename = await localPath(root, entries[request.command]);
@@ -45,7 +47,8 @@ export async function execWorkspace(root: string, input: unknown) {
     renewal = (async () => {
       try {
         const current = await readWorkspaceState(root);
-        await heartbeatWorkspace(root, { token: request.token, expectedRevision: current.revision });
+        const owner = await resourceOwner(root, request.token);
+        await heartbeatWorkspace(root, { token: request.token, expectedRevision: owner?.revision ?? current.revision });
       } catch { renewalFailed = true; child.kill(); }
     })().finally(() => { renewal = undefined; });
   }, Math.floor(WORKSPACE_LEASE_MS / 3));

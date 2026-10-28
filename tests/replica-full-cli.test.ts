@@ -7,6 +7,30 @@ import { spawn } from 'node:child_process';
 import { parseFullReplicaArguments, runFullReplicaCLI, FULL_REPLICA_HELP } from '../src/replica-full/cli.js';
 import type { FullReplicaDependencies } from '../src/replica-full/types.js';
 import { fullReplicaHash, validateFullReplicaManifest } from '../src/replica-full/contract.js';
+import { claimWorkspace, checkpointWorkspace, inspectWorkspace } from '../src/workspace/service.js';
+
+const ROOT = 'D:/cloneWP';
+async function withWorkspaceClaim<T>(work: (token: string) => Promise<T>): Promise<T> {
+  const taskId = `replica-full-cli-test-${randomUUID()}`, before = await inspectWorkspace(ROOT);
+  const owner = await claimWorkspace(ROOT, { agent: 'codex', sessionId: `test-${randomUUID()}`, taskId,
+    resources: [`task:${taskId}`], expectedRevision: before.revision, expectedFingerprint: before.fingerprint });
+  const previous = process.env.CLONEWP_WORKSPACE_TOKEN;
+  process.env.CLONEWP_WORKSPACE_TOKEN = owner.token;
+  let completed = false;
+  try { const result = await work(owner.token); completed = true; return result; }
+  finally {
+    if (previous === undefined) delete process.env.CLONEWP_WORKSPACE_TOKEN;
+    else process.env.CLONEWP_WORKSPACE_TOKEN = previous;
+    const current = await inspectWorkspace(ROOT);
+    await checkpointWorkspace(ROOT, { token: owner.token, expectedRevision: owner.revision,
+      expectedFingerprint: current.fingerprint, release: true,
+      notes: { goal: 'Exercise full replica CLI under a real scoped workspace claim',
+        summary: completed ? 'Local CLI fixture completed' : 'Local CLI fixture failed',
+        progress: completed ? 'completed' : 'blocked', decisions: [], changes: [],
+        checks: [{ command: 'replica-full-cli.test.ts', status: completed ? 'passed' : 'failed' }],
+        openItems: completed ? [] : ['Inspect the failing test assertion.'], nextSteps: completed ? ['No fixture follow-up.'] : ['Review the failing test output.'] } });
+  }
+}
 
 test('full replica CLI rejects ambiguous commands/flags and requires a concrete new manifest/run directory', () => {
   for (const command of ['auto', 'constructor', '__proto__']) assert.throws(() => parseFullReplicaArguments([command]), /unknown_command/);
@@ -45,16 +69,17 @@ for (const navigation of ['none', 'relative', 'absolute'] as const) test(`new ru
     const formEvidence = await put('form-source.json', '{}'), form = { key: 'filter', slotComponentKey: 'body_search', sourceUnitIds: ['body'], sourceFactIds: ['desktop:interaction:form'], sourceEvidence: { ...formEvidence, path: navigation === 'absolute' ? path.join(directory, formEvidence.path) : formEvidence.path }, method: 'get', action: 'https://hoshiichi.com/all_product', fields: [{ name: 'application', label: '用途:', options: [{ label: 'すべて', value: '' }] }], submitLabel: '検索' };
     const input = navigation === 'none' ? manifest : { ...manifest, sourceUrl: 'https://hoshiichi.com/alder-local', body: { ...manifest.body, navigationForms: [form] } };
     await writeFile(inputPath, JSON.stringify(input)); let factories = 0, closes = 0;
-    await assert.rejects(runFullReplicaCLI(['run', '--manifest', inputPath, '--run-dir', run], { async createDependencies(options) {
+    await withWorkspaceClaim(async () => assert.rejects(runFullReplicaCLI(['run', '--manifest', inputPath, '--run-dir', run], { async createDependencies(options) {
       factories++; const state = JSON.parse(await readFile(path.join(run, 'state.json'), 'utf8')); assert.equal(state.status, 'preparing'); assert.equal(state.taskId, 'alder-local'); assert.ok(path.isAbsolute(options.manifest.header!.assets.path));
       const persisted = JSON.parse(await readFile(path.join(run, 'manifest.json'), 'utf8')); assert.deepEqual(persisted.body.navigationForms, options.manifest.body.navigationForms); assert.equal(state.manifestHash, fullReplicaHash(options.manifest));
       assert.deepEqual(persisted.nativeImagePolicy, { version: 2, mode: 'native-first' });
       assert.deepEqual(persisted.editorCompletionPolicy, { version: 1, mode: 'align-and-reopen', runtime: 'shared-owned-editor-v1' });
+      if(persisted.header)assert.deepEqual(persisted.header.plan.menuBindingPolicy,{version:1,editorReview:'desktop-and-mobile-reopen'});
       if (navigation === 'none') assert.equal(options.manifest.body.navigationForms, undefined);
       else { assert.equal(options.manifest.body.navigationForms?.length, 1); assert.deepEqual(options.manifest.body.navigationForms![0], { ...form, sourceEvidence: { ...form.sourceEvidence, path: path.join(directory, 'form-source.json') } }); }
       const never = async () => { throw Error('No remote call allowed'); };
       return { close: async () => { closes++; }, prepareHeader: async () => { throw Error('Synthetic local preparation failure'); }, prepareBody: never, assertPreparedBody: never, provisionHeader: never, createPage: never, saveBody: never, bindHeader: never, reviewWholePage: never, verifyReview: never, publishPage: never } as Omit<FullReplicaDependencies, 'writeState'>;
-    } }), /Synthetic local preparation failure/);
+    } }), /Synthetic local preparation failure/));
     assert.equal(closes, 1); assert.equal(factories, 1);
     const status = await runFullReplicaCLI(['status', '--run-dir', run], { async createDependencies() { throw Error('Status must not load credentials'); } }) as { remoteWrites: number; status: string; userProgress?: { step: number; headline: string; needsYou: unknown } };
     assert.equal(status.remoteWrites, 0); assert.equal(status.status, 'preparing');
@@ -80,9 +105,11 @@ test('timing initialization failure occurs before the CLI creates any command lo
   const directory = path.join('D:/cloneWP/.cache', `replica-full-cli-init-${randomUUID()}`); await navigationReturnEntryFixture(directory);
   try {
     let factories = 0;
-    const toISOString = context.mock.method(Date.prototype, 'toISOString', () => { throw Error('Synthetic timing initialization failure'); });
-    try { await assert.rejects(runFullReplicaCLI(['revise-navigation-return', '--run-dir', directory, '--expected-fingerprint', 'b'.repeat(64)], { async createDependencies() { factories++; throw Error('Must not reach dependencies'); } }), /Synthetic timing initialization failure/); }
-    finally { toISOString.mock.restore(); }
+    await withWorkspaceClaim(async () => {
+      const toISOString = context.mock.method(Date.prototype, 'toISOString', () => { throw Error('Synthetic timing initialization failure'); });
+      try { await assert.rejects(runFullReplicaCLI(['revise-navigation-return', '--run-dir', directory, '--expected-fingerprint', 'b'.repeat(64)], { async createDependencies() { factories++; throw Error('Must not reach dependencies'); } }), /Synthetic timing initialization failure/); }
+      finally { toISOString.mock.restore(); }
+    });
     assert.equal(factories, 0); await assert.rejects(readFile(path.join(directory, '.lock')), { code: 'ENOENT' });
     assert.equal((await readdir(directory)).some(name => name.startsWith('timings-')), false);
   } finally { await rm(directory, { recursive: true, force: true }); }
@@ -92,16 +119,16 @@ test('real navigation-return CLI entry creates timing and releases its exact loc
   const directory = path.join('D:/cloneWP/.cache', `replica-full-cli-entry-${randomUUID()}`); await navigationReturnEntryFixture(directory);
   try {
     const state = await readFile(path.join(directory, 'state.json'), 'utf8'), manifest = await readFile(path.join(directory, 'manifest.json'), 'utf8');
-    for (let attempt = 0; attempt < 2; attempt++) {
+    await withWorkspaceClaim(async token => { for (let attempt = 0; attempt < 2; attempt++) {
       const result = await new Promise<{ code: number | null; stdout: string; stderr: string }>((resolve, reject) => {
         // Default CLI, timing recorder and dependency factory; the stale fingerprint
         // rejects before preparation, credential loading, or any remote operation.
-        const child = spawn(process.execPath, ['--import', 'tsx', 'D:/cloneWP/src/replica-full/cli.ts', 'revise-navigation-return', '--run-dir', directory, '--expected-fingerprint', 'b'.repeat(64)], { cwd: 'D:/cloneWP', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+        const child = spawn(process.execPath, ['--import', 'tsx', 'D:/cloneWP/src/replica-full/cli.ts', 'revise-navigation-return', '--run-dir', directory, '--expected-fingerprint', 'b'.repeat(64)], { cwd: 'D:/cloneWP', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, CLONEWP_WORKSPACE_TOKEN: token } });
         let stdout = '', stderr = ''; child.stdout.on('data', value => { stdout += value; }); child.stderr.on('data', value => { stderr += value; }); child.once('error', reject); child.once('close', code => resolve({ code, stdout, stderr }));
       });
       assert.equal(result.code, 1); assert.equal(result.stdout, ''); assert.deepEqual(JSON.parse(result.stderr), { error: 'replica_full_navigation_return_stale' });
       await assert.rejects(readFile(path.join(directory, '.lock')), { code: 'ENOENT' }); assert.equal(await readFile(path.join(directory, 'state.json'), 'utf8'), state); assert.equal(await readFile(path.join(directory, 'manifest.json'), 'utf8'), manifest);
-    }
+    } });
     const timingFiles = (await readdir(directory)).filter(name => name.startsWith('timings-revise-navigation-return-') && name.endsWith('.json')); assert.equal(timingFiles.length, 2);
     for (const filename of timingFiles) { const timing = JSON.parse(await readFile(path.join(directory, filename), 'utf8')); assert.equal(timing.command, 'revise-navigation-return'); assert.equal(timing.status, 'failed'); assert.deepEqual(timing.stages, []); }
   } finally { await rm(directory, { recursive: true, force: true }); }

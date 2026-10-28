@@ -177,6 +177,16 @@ test('browser import checks screenshot bytes, manifest counts and immutable repr
     await assert.rejects(prepareObservedReferenceV2(value.snapshot.url, evidenceDir, { root: directory }), /source-commerce observation evidence/);
     await writeFile(path.join(evidenceDir, 'packet.json'), bytes); manifest.packets[0].sha256 = sha256(bytes); await writeFile(manifestPath, JSON.stringify(manifest));
     const job = await prepareObservedReferenceV2(value.snapshot.url, evidenceDir, { root: directory }); assert.equal(job.version, 2); assert.equal(job.status, 'awaiting-component-plan');
+    assert.match(job.jobId, /^reference-v2-.+-[a-f0-9]{8}$/);
+    const jobId = 'reference-v2-owned-explicit-task', named = await prepareObservedReferenceV2(value.snapshot.url, evidenceDir, { root: directory, jobId });
+    assert.equal(named.jobId, jobId); assert.equal(named.jobDir, path.join(directory, 'references', jobId));
+    const originalJob = await readFile(path.join(named.jobDir, 'job.json'));
+    await assert.rejects(prepareObservedReferenceV2(value.snapshot.url, evidenceDir, { root: directory, jobId }), { code: 'EEXIST' });
+    assert.deepEqual(await readFile(path.join(named.jobDir, 'job.json')), originalJob, 'A conflicting explicit id never overwrites its existing job');
+    for (const invalid of ['', '.', '..', '../escape', 'reference-v2-../escape', 'reference-v2-a/b', 'reference-v2-a\\b', 'D:/escape', 'reference-v2-name.json', 'reference-v2-name ', 'reference-v2-a:', 'reference-v2-A', 'reference-v2-a-', 'reference-v2-' + 'a'.repeat(109)]) await assert.rejects(prepareObservedReferenceV2(value.snapshot.url, evidenceDir, { root: directory, jobId: invalid }), /bounded reference-v2 directory name/);
+    const concurrent = await Promise.allSettled([1, 2].map(() => prepareObservedReferenceV2(value.snapshot.url, evidenceDir, { root: directory, jobId: 'reference-v2-concurrent-owned' })));
+    assert.equal(concurrent.filter(result => result.status === 'fulfilled').length, 1);
+    assert.equal(concurrent.filter(result => result.status === 'rejected' && result.reason.code === 'EEXIST').length, 1);
     const facts = JSON.parse(await readFile(job.sourceFactsPath, 'utf8')); assert.ok(facts.observation.path.startsWith(job.jobDir)); await verifySourceFactsEvidenceV2(facts);
     const revisionName = 'observation-manifest-responsive.json', revisionPath = path.join(evidenceDir, revisionName); await writeFile(revisionPath, JSON.stringify(manifest));
     const revision = await readObservationDirectoryV2(evidenceDir, value.snapshot.url, { manifestName: revisionName }), revisedFacts = buildSourceFactsV2(revision);

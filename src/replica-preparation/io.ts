@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { assertPreparationBoundaries } from './boundaries.js';
 import { assertBodySelectionRequest, assertBodySelectionUnits } from '../replica-full/page-scope.js';
 import { randomUUID } from 'node:crypto';
 import { lstat, mkdir, open, readFile, realpath, rename, statfs, unlink } from 'node:fs/promises';
@@ -31,7 +32,7 @@ import { encodeProductionGuideChunk, decodeProductionGuideChunk } from './produc
 import { createPhoneProductionGuide, projectPhoneProductionFacts, verifyPhoneSectionOwners } from '../replica-responsive/production.js';
 import { collectStyleRequirements, planNative44Styles } from '../native44/style-resolution.js';
 import { loadNative44Knowledge } from '../native44/knowledge.js';
-import { NATIVE44_ALL_TYPES, CORE_SINGLE_PRODUCT_TYPES } from '../native44/catalog.js';
+import { productExtensionWidgetTypes } from '../native44/product-extension.js';
 import { usedNative44WidgetTypes } from '../native44/compiler.js';
 import { walkNative44 } from '../native44/types.js';
 import { buildNative44StyleCapabilities, getNative44StyleCapabilitiesForType, readNative44StyleVariableConsumers, readNative44StyleWrapperClasses } from '../native44/style-capabilities.js';
@@ -39,12 +40,15 @@ import { UNIFIED_ELEMENTOR_GUIDE } from '../context/files.js';
 import { createComponentGuidance, componentGuidanceApplication, type ComponentGuidance } from './component-guidance.js';
 import { COMPONENT_LEARNING_ARCHIVE, createComponentLearning, componentLearningApplication, type ComponentLearning } from './component-learning.js';
 import { COMPONENT_MODEL_POLICY, analyzeComponentModel } from '../native44/component-model.js';
+import { defaultPreparationExecutionPolicy, preparationConcurrency } from './execution-policy.js';
+import { createPreparationCoordination, createPreparationRepairPlan, checkPreparationBrowserWorkspace } from './coordination.js';
+import { assertPreparationQueueCapacity, nextPreparationQueueRow, preparationQueueTiming, preparationReworkSchema, preparationWorkerSchema, type PreparationCompletedAttempt } from './queue-runtime.js';
 
 const ROOT = 'D:/cloneWP';
 function fail(code: string): never { throw Error(`replica_preparation_${code}`); }
 const byteHash = async (bytes: Uint8Array) => (await import('node:crypto')).createHash('sha256').update(bytes).digest('hex');
 type JobAttempt = { startedAt: string; finishedAt: string; elapsedMs: number; status: 'failed' };
-type JobStatus = { job: PreparationJob; packet: PreparationFileRef; resultPath: string; status: 'ready' | 'running' | 'complete' | 'failed'; startedAt?: string; leaseUntil?: string; finishedAt?: string; elapsedMs?: number; result?: PreparationFileRef; previousAttempts?: JobAttempt[] };
+type JobStatus = { job: PreparationJob; packet: PreparationFileRef; resultPath: string; status: 'ready' | 'running' | 'complete' | 'failed'; startedAt?: string; leaseUntil?: string; finishedAt?: string; elapsedMs?: number; result?: PreparationFileRef; previousAttempts?: JobAttempt[]; workerId?: string; workRevision?: number; previousResults?: PreparationCompletedAttempt[]; reworkRequest?: PreparationFileRef };
 interface State { version: 1; kind: 'clonewp-preparation-state'; taskId: string; runId: string; plan: PreparationFileRef; contractHash: string; finalRunDirectory: string; createdAt: string; preflightMs: number; jobs: JobStatus[]; merged?: PreparationFileRef; productionGuide?: PreparationFileRef; nativeSettingsCapabilities?: PreparationFileRef; componentGuidance?: PreparationFileRef; componentLearning?: PreparationFileRef; componentModel?: PreparationFileRef; completedAt?: string }
 
 export async function preparationPath(input: string, missing = false): Promise<string> {
@@ -120,7 +124,16 @@ async function locked<T>(directory: string, work: (state: State, plan: Preparati
     for (const row of state.jobs) {
       const jobDirectory = path.join(directory, 'jobs', row.job.jobId);
       if (row.packet.path !== path.join(jobDirectory, 'packet.json') || row.resultPath !== path.join(jobDirectory, 'result.json') || row.result && row.result.path !== row.resultPath || !['ready', 'running', 'complete', 'failed'].includes(row.status)) fail('state_changed');
+      if (plan.executionPolicy) {
+        if (!Number.isSafeInteger(row.workRevision) || row.workRevision! < 0 || row.workerId !== undefined && !preparationWorkerSchema.safeParse(row.workerId).success) fail('queue_state_changed');
+        for (const previous of row.previousResults ?? []) {
+          if (path.dirname(previous.result.path) !== jobDirectory || !/^rework-[0-9]+\.json$/.test(path.basename(previous.result.path))) fail('queue_state_changed');
+          await bound(previous.result); await bound(previous.request);
+        }
+        if (row.reworkRequest) await bound(row.reworkRequest);
+      }
     }
+    if (plan.executionPolicy && (state.jobs.filter(row => row.status === 'running').length > preparationConcurrency(plan) || new Set(state.jobs.filter(row => row.status === 'running').map(row => row.workerId)).size !== state.jobs.filter(row => row.status === 'running').length)) fail('queue_state_changed');
     return await work(state, plan);
   } finally { const value = await preparationRead(lockPath) as { lockId: string }; if (value.lockId !== lockId) fail('lock_changed'); await unlink(lockPath); }
 }
@@ -171,6 +184,29 @@ async function sourceInputs(plan: PreparationPlan) {
     if (preparationHash(expected.sort()) !== preparationHash([...section.sourceFactIds].sort())) fail('section_fact_ownership');
   }
   for (const ref of [...(plan.headerAssets ? [plan.headerAssets] : []), plan.bodyAssets, plan.bodyBase.componentCatalog, plan.bodyBase.knowledge, plan.bodyBase.componentPlan, ...(plan.responsive?.carouselMotionSource ? [plan.responsive.carouselMotionSource] : []), ...plan.shared.decisions.flatMap(row => row.evidence), ...plan.shared.compatibility.flatMap(row => row.evidence)]) await bytesBound(ref);
+  if (plan.configurator) {
+    const c = plan.configurator, catalog = await bound(c.catalogTemplate) as Record<string, unknown>, imageManifest = await bound(c.imageManifest) as Array<{ key?: string }>,
+      packageManifest = await bound(c.packageManifest) as { kind?: string; files?: Array<{ path?: string; sha256?: string }> },
+      registration = await bound(c.registrationEvidence) as { origin?: string; registered?: boolean; className?: string; controls?: Record<string, unknown>; files?: Record<string, string> };
+    const same = (left: string[], right: string[]) => left.length === right.length && left.every(item => right.includes(item));
+    const sourceKeys = new Set<string>();
+    const scan = (value: unknown): void => {
+      if (!value || typeof value !== 'object') return;
+      if (Array.isArray(value)) { value.forEach(scan); return; }
+      const row = value as Record<string, unknown>;
+      if ('$asset' in row) { if (Object.keys(row).length !== 1 || typeof row.$asset !== 'string') fail('configurator_catalog_asset'); sourceKeys.add(row.$asset); return; }
+      Object.values(row).forEach(scan);
+    };
+    scan(catalog);
+    if (!catalog || catalog.version !== 1 || !catalog.form || (catalog.form as Record<string, unknown>).$nativeFormBinding !== true ||
+      !Array.isArray(imageManifest) || !same(imageManifest.map(row => row.key ?? ''), c.mediaKeys) || !same([...sourceKeys], c.mediaKeys)) fail('configurator_catalog_identity');
+    const files = Object.fromEntries((packageManifest.files ?? []).map(row => [row.path, row.sha256]));
+    if (packageManifest.kind !== 'clonewp-configurator-package' || files['clonewp-bottle-configurator.php'] !== c.packageFiles.php || files['runtime.js'] !== c.packageFiles.js || files['style.css'] !== c.packageFiles.css ||
+      registration.origin !== plan.targetOrigin || registration.registered !== true || registration.className !== 'CloneWP_Bottle_Configurator' ||
+      registration.files?.['clonewp-bottle-configurator.php'] !== c.packageFiles.php || registration.files?.['runtime.js'] !== c.packageFiles.js || registration.files?.['style.css'] !== c.packageFiles.css ||
+      !registration.controls || !['options','decorations','fonts','form_widget','summary_field','upload_field'].every(key => key in registration.controls!)) fail('configurator_runtime_identity');
+    for (const reference of c.sourceEvidence) await bytesBound(reference);
+  }
   const phones = plan.responsive ? await readResponsiveSource(plan.responsive, plan, async (ref, base = ROOT) => { const filename = await preparationPath(path.resolve(base, ref.path)); await bytesBound(ref, base); return { filename, bytes: await readFile(filename) }; }) : undefined;
   const productionSource = plan.version >= 6 && phones ? projectPhoneProductionFacts(facts, packets, refs, phones) : facts;
   if (plan.version >= 6 && plan.responsive) verifyPhoneSectionOwners(productionSource, plan.sections, plan.responsive);
@@ -283,7 +319,7 @@ export async function readPreparationNativeSettings(directory: string, widgetTyp
 export async function comparePreparationPresentation(directory: string, evidencePath: string) {
   const identity = z.string().min(1).max(240);
   const evidence = z.object({ version: z.literal(1), kind: z.literal('production-presentation-review'), taskId: identity, runId: identity, targetObservation: z.object({ path: z.string().min(1), sha256: z.string().regex(/^[a-f0-9]{64}$/) }).strict(), bindings: z.array(z.object({ sourceFactId: identity, targetFactId: identity, sourceState: identity, targetState: identity, sourceAnchorFactId: identity.optional(), targetAnchorFactId: identity.optional() }).strict()).max(50000) }).strict().parse(await preparationRead(await preparationPath(evidencePath)));
-  return locked(directory, async (_state, plan) => {
+  return locked(directory, async (state, plan) => {
     if (evidence.taskId !== plan.taskId || evidence.runId !== plan.runId || plan.version < 6) fail('presentation_identity');
     const sources = await sourceInputs(plan);
     await bound(evidence.targetObservation);
@@ -294,8 +330,20 @@ export async function comparePreparationPresentation(directory: string, evidence
     const guide = productionGuide(sources, plan, plan.sections);
     const owned = [...new Set([...plan.sections.flatMap(section => section.sourceFactIds), ...(guide.mobile?.sections.flatMap(section => Object.keys(section.sourceFacts)) ?? [])])];
     const report = comparePresentationFacts(sources.productionSource, target, owned, evidence.bindings);
-    return { ...report, taskId: plan.taskId, runId: plan.runId, sourceObservation: sources.productionSource.observation, targetObservation: evidence.targetObservation, screenshots: { source: sources.productionSource.snapshots.map(snapshot => snapshot.screenshot), target: target.snapshots.map(snapshot => snapshot.screenshot) } };
+    const phoneOwners = Object.fromEntries((guide.mobile?.sections ?? []).flatMap(section => Object.keys(section.sourceFacts).map(id => [id, section.key])));
+    return { ...report, ...(plan.executionPolicy ? { repairPlan: createPreparationRepairPlan(plan, state.jobs.map(row => row.job), report.findings, phoneOwners) } : {}), taskId: plan.taskId, runId: plan.runId, sourceObservation: sources.productionSource.observation, targetObservation: evidence.targetObservation, screenshots: { source: sources.productionSource.snapshots.map(snapshot => snapshot.screenshot), target: target.snapshots.map(snapshot => snapshot.screenshot) } };
   });
+}
+
+export async function readPreparationCoordination(directory: string) {
+  return locked(directory, async (state, plan) => {
+    if (!plan.executionPolicy) fail('queue_policy_required');
+    return { coordination: createPreparationCoordination(plan, state.jobs.map(row => row.job)), remoteWrites: 0 };
+  });
+}
+export async function inspectPreparationBrowserWorkspace(directory: string, evidencePath: string, pageId: number) {
+  const evidence = await preparationRead(await preparationPath(evidencePath));
+  return locked(directory, async (_state, plan) => checkPreparationBrowserWorkspace(plan, evidence, pageId));
 }
 
 export async function initializePreparation(input: unknown, options: { finalRunDirectory?: string } = {}) {
@@ -306,14 +354,15 @@ export async function initializePreparation(input: unknown, options: { finalRunD
   try {
     await lstat(directory);
     await locked(directory, async (state, frozenPlan) => {
-      const candidate = {...plan,nativeImagePolicy:plan.nativeImagePolicy ?? defaultNativeImagePolicy(),bodyBase:{...plan.bodyBase,...(!plan.bodyBase.inquiryPolicy && frozenPlan.bodyBase.inquiryPolicy ? {inquiryPolicy:frozenPlan.bodyBase.inquiryPolicy} : {})}};
+      const candidate = {...plan,...(plan.headerBase && frozenPlan.headerBase?.menuBindingPolicy ? {headerBase:{...plan.headerBase,menuBindingPolicy:plan.headerBase.menuBindingPolicy ?? frozenPlan.headerBase.menuBindingPolicy}} : {}),...(!plan.executionPolicy && frozenPlan.executionPolicy ? {executionPolicy:frozenPlan.executionPolicy} : {}),nativeImagePolicy:plan.nativeImagePolicy ?? defaultNativeImagePolicy(),bodyBase:{...plan.bodyBase,...(!plan.bodyBase.inquiryPolicy && frozenPlan.bodyBase.inquiryPolicy ? {inquiryPolicy:frozenPlan.bodyBase.inquiryPolicy} : {})}};
       if (![preparationHash(plan),preparationHash(candidate)].includes(state.contractHash) || state.finalRunDirectory !== finalRunDirectory) fail('contract_conflict');
     });
     return preparationStatus(directory);
   } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
-  plan = validatePreparationPlan({ ...plan, nativeImagePolicy: plan.nativeImagePolicy ?? defaultNativeImagePolicy() });
+  plan = validatePreparationPlan({ ...plan, ...(plan.version >= 8 && plan.headerBase ? { headerBase: { ...plan.headerBase, menuBindingPolicy: plan.headerBase.menuBindingPolicy ?? (await import('../woodmart-header/generic/menu-binding.js')).defaultMenuBindingPolicy() } } : {}), ...(plan.version >= 8 && !plan.executionPolicy ? { executionPolicy: defaultPreparationExecutionPolicy(plan) } : {}), nativeImagePolicy: plan.nativeImagePolicy ?? defaultNativeImagePolicy() });
+  assertPreparationBoundaries(plan, sources.sourceFacts);
   const free = await statfs(path.dirname(directory)); if (free.bavail * free.bsize < 512 * 1024 * 1024) fail('evidence_space');
-  const nativeKnowledge = plan.version >= 8 ? await loadNative44Knowledge(plan.bodyBase.componentExtension ? [...NATIVE44_ALL_TYPES,...CORE_SINGLE_PRODUCT_TYPES] : undefined,undefined,plan.bodyBase.componentExtension) : undefined;
+  const nativeKnowledge = plan.version >= 8 ? await loadNative44Knowledge(productExtensionWidgetTypes(plan.bodyBase.componentExtension),undefined,plan.bodyBase.componentExtension) : undefined;
   const nativeSourceEffects = nativeKnowledge ? await Promise.all([readNative44StyleVariableConsumers(nativeKnowledge), readNative44StyleWrapperClasses(nativeKnowledge)]) : undefined;
   const nativeCapabilities = nativeKnowledge && nativeSourceEffects ? buildNative44StyleCapabilities(nativeKnowledge, { variableConsumers: nativeSourceEffects[0], wrapperClassesByType: nativeSourceEffects[1] }) : undefined;
   if (nativeCapabilities && nativeCapabilities.knowledgeFingerprint !== plan.bodyBase.knowledge.fingerprint) fail('native_settings_capabilities_identity');
@@ -344,11 +393,14 @@ export async function initializePreparation(input: unknown, options: { finalRunD
   const componentGuidance = guidance ? await writeNew(path.join(directory, 'component-guidance.json'), guidance) : undefined;
   const componentLearning = learning ? await writeNew(path.join(directory, 'component-learning.json'), learning) : undefined;
   const frozen = await writeNew(path.join(directory, 'contract.json'), plan), jobs: JobStatus[] = [];
-  for (const job of buildPreparationJobs(plan)) {
+  const plannedJobs = buildPreparationJobs(plan), coordination = plan.executionPolicy ? createPreparationCoordination(plan, plannedJobs) : undefined;
+  for (const job of plannedJobs) {
     const jobDirectory = path.join(directory, 'jobs', job.jobId); await mkdir(jobDirectory);
     const ownedUnits = sources.sourceUnits.units.filter((unit: any) => job.sourceUnitIds.includes(unit.id)), factIds = job.responsibility === 'header' ? ownedUnits.flatMap((unit: any) => unit.sourceFactIds) : job.sourceFactIds;
     const packetValue = {
       version: 1, kind: 'clonewp-preparation-packet', job,
+      ...(plan.boundaryTable ? { boundaryTable: plan.boundaryTable, boundaryInstructions: 'Coordinator owns external root spacing. Preserve source backgrounds and internal padding; do not author root margins/offsets in native controls, bindings or CSS. Report boundary gaps to coordinator. All original render and interaction gates remain mandatory.' } : {}),
+      ...(coordination ? { coordination, workProtocol: 'Use start/next workRevision in your result. One logical worker may run one job; only the coordinator browses, merges or writes remotely. Complete local section work before whole-page batched review; return named gaps instead of inventing proof.' } : {}),
       ...(componentGuidance && job.responsibility === 'body' ? { componentGuidance: { ...guidance!, snapshot: componentGuidance } } : {}),
       ...(componentLearning && job.responsibility === 'body' ? { componentLearning: { ...learning!, snapshot: componentLearning, modelPolicy: COMPONENT_MODEL_POLICY } } : {}),
       ...(nativeSettingsCapabilities && job.responsibility === 'body' ? { nativeSettingsCapabilities: { catalog: nativeSettingsCapabilities, widgetTypes: Object.keys(nativeCapabilities!.components), readCommand: ['npm', 'run', 'replica:prepare', '--', 'read-native-settings', '--directory', directory, '--widget', '<WIDGET_TYPE>'], scope: 'source-studied-not-current-target-registered', loading: 'one-shared-catalog-read-used-types-only' } } : {}),
@@ -360,6 +412,7 @@ export async function initializePreparation(input: unknown, options: { finalRunD
       ...(job.responsibility === 'body' && plan.bodyBase.inquiryPolicy ? {inquiryInstructions:'Inquiry forms default to functional submission, target database storage and email notification. Preserve a source-bound native Form; the coordinator applies the frozen project business configuration in the existing merge/compile path. Do not copy source recipients, use static text instead of controls, or claim inert is functional. Missing configuration is a named blocker. Source-proven non-inquiry forms and explicit user static exceptions must be frozen in inquiryPolicy.exceptions. Do not submit test inquiries or send test emails automatically: actual submission and mailbox testing are user-managed. Verify native settings, editable controls, choices, required rules and saved target DOM without submitting. Missing sender identity is generated for each site; do not request it.'} : {}),
       ...(plan.nativeImagePolicy ? { nativeImagePolicy: plan.nativeImagePolicy, nativeImageInstructions: 'Put image/background photos in actual registered native media controls using task $asset references. Never force photo URLs through body CSS; keep gradients and layout CSS separate. A native-control-unavailable CSS exception needs exact component ownership and hashed technical evidence. Final review must show native panel media, a different image rendered, and the original restored, with actual element/control IDs and screenshots.' } : {}),
       ...(job.responsibility === 'header' ? { headerBase: plan.headerBase } : { bodyBase: plan.bodyBase }),
+      ...(job.responsibility === 'header' && plan.headerBase?.menuBindingPolicy ? { menuBindingInstructions: 'Use menuKey for every mainmenu and secondary menu component on desktop and mobile; never write raw menu_id/type/options or reuse source IDs. Preserve the frozen menuBindingPolicy. The native compiler resolves each actual target slug and select type. After saving, reopen each native header menu panel and capture its live selected option plus screenshot; complete all desktop/mobile editor observations before approving the task.' } : {}),
       sections: plan.sections.filter(section => job.sectionKeys.includes(section.key)).map(section => ({ ...section, cssRoot: `:page .${native44ModuleClass(section.key)}` })),
       ...(plan.version >= 6 && job.responsibility === 'body' ? { productionGuide: productionGuide(sources, plan, plan.sections.filter(section => job.sectionKeys.includes(section.key)), undefined, nativeSettingsCapabilities) } : {}),
       sourceUnits: ownedUnits, sourceFacts: Object.fromEntries(factIds.map((id: string) => [id, sources.sourceFacts.facts[id]])),
@@ -367,34 +420,67 @@ export async function initializePreparation(input: unknown, options: { finalRunD
       screenshots: sources.sourceFacts.snapshots.map(snapshot => ({ id: snapshot.id, viewport: snapshot.viewport, screenshot: { ...snapshot.screenshot, path: path.resolve(path.dirname(plan.sourceFacts.path), snapshot.screenshot.path) } })),
       assets: job.responsibility === 'header' ? plan.headerAssets : plan.bodyAssets,
       ...(job.responsibility === 'body' && plan.navigationForms ? { navigationForms: plan.navigationForms.filter(form => form.sourceUnitIds.every(id => job.sourceUnitIds.includes(id))), navigationFormInstructions: 'Keep each declared slotComponentKey as one real composite container carrying the exact form sourceFactIds and native source heading or description content. Place any following CTA outside the slot. The independent full adapter appends the typed GET form after the native body save; do not generate a form, fake placeholder or substitute native form.' } : {}),
+      ...(job.responsibility === 'body' && plan.configurator && plan.configurator.sourceUnitIds.every(id => job.sourceUnitIds.includes(id)) ? { configurator: plan.configurator, configuratorInstructions: 'Keep slotComponentKey as a real native composite container and formComponentKey as the ordinary native Form. Preserve source facts in their owned section. Do not author a fake configurator or inject script/HTML. The coordinator resolves owned media and adds the registered native widget through a separate exact scoped post-save patch.' } : {}),
     };
     if ('productionGuide' in packetValue && packetValue.productionGuide && !guideReadBudget(packetValue)) packetValue.productionGuide = await writeProductionGuideIndex(path.join(jobDirectory, 'production-guide'), { taskId: plan.taskId, runId: plan.runId, scope: job.jobId, contractHash: preparationHash(plan) }, packetValue.productionGuide, directory) as unknown as typeof packetValue.productionGuide;
     if (!guideReadBudget(packetValue)) fail('production_packet_limit');
     const packet = await writeNew(path.join(jobDirectory, 'packet.json'), packetValue);
-    jobs.push({ job, packet, resultPath: path.join(jobDirectory, 'result.json'), status: 'ready' });
+    jobs.push({ job, packet, resultPath: path.join(jobDirectory, 'result.json'), status: 'ready', ...(plan.executionPolicy ? { workRevision: 0 } : {}) });
   }
   const state: State = { version: 1, kind: 'clonewp-preparation-state', taskId: plan.taskId, runId: plan.runId, plan: frozen, contractHash: preparationHash(plan), finalRunDirectory, createdAt: new Date().toISOString(), preflightMs: performance.now() - preflightStart, jobs, ...(nativeSettingsCapabilities ? { nativeSettingsCapabilities } : {}), ...(componentGuidance ? { componentGuidance } : {}), ...(componentLearning ? { componentLearning } : {}) };
   await save(directory, state); return preparationStatus(directory);
 }
-export async function startPreparationJob(directory: string, jobId: string) {
-  return locked(directory, async (state) => {
-    if (state.merged) fail('already_merged'); const row = state.jobs.find(job => job.job.jobId === jobId); if (!row || !['ready', 'failed'].includes(row.status)) fail('job_not_ready');
-    await bound(row.packet);
-    if (row.status === 'failed') {
-      row.previousAttempts = [...row.previousAttempts ?? [], { startedAt: row.startedAt!, finishedAt: row.finishedAt!, elapsedMs: row.elapsedMs!, status: 'failed' }];
-      delete row.finishedAt; delete row.elapsedMs; delete row.result;
-    }
-    row.status = 'running'; row.startedAt = new Date().toISOString(); const lease = preparationLeaseUntil(row.startedAt); if (lease) row.leaseUntil = lease; else delete row.leaseUntil; await save(directory, state);
-    return { status: 'running', job: row.job, packet: row.packet, resultPath: row.resultPath, startedAt: row.startedAt, ...(row.leaseUntil ? { leaseUntil: row.leaseUntil } : {}) };
+async function startJob(directory: string, state: State, plan: PreparationPlan, row: JobStatus, worker?: string) {
+  if (state.merged) fail('already_merged');
+  if (!['ready', 'failed'].includes(row.status)) fail('job_not_ready');
+  if (plan.executionPolicy) {
+    const workerId = preparationWorkerSchema.parse(worker ?? row.workerId ?? row.job.jobId);
+    if (row.workerId && row.workerId !== workerId) fail('worker_owner');
+    assertPreparationQueueCapacity(state.jobs, preparationConcurrency(plan), workerId);
+    row.workerId = workerId;
+  }
+  await bound(row.packet);
+  if (row.status === 'failed') {
+    row.previousAttempts = [...row.previousAttempts ?? [], { startedAt: row.startedAt!, finishedAt: row.finishedAt!, elapsedMs: row.elapsedMs!, status: 'failed' }];
+    if (plan.executionPolicy) row.workRevision = (row.workRevision ?? 0) + 1;
+    delete row.finishedAt; delete row.elapsedMs; delete row.result;
+  }
+  row.status = 'running'; row.startedAt = new Date().toISOString(); const lease = preparationLeaseUntil(row.startedAt); if (lease) row.leaseUntil = lease; else delete row.leaseUntil;
+  await save(directory, state);
+  return { status: 'running', job: row.job, packet: row.packet, resultPath: row.resultPath, startedAt: row.startedAt,
+    ...(plan.executionPolicy ? { workerId: row.workerId, workRevision: row.workRevision, ...(row.reworkRequest ? { reworkRequest: row.reworkRequest } : {}) } : {}), ...(row.leaseUntil ? { leaseUntil: row.leaseUntil } : {}) };
+}
+export async function startPreparationJob(directory: string, jobId: string, workerId?: string) {
+  return locked(directory, async (state, plan) => {
+    const row = state.jobs.find(job => job.job.jobId === jobId); if (!row) fail('job_not_ready');
+    return startJob(directory, state, plan, row, workerId);
+  });
+}
+/** One atomic claim per coordinator call; it never creates chats or grants remote write permission. */
+export async function nextPreparationJob(directory: string, workerId: string) {
+  preparationWorkerSchema.parse(workerId);
+  return locked(directory, async (state, plan) => {
+    if (!plan.executionPolicy) fail('queue_policy_required');
+    if (state.merged) return { status: 'prepared', manifest: state.merged, remoteWrites: 0 };
+    if (state.jobs.some(row => row.status === 'running' && row.workerId === workerId)) fail('worker_busy');
+    if (state.jobs.filter(row => row.status === 'running').length >= preparationConcurrency(plan)) return { status: 'queue-busy', remoteWrites: 0 };
+    const row = nextPreparationQueueRow(state.jobs, workerId);
+    if (row) return startJob(directory, state, plan, row, workerId);
+    return { status: state.jobs.some(row => row.status === 'ready') ? 'waiting-for-owner' : state.jobs.some(row => row.status === 'running') ? 'waiting-for-results' : state.jobs.some(row => row.status === 'failed') ? 'failed-needs-retry' : 'ready-to-merge', remoteWrites: 0 };
   });
 }
 export async function completePreparationJob(directory: string, jobId: string, resultPath: string) {
-  return locked(directory, async (state) => {
-    const row = state.jobs.find(job => job.job.jobId === jobId); if (!row || row.status !== 'running' || state.merged) fail('job_not_running');
+  return locked(directory, async (state, plan) => {
+    const row = state.jobs.find(job => job.job.jobId === jobId); if (!row || row.status !== 'running' && !(plan.executionPolicy && row.status === 'complete') || state.merged && !plan.executionPolicy) fail('job_not_running');
     if ((await preparationPath(resultPath)).toLowerCase() !== row.resultPath.toLowerCase()) fail('result_path'); await bound(row.packet);
     const resultBytes = await readFile(await preparationPath(resultPath)); if (resultBytes.length > 32 * 1024 * 1024) fail('file_size');
     const result = validatePreparationJobResult(JSON.parse(resultBytes.toString('utf8')));
     if (result.jobId !== jobId || result.contractHash !== state.contractHash || result.sharedHash !== row.job.sharedHash || result.taskId !== state.taskId || result.runId !== state.runId) fail('result_identity');
+    if (plan.executionPolicy ? (result.workRevision ?? 0) !== row.workRevision : result.workRevision !== undefined) fail('result_work_revision');
+    if (row.status === 'complete') {
+      if (row.result?.sha256 !== await byteHash(resultBytes)) fail('completed_result_changed');
+      return { status: 'complete', jobId, elapsedMs: row.elapsedMs!, measurement: 'utc-wall-agent-start-to-result', pureModelTime: 'not-measured', unchanged: true };
+    }
     if (state.componentGuidance && row.job.responsibility === 'body') componentGuidanceApplication(await bound(state.componentGuidance) as ComponentGuidance, row.job, result);
     if (state.componentLearning && row.job.responsibility === 'body') {
       const application = componentLearningApplication(await bound(state.componentLearning) as ComponentLearning, result,(await bound(state.plan) as PreparationPlan).bodyBase);
@@ -403,6 +489,48 @@ export async function completePreparationJob(directory: string, jobId: string, r
     const finishedAt = new Date().toISOString(), elapsedMs = Date.parse(finishedAt) - Date.parse(row.startedAt!); if (elapsedMs < 0) fail('clock_changed');
     row.result = { path: row.resultPath, sha256: await byteHash(resultBytes) }; row.status = 'complete'; row.finishedAt = finishedAt; row.elapsedMs = elapsedMs; delete row.leaseUntil; await save(directory, state);
     return { status: 'complete', jobId, elapsedMs, measurement: 'utc-wall-agent-start-to-result', pureModelTime: 'not-measured' };
+  });
+}
+/** Re-open an explicit batch before merge, preserving old bytes and original logical worker ownership. */
+export async function requestPreparationRework(directory: string, evidencePath: string) {
+  const checked = await preparationPath(evidencePath);
+  if ((await lstat(checked)).size > 1024 * 1024) fail('file_size');
+  const evidenceBytes = await readFile(checked); if (evidenceBytes.length > 1024 * 1024) fail('file_size');
+  const request = preparationReworkSchema.parse(JSON.parse(evidenceBytes.toString('utf8'))), requestHash = await byteHash(Buffer.from(preparationJson(request)));
+  return locked(directory, async (state, plan) => {
+    if (!plan.executionPolicy) fail('queue_policy_required');
+    if (state.merged) fail('rework_requires_current_revision');
+    if (request.taskId !== state.taskId || request.runId !== state.runId || request.contractHash !== state.contractHash) fail('rework_identity');
+    const evidence = { path: path.join(directory, `rework-request-${requestHash}.json`), sha256: requestHash };
+    const candidates = request.requests.map(item => {
+      const row = state.jobs.find(row => row.job.jobId === item.jobId);
+      if (!row) return fail('rework_job_unknown');
+      const repeated = row.reworkRequest?.sha256 === evidence.sha256;
+      if (!repeated && (row.status !== 'complete' || !row.result || row.result.sha256 !== item.expectedResultSha256)) fail('rework_result_changed');
+      return { row, repeated };
+    });
+    if (candidates.every(item => item.repeated)) return { status: 'rework-ready', unchanged: true, remoteWrites: 0 };
+    // Validate every candidate before archiving any result or changing the batch state.
+    for (const { row, repeated } of candidates) if (!repeated) await bound(row.result!);
+    try { await writeNew(evidence.path, request); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error; await bound(evidence); }
+    for (const { row, repeated } of candidates) {
+      if (repeated) continue;
+      const previous = await bound(row.result!), filename = path.join(path.dirname(row.resultPath), `rework-${row.workRevision!}.json`);
+      let archived: PreparationFileRef;
+      try { archived = await writeNew(filename, previous); }
+      catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+        const bytes = await readFile(await preparationPath(filename));
+        if (bytes.toString('utf8') !== preparationJson(previous)) fail('rework_archive_changed');
+        archived = { path: filename, sha256: await byteHash(bytes) };
+      }
+      row.previousResults = [...row.previousResults ?? [], { result: archived, originalSha256: row.result!.sha256, startedAt: row.startedAt!, finishedAt: row.finishedAt!, elapsedMs: row.elapsedMs!, workRevision: row.workRevision!, request: evidence }];
+      row.status = 'ready'; row.workRevision = row.workRevision! + 1; row.reworkRequest = evidence;
+      delete row.result; delete row.startedAt; delete row.finishedAt; delete row.elapsedMs; delete row.leaseUntil;
+    }
+    await save(directory, state);
+    return { status: 'rework-ready', jobs: candidates.map(({ row }) => ({ jobId: row.job.jobId, workerId: row.workerId, workRevision: row.workRevision, resultPath: row.resultPath })), remoteWrites: 0 };
   });
 }
 export async function failPreparationJob(directory: string, jobId: string) {
@@ -432,9 +560,10 @@ export async function mergePreparationDirectory(directory: string) {
     }) : undefined;
     let resolvedProgram = plan.version >= 8 ? validateNative44Program({ ...merged.program, styleCapabilities: state.nativeSettingsCapabilities, ...(state.componentLearning ? { componentLearning: state.componentLearning } : {}) }) : merged.program, resolvedImagePolicy = merged.nativeImagePolicy;
     if (plan.nativeImagePolicy?.version === 2) {
-      const manifest = await bound(plan.bodyAssets) as { assets: Native44Asset[] };
-      if (!Array.isArray(manifest.assets)) fail('image_resolution_manifest');
-      const resolution = await resolveNativeImageResolution({ program: merged.program, sourceFacts: sources.sourceFacts, assets: manifest.assets, readAsset: async asset => {
+      const manifest = await bound(plan.bodyAssets) as Native44Asset[] | { assets: Native44Asset[] };
+      const assets = Array.isArray(manifest) ? manifest : manifest.assets;
+      if (!Array.isArray(assets)) fail('image_resolution_manifest');
+      const resolution = await resolveNativeImageResolution({ program: merged.program, sourceFacts: sources.sourceFacts, assets, readAsset: async asset => {
         const filename = await preparationPath(path.resolve(path.dirname(plan.bodyAssets.path), asset.localPath)), info = await lstat(filename);
         if (!info.isFile() || info.size > 64 * 1024 * 1024) fail('image_resolution_file');
         return readFile(filename);
@@ -463,7 +592,7 @@ export async function mergePreparationDirectory(directory: string) {
     const guide = plan.version >= 6 ? productionGuide(sources, plan, plan.sections, merged.responsive ? { plan: merged.responsive, program: resolvedProgram, css: merged.css } : undefined) : undefined;
     const program = await writeNew(path.join(target, 'program.json'), { ...resolvedProgram, componentPlan }), cssBytes = Buffer.from(merged.css), cssPath = path.join(target, 'body.css');
     const cssHandle = await open(cssPath, 'wx'); try { await cssHandle.writeFile(cssBytes); await cssHandle.sync(); } finally { await cssHandle.close(); }
-    const manifest = validateFullReplicaManifest({ ...(resolvedProgram.componentExtension?{componentExtension:resolvedProgram.componentExtension}:{}),...(resolvedProgram.currentRecord?{currentRecord:resolvedProgram.currentRecord}:{}),version: plan.version >= 5 ? 4 : plan.version, kind: 'clonewp-full-replica', taskId: plan.taskId, runId: plan.runId, title: plan.title, slug: plan.slug, sourceUrl: plan.sourceUrl, targetOrigin: plan.targetOrigin, headerProvider: plan.reusedHeader ? 'reused-woodmart-header' : 'woodmart-header-builder', ...(plan.pageScope ? { pageScope: plan.pageScope } : {}), deliveryPolicy: 'publish-after-review', ...(plan.reviewSkipPolicy ? { reviewSkipPolicy: plan.reviewSkipPolicy } : {}), ...(resolvedImagePolicy ? { nativeImagePolicy: resolvedImagePolicy } : {}), ...(merged.responsive ? { responsive: merged.responsive } : {}), sourceEvidence: plan.sourceEvidence, sourcePartition: plan.sourcePartition, ...(plan.reusedHeader ? { reusedHeader: plan.reusedHeader } : { header: { plan: merged.header, bundleDirectory: path.join(state.finalRunDirectory, 'header'), assets: plan.headerAssets } }), body: { program, css: { path: cssPath, sha256: await byteHash(cssBytes) }, sourceUnits, ...(merged.navigationForms ? { navigationForms: merged.navigationForms } : {}) } });
+    const manifest = validateFullReplicaManifest({ ...(resolvedProgram.componentExtension?{componentExtension:resolvedProgram.componentExtension}:{}),...(resolvedProgram.currentRecord?{currentRecord:resolvedProgram.currentRecord}:{}),version: plan.version >= 5 ? 4 : plan.version, kind: 'clonewp-full-replica', taskId: plan.taskId, runId: plan.runId, title: plan.title, slug: plan.slug, sourceUrl: plan.sourceUrl, targetOrigin: plan.targetOrigin, headerProvider: plan.reusedHeader ? 'reused-woodmart-header' : 'woodmart-header-builder', ...(plan.pageScope ? { pageScope: plan.pageScope } : {}), deliveryPolicy: 'publish-after-review', ...(plan.reviewSkipPolicy ? { reviewSkipPolicy: plan.reviewSkipPolicy } : {}), ...(resolvedImagePolicy ? { nativeImagePolicy: resolvedImagePolicy } : {}), ...(merged.responsive ? { responsive: merged.responsive } : {}), sourceEvidence: plan.sourceEvidence, sourcePartition: plan.sourcePartition, ...(plan.reusedHeader ? { reusedHeader: plan.reusedHeader } : { header: { plan: merged.header, bundleDirectory: path.join(state.finalRunDirectory, 'header'), assets: plan.headerAssets } }), body: { program, css: { path: cssPath, sha256: await byteHash(cssBytes) }, sourceUnits, ...(merged.navigationForms ? { navigationForms: merged.navigationForms } : {}), ...(merged.configurator ? { configurator: merged.configurator } : {}) } });
     const prepared = await prepareActualBody(manifest);
     if (plan.version >= 8) {
       assertActualPreparedBody(prepared);
@@ -481,7 +610,7 @@ export async function mergePreparationDirectory(directory: string) {
   });
 }
 export async function preparationStatus(directory: string) {
-  return locked(directory, async (state) => {
+  return locked(directory, async (state, plan) => {
     const now = Date.now();
     const jobs = state.jobs.map(row => {
       const stale = preparationJobStale(row, now), staleMinutes = preparationStaleMinutes(row, now);
@@ -490,12 +619,14 @@ export async function preparationStatus(directory: string) {
         ...(stale ? { storedStatus: row.status, staleMinutes, nextAction: `npm run replica:prepare -- fail --directory "${directory}" --job ${row.job.jobId}，再 start --job ${row.job.jobId} 重新开始` } : {}),
         ...(row.startedAt ? { startedAt: row.startedAt } : {}), ...(row.leaseUntil ? { leaseUntil: row.leaseUntil } : {}), ...(row.finishedAt ? { finishedAt: row.finishedAt } : {}), ...(row.previousAttempts ? { previousAttempts: row.previousAttempts } : {}),
         ...(row.elapsedMs === undefined ? {} : { elapsedMs: row.elapsedMs, measurement: 'utc-wall-agent-start-to-result' }),
+        ...(plan.executionPolicy ? { workerId: row.workerId ?? null, workRevision: row.workRevision, previousResults: row.previousResults ?? [], ...(row.result ? { result: row.result } : {}), ...(row.reworkRequest ? { reworkRequest: row.reworkRequest } : {}) } : {}),
       };
     });
     const stalledJobs = jobs.filter(job => job.status === 'stale').map(job => job.jobId);
     return {
       status: state.merged ? 'prepared' : 'awaiting-preparation', directory, taskId: state.taskId, runId: state.runId, contractHash: state.contractHash,
       execution: 'codex-native-collaboration', remoteWrites: 0, finalRunDirectory: state.finalRunDirectory,
+      ...(plan.executionPolicy ? { coordination: createPreparationCoordination(plan, state.jobs.map(row => row.job)), queue: { maxWorkers: preparationConcurrency(plan), running: state.jobs.filter(row => row.status === 'running').length, ready: state.jobs.filter(row => row.status === 'ready').length, failed: state.jobs.filter(row => row.status === 'failed').length, timing: preparationQueueTiming(state.jobs, now), claimCommand: ['npm', 'run', 'replica:prepare', '--', 'next', '--directory', directory, '--worker', '<WORKER_ID>'] } } : {}),
       ...(stalledJobs.length ? { stalled: true, stalledJobs } : {}),
       ...(state.nativeSettingsCapabilities ? { nativeSettingsCapabilities: state.nativeSettingsCapabilities } : {}),
       ...(state.componentGuidance ? { componentGuidance: state.componentGuidance } : {}),
@@ -504,7 +635,7 @@ export async function preparationStatus(directory: string) {
       jobs,
       timing: { createdAt: state.createdAt, preflight: { elapsedMs: state.preflightMs, measurement: 'monotonic-local' }, ...(state.completedAt ? { completedAt: state.completedAt, wallMs: Date.parse(state.completedAt) - Date.parse(state.createdAt) } : {}), pureModelTime: 'not-measured', sourceObservation: 'not-measured', sharedPlanning: 'not-measured', visualAcceptance: 'not-measured' },
       ...(state.productionGuide ? { productionGuide: state.productionGuide } : {}),
-      ...(state.merged ? { manifest: state.merged } : { next: 'Start one native collaboration agent per job concurrently; each uses start before preparation and complete after its owned result. Merge all jobs before the existing full workflow.' }),
+      ...(state.merged ? { manifest: state.merged } : { next: plan.executionPolicy ? 'Coordinator runs next with a stable logical worker ID and assigns the claimed packet to one collaboration agent. Reuse freed worker slots; preserve owners for batched rework. Merge all results before one whole-page render/review; only the coordinator browses or writes remotely.' : 'Start one native collaboration agent per job concurrently; each uses start before preparation and complete after its owned result. Merge all jobs before the existing full workflow.' }),
     };
   });
 }

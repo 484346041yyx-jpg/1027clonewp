@@ -3,11 +3,12 @@ import { validateResponsiveHeaderPlan, type ResponsiveHeader } from '../../repli
 import { validateHeaderMenuContent, type HeaderMenuContent } from './menu-content.js';
 import { validateSimpleDropdowns, type SimpleDropdownPresentation } from './simple-dropdown.js';
 import { validateHeaderHoverEffects, type HeaderMenuHoverEffect } from './hover-effects.js';
+import { menuBindingPolicySchema, type MenuBindingPolicy } from './menu-binding.js';
 
 /** An opt-in header module is independent of an Elementor body or page binding. */
 export type HeaderRowSlot = 'top-bar' | 'general-header' | 'header-bottom';
 export type HeaderColumnPosition = 'left' | 'center' | 'right';
-export type HeaderModuleElementType = 'logo' | 'mainmenu' | 'account' | 'cart' | 'search' | 'space';
+export type HeaderModuleElementType = 'logo' | 'mainmenu' | 'menu' | 'account' | 'cart' | 'search' | 'space';
 export interface HeaderModuleElement {
   key: string;
   type: HeaderModuleElementType;
@@ -26,6 +27,7 @@ export interface HeaderModuleMenu { key: string; name: string; items: HeaderMenu
 export interface HeaderModulePlan {
   kind: 'clonewp-header-module';
   version: 1;
+  menuBindingPolicy?: MenuBindingPolicy;
   moduleKey: string;
   targetOrigin: string;
   owner: HeaderOwner;
@@ -39,7 +41,7 @@ export interface HeaderModulePlan {
 }
 export const HEADER_ROW_SLOTS: readonly HeaderRowSlot[] = Object.freeze(['top-bar', 'general-header', 'header-bottom']);
 export const HEADER_COLUMN_POSITIONS: readonly HeaderColumnPosition[] = Object.freeze(['left', 'center', 'right']);
-const types = new Set<HeaderModuleElementType>(['logo', 'mainmenu', 'account', 'cart', 'search', 'space']);
+const types = new Set<HeaderModuleElementType>(['logo', 'mainmenu', 'menu', 'account', 'cart', 'search', 'space']);
 const keyPattern = /^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$/;
 function fail(code: string): never { throw new Error(`woodmart_header_module_${code}`); }
 function object(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === 'object' && !Array.isArray(value); }
@@ -69,7 +71,8 @@ export function validateHeaderModulePlan(input: unknown): HeaderModulePlan {
   const value: unknown = JSON.parse(canonicalHeaderJson(input));
   if (!object(value)) fail('plan_invalid');
   if (object(value.layout) && Object.hasOwn(value.layout, 'mobile')) return validateResponsiveHeaderPlan(value as unknown as HeaderModulePlan, validateHeaderModulePlan);
-  exact(value, ['kind', 'version', 'moduleKey', 'targetOrigin', 'owner', 'name', 'menus', 'layout', 'style'], ['menuContent', 'menuItemMedia']);
+  exact(value, ['kind', 'version', 'moduleKey', 'targetOrigin', 'owner', 'name', 'menus', 'layout', 'style'], ['menuContent', 'menuItemMedia', 'menuBindingPolicy']);
+  if (value.menuBindingPolicy !== undefined) value.menuBindingPolicy = menuBindingPolicySchema.parse(value.menuBindingPolicy);
   if (value.kind !== 'clonewp-header-module' || value.version !== 1 || typeof value.moduleKey !== 'string' || !/^[a-z][a-z0-9_-]{0,63}$/.test(value.moduleKey) || !text(value.name, 200)) fail('plan_invalid');
   const origin = headerTargetOrigin(value.targetOrigin);
   if (!object(value.owner)) fail('owner_invalid');
@@ -116,7 +119,7 @@ export function validateHeaderModulePlan(input: unknown): HeaderModulePlan {
         if (!key(element.key) || elementKeys.has(element.key) || elementKeys.size >= 100 || !types.has(element.type as HeaderModuleElementType)) fail('element_invalid');
         elementKeys.add(element.key); params(element.params);
         if (Object.hasOwn(element.params, 'menu_id')) fail('raw_menu_binding_forbidden');
-        if (element.type === 'mainmenu') {
+        if (element.type === 'mainmenu' || element.type === 'menu') {
           if (!key(element.menuKey) || !menuKeys.has(element.menuKey)) fail('menu_binding_missing');
         } else if (Object.hasOwn(element, 'menuKey')) fail('unexpected_menu_binding');
         validateHeaderHoverEffects(element as unknown as HeaderModuleElement, (value.menus as unknown as HeaderModuleMenu[]).find(menu => menu.key === element.menuKey));

@@ -45,7 +45,7 @@ export interface PreparationTimingRecorder {
 }
 
 const stageSet = new Set<string>(PREPARATION_TIMING_STAGES);
-const commandSet = new Set(['prepare', 'run', 'amend-unwritten-body-style', 'resume', 'review', 'publish', 'reconcile', 'rebase-current-draft', 'recover-style', 'revise-style', 'revise-header-style', 'revise-native-motion', 'revise-layout', 'revise-navigation-return']);
+const commandSet = new Set(['prepare', 'run', 'amend-unwritten-body-style', 'resume', 'review', 'publish', 'reconcile', 'rebase-current-draft', 'recover-style', 'revise-style', 'revise-header-style', 'revise-native-motion', 'revise-layout', 'revise-navigation-return', 'revise-configurator-catalog']);
 const statusSet = new Set(['succeeded', 'failed', 'cancelled']);
 const sourceSet = new Set(['agent-dispatch', 'agent-start', 'external-observation']);
 const systemClock: TimingClock = { monotonicNow: () => performance.now(), utcNow: () => new Date().toISOString() };

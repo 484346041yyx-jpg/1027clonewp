@@ -145,7 +145,7 @@ export async function createHeaderBundle(directory: string, input: unknown, medi
   const identity: HeaderBundleState['identity'] = { moduleKey: plan.moduleKey, owner: { ...plan.owner }, targetOrigin: plan.targetOrigin, headerId };
   const initial: HeaderBundleState = { version: 1, identity, confirmed: null, pending: null, revision: 0 };
   const files: Record<string, string> = {
-    'header.json': safeJSON({ version: 1, kind: 'clonewp-header-layout', moduleKey: plan.moduleKey, targetOrigin: plan.targetOrigin, owner: plan.owner, name: plan.name, layout: plan.layout, ...(plan.menuContent ? { menuContent: plan.menuContent } : {}), ...(plan.menuItemMedia ? { menuItemMedia: plan.menuItemMedia } : {}) }),
+    'header.json': safeJSON({ version: 1, kind: 'clonewp-header-layout', moduleKey: plan.moduleKey, targetOrigin: plan.targetOrigin, owner: plan.owner, name: plan.name, layout: plan.layout, ...(plan.menuBindingPolicy ? { menuBindingPolicy: plan.menuBindingPolicy } : {}), ...(plan.menuContent ? { menuContent: plan.menuContent } : {}), ...(plan.menuItemMedia ? { menuItemMedia: plan.menuItemMedia } : {}) }),
     'menus.json': safeJSON(plan.menus.map(({ dropdowns: _dropdowns, ...menu }) => menu)),
     'dropdowns.json': safeJSON(Object.fromEntries(plan.menus.filter(menu => menu.dropdowns).map(menu => [menu.key, menu.dropdowns]))),
     'header.css': plan.style.css, 'fonts.json': safeJSON(plan.style.fonts),
@@ -161,7 +161,7 @@ export async function createHeaderBundle(directory: string, input: unknown, medi
 /** Read independently editable files, then reassemble and validate one plan. */
 export async function loadHeaderBundle(directory: string): Promise<HeaderBundle> {
   const actual = await checkedDirectory(directory);
-  const header = z.object({ version: z.literal(1), kind: z.literal('clonewp-header-layout'), moduleKey: z.string(), targetOrigin: z.string(), owner: z.unknown(), name: z.string(), layout: z.unknown(), menuContent: z.unknown().optional(), menuItemMedia: z.unknown().optional() }).strict().parse(await jsonFile(actual, 'header.json'));
+  const header = z.object({ version: z.literal(1), kind: z.literal('clonewp-header-layout'), moduleKey: z.string(), targetOrigin: z.string(), owner: z.unknown(), name: z.string(), layout: z.unknown(), menuBindingPolicy: z.unknown().optional(), menuContent: z.unknown().optional(), menuItemMedia: z.unknown().optional() }).strict().parse(await jsonFile(actual, 'header.json'));
   const menus = await jsonFile(actual, 'menus.json'), fonts = await jsonFile(actual, 'fonts.json'), css = await textFile(actual, 'header.css');
   let dropdowns: unknown = {};
   try { dropdowns = await jsonFile(actual, 'dropdowns.json'); } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }

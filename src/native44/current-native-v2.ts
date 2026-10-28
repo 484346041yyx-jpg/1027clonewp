@@ -1,3 +1,4 @@
+import { runResources } from '../workspace/operation-resources.js';
 import path from 'node:path';
 import { requireEditorCompletion } from '../editor-completion/store.js';
 import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises';
@@ -84,7 +85,7 @@ export async function deriveNative44CurrentNativeV2(input: { root: string; reque
   for (const item of [program.knowledge, ...[loaded.index.sharedControls, ...types.map(type => loaded.index.components[type])].map(item => ({ path: path.join(root, 'data', 'native44', item.path), sha256: item.sha256 }))]) await read({ path: item.path, sha256: item.sha256 });
   // The exact pending declaration factory is invoked independently at every
   // compilation boundary. Serialized pending receipts grant no permission.
-  const pendingForms = await prepareNative44PendingFormCapabilities({ root, program });
+  const pendingForms = await prepareNative44PendingFormCapabilities({ root, program,css:String(before.settings.custom_css??'') });
   const options = { schemas, knowledge: toNative44CompilerKnowledge(loaded, schemas), assets, targetOrigin: new URL(manifest.targetUrl).origin, pendingForms };
   const compiled = compileNative44(program, options);
   for (const receipt of compiled.pendingFormBindings ?? []) for (const item of [receipt.sourceFacts, receipt.appearance, receipt.registered.capabilities, ...receipt.packets]) await read({ path: item.path, sha256: item.sha256 }, 64 * 1024 * 1024);
@@ -98,6 +99,7 @@ export async function deriveNative44CurrentNativeV2(input: { root: string; reque
     references: { frozenProgram: { path: lock.program!.path, sha256: lock.program!.sha256 }, sourceFacts: { path: lock.inputs!.sourceFacts.path, sha256: lock.inputs!.sourceFacts.sha256 }, componentPlan: { path: lock.inputs!.componentPlan.path, sha256: lock.inputs!.componentPlan.sha256 }, requirements: request.requirements, acceptancePolicy: request.acceptancePolicy, sourceUnits: request.sourceUnits, baselineSnapshot: request.before, baselineManifest: request.manifest, baselineModel: request.baselineModel, fragmentProgram: request.program, registeredSchemas: request.schemas, proposedModel: request.proposedModel }, priorRecords: input.priorRecords });
   await verifyNative44ImageBoxCaptionReveals({ root, model: derived.model, elements: derived.elements, program: lock.program!, sourceFacts: lock.inputs!.sourceFacts, componentPlan: lock.inputs!.componentPlan, read });
   const css = compileNative44CSSModel(derived.model, { elements: derived.elements }), settings = { ...before.settings, custom_css: css.css }, expected = { ...before, elements: derived.elements, settings, hash: documentHashV2(derived.elements, settings) };
+  await prepareNative44PendingFormCapabilities({root,program,css:css.css});
   const record = finalizeNative44CurrentNativeModelRecord(derived, expected), folder = path.join(root, 'runs', request.runId, 'amendments', request.operationId), recordRef = fileReference(path.join(folder, 'model-record.json'), record);
   const priorRefs = pointer.nativeReplacementRecords ?? [];
   if (!Array.isArray(priorRefs) || priorRefs.length !== (input.priorRecords ?? []).length || priorRefs.some((item: unknown) => !ref.safeParse(item).success)) fail('prior_record_inventory_conflict');
@@ -125,7 +127,7 @@ async function validate(root: string, request: Native44CurrentNativeV2Request, r
 }
 
 export async function prepareNative44CurrentNativeV2(rootInput: string, input: unknown) {
-  const root = await realpath(rootInput), request = Native44CurrentNativeV2RequestSchema.parse(input), reader = new VerifiedEvidenceReader(root), unlock = await acquireLock(root); noSecrets(request);
+  const root = await realpath(rootInput), request = Native44CurrentNativeV2RequestSchema.parse(input), reader = new VerifiedEvidenceReader(root), unlock = await acquireLock(root, await runResources(root, request.runId)); noSecrets(request);
   try {
     await ensureDiskSpaceV2(root); const data = await validate(root, request, reader); await reader.revalidateAll();
     await mkdir(path.dirname(data.folder), { recursive: true }); await mkdir(data.folder);
@@ -145,7 +147,7 @@ export async function prepareNative44CurrentNativeV2(rootInput: string, input: u
 }
 
 export async function applyNative44CurrentNativeV2(rootInput: string, runId: string, operationId: string, deps: Native44CurrentNativeRevisionDependencies, mode: 'apply' | 'reconcile' = 'apply') {
-  const root = await realpath(rootInput), reader = new VerifiedEvidenceReader(root), unlock = await acquireLock(root); let remote: Awaited<ReturnType<typeof deps.remote>> | undefined;
+  const root = await realpath(rootInput), reader = new VerifiedEvidenceReader(root), unlock = await acquireLock(root, await runResources(root, runId)); let remote: Awaited<ReturnType<typeof deps.remote>> | undefined;
   try {
     await ensureDiskSpaceV2(root); const paths = await location(root, runId, operationId), bundleBytes = await readFile(path.join(paths.folder, 'bundle.json')), bundle = JSON.parse(bundleBytes.toString('utf8')) as Bundle;
     if (bundle.version !== 2 || bundle.kind !== 'native44-current-native-bundle') fail('bundle_invalid');
@@ -174,7 +176,7 @@ export async function applyNative44CurrentNativeV2(rootInput: string, runId: str
     let observed = await read(), writes = 0;
     const state = async (status: Operation['status']) => { operation = { ...operation, status, observedHash: observed.hash, updatedAt: now() }; await writeJson(path.join(paths.folder, 'operation-state.json'), operation); };
     if (observed.hash === data.before.hash && mode === 'apply' && ['prepared', 'retryable'].includes(operation.status)) {
-      const capabilities = await discoverNative44Contracts(remote, data.types), pendingForms = await prepareNative44PendingFormCapabilities({ root, program: data.program }), options = { schemas: capabilities.legacySchemas, knowledge: toNative44CompilerKnowledge(data.loaded, capabilities.legacySchemas), assets: data.assets, targetOrigin: new URL(data.manifest.targetUrl).origin, pendingForms }, compiled = compileNative44(data.program, options);
+      const capabilities = await discoverNative44Contracts(remote, data.types), pendingForms = await prepareNative44PendingFormCapabilities({ root, program: data.program,css:data.stylesheet }), options = { schemas: capabilities.legacySchemas, knowledge: toNative44CompilerKnowledge(data.loaded, capabilities.legacySchemas), assets: data.assets, targetOrigin: new URL(data.manifest.targetUrl).origin, pendingForms }, compiled = compileNative44(data.program, options);
       if (!same(compiled, data.compiled)) fail('live_fragment_compilation_changed');
       bindNative44CurrentNativeModelCompilation(data.model, compiled);
       await immutable(path.join(paths.folder, `live-capabilities-${hashV2(canonicalV2(capabilities))}.json`), capabilities);

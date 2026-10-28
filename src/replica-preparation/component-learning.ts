@@ -1,9 +1,9 @@
-import {assertProductExtensionReference} from '../native44/product-extension.js';
-import {CORE_SINGLE_PRODUCT_TYPES} from '../native44/catalog.js';
+import {productExtensionWidgetTypes} from '../native44/product-extension.js';
+
 import type {FileRef} from '../replica-v2/types.js';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import { NATIVE44_ALL_TYPES } from '../native44/catalog.js';
+
 import { analyzeComponentModel } from '../native44/component-model.js';
 import type { Native44Program } from '../native44/types.js';
 import type { PreparationJobResult } from './types.js';
@@ -30,7 +30,7 @@ const patterns = [
 export function createComponentLearning(bytes: Uint8Array, source: { path: string; sha256: string }, extension?:FileRef) {
   if (bytes.byteLength > 2 * 1024 * 1024 || createHash('sha256').update(bytes).digest('hex') !== source.sha256) throw Error('component_learning_source_hash');
   const archive = archiveSchema.parse(JSON.parse(Buffer.from(bytes).toString('utf8')));
-  const hints = new Map<string, Set<string>>(), allowed = new Set<string>(NATIVE44_ALL_TYPES);if(extension){assertProductExtensionReference(extension);CORE_SINGLE_PRODUCT_TYPES.forEach(type=>allowed.add(type));}
+  const hints = new Map<string, Set<string>>(), allowed = new Set<string>(productExtensionWidgetTypes(extension));
   for (const site of archive.sources) for (const row of [...site.settings, ...site.collections]) {
     const fields = hints.get(row.widgetType) ?? new Set<string>();
     for (const name of Object.keys({ ...(row.initialSettings as object ?? {}), ...(row.expandedSettings as object ?? {}) })) fields.add(name);

@@ -6,6 +6,8 @@ import type { LegacySchema } from '../wordpress/types.js';
 import type { Native44Native, Native44Program } from './types.js';
 import { walkNative44 } from './types.js';
 import { assertProductRuntimeCapability, type ProductRuntimeCapability } from '../wordpress/current-product-runtime.js';
+import { readRelatedProductsProvider, type RelatedProductsProvider, type RelatedProductsReader } from './native-related-products.js';
+import { relatedProductsQueryKey, normalizeRelatedProductsQuery, type RelatedProductsQueryInput, type RelatedProductsSnapshot } from '../wordpress/related-products.js';
 
 /** A target selection, never a source example ID, record mutation or display default. */
 export const currentProductSelectionSchema = z.object({ recordType: z.literal('product'), contextKey: z.string().regex(/^[A-Za-z][A-Za-z0-9_-]{0,100}$/), productId: z.number().int().positive().max(Number.MAX_SAFE_INTEGER) }).strict();
@@ -46,7 +48,7 @@ export const CORE_PRODUCT_ADAPTERS = {
   wd_wc_notices: { field: 'notices', reads: [], actions: [], dependencies: ['current-product', 'native-cart-session', 'native-notice-service'] },
 } as const;
 export type CoreProductWidget = keyof typeof CORE_PRODUCT_ADAPTERS;
-export function coreProductAdapter(type: string) { return Object.hasOwn(CORE_PRODUCT_ADAPTERS, type) ? CORE_PRODUCT_ADAPTERS[type as CoreProductWidget] : undefined; }
+export function coreProductAdapter(type: string) { return Object.hasOwn(CORE_PRODUCT_ADAPTERS, type) ? CORE_PRODUCT_ADAPTERS[type as CoreProductWidget] : type === 'woocommerce-product-related' ? { field: 'related-products', reads: ['categories', 'tags', 'related-products'], actions: [], dependencies: ['current-product', 'native-woocommerce-related-query'] } as const : undefined; }
 export interface CoreProductBinding {
   componentKey: string; widgetType: CoreProductWidget; settings: Record<string, unknown>;
   provider: 'target-woocommerce-product-v1'; contextKey: string; productId: number; targetOrigin: string; observedAt: string;
@@ -55,6 +57,7 @@ export interface CoreProductBinding {
   nativeDataOwner: 'current-woocommerce-product'; runtimeContextRequired: true; renderedVerified: false;
 }
 export function adaptCoreProductComponent(node: Native44Native, options: { provider: CurrentProductProvider; selection: CurrentProductSelection; targetOrigin: string; schema: LegacySchema; localControls: ReadonlySet<string> }): CoreProductBinding {
+  if (node.widgetType === 'woocommerce-product-related') throw Error('native_related_product_dedicated_adapter_required');
   const adapter = coreProductAdapter(node.widgetType), binding = node.model?.data;
   if (!adapter || binding?.source !== 'current-record' || binding.recordType !== 'product' || binding.contextKey !== options.selection.contextKey || binding.field !== adapter.field || !binding.evidenceFactIds.length || binding.evidenceFactIds.some(id => !node.sourceFactIds?.includes(id))) throw Error(`core_product_binding_mismatch: ${node.key}`);
   const observation = currentProductObservation(options.provider, options.selection, options.targetOrigin);
@@ -86,13 +89,25 @@ export function prepareCoreProductBindings(program: Pick<Native44Program, 'block
   for (const node of walkNative44(program.blocks)) {
     const data = node.model?.data;
     if (data?.source !== 'current-record') continue;
+    if (node.kind === 'native-related-products') continue;
     if (node.kind !== 'native' || !coreProductAdapter(node.widgetType)) throw Error(`current_product_native_adapter_missing: ${node.key}`);
     const binding = adaptCoreProductComponent(node, { ...options, selection: program.currentRecord, schema: options.schemas[node.widgetType], localControls: options.controlsByWidget[node.widgetType] ?? new Set() });
     for (const action of binding.actions.filter(action => ['purchase', 'reviews'].includes(action))) { if (owners.has(action)) throw Error(`current_product_duplicate_business_owner: ${action}`); owners.add(action); }
     bindings.push(binding);
   }
-  if (!bindings.length) throw Error('current_product_selection_unused');
+  if (!bindings.length && !walkNative44(program.blocks).some(node => node.kind === 'native-related-products')) throw Error('current_product_selection_unused');
   return bindings;
+}
+/** Related result IDs are audit observations. The native widget keeps runtime query ownership. */
+export async function prepareProgramRelatedProducts(reader: Partial<RelatedProductsReader>, program: Pick<Native44Program, 'blocks' | 'currentRecord'>, origin: string, persist?: (query: RelatedProductsQueryInput, observation: RelatedProductsSnapshot) => Promise<unknown>): Promise<RelatedProductsProvider[]> {
+  const nodes = walkNative44(program.blocks).filter(n => n.kind === 'native-related-products');
+  if (!nodes.length) return [];
+  if (!program.currentRecord || !reader.readTargetRelatedProducts) throw Error('related_products_reader_or_context_missing');
+  const selection = program.currentRecord, queries = new Map(nodes.map(n => [relatedProductsQueryKey(n.query), normalizeRelatedProductsQuery(n.query)])), providers: RelatedProductsProvider[] = [];
+  for (const query of queries.values()) providers.push(await readRelatedProductsProvider({ readTargetRelatedProducts: async (id, q) => {
+    const observation = await reader.readTargetRelatedProducts!(id, q); if (persist) await persist(q, observation); return observation;
+  } }, selection, query, origin));
+  return providers;
 }
 
 /** Shared target-read step for the existing preparation and body-save paths.

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { NATIVE44_ALL_TYPES, EXTENDED_NATIVE_TYPES } from './catalog.js';
-import { assertProductExtensionReference } from './product-extension.js';
+import { assertProductExtensionReference, productExtensionWidgetTypes } from './product-extension.js';
 import type { Native44Component, Native44Program } from './types.js';
 import type { SourceFactsV2 } from '../replica-v2/source.js';
 import { coreProductAdapter } from './current-product.js';
@@ -11,8 +11,8 @@ const key = z.string().regex(/^[A-Za-z][A-Za-z0-9_-]{0,100}$/);
 const evidence = z.array(z.string().min(1)).min(1).max(1000);
 export const componentDataSchema = z.discriminatedUnion('source', [
   z.object({ source: z.literal('static') }).strict(),
-  z.object({ source: z.literal('current-record'), recordType: z.enum(['product', 'post']), contextKey: key, field: z.enum(['title', 'media', 'rating', 'short-description', 'price', 'attributes', 'content', 'meta', 'purchase', 'reviews', 'navigation', 'notices']), evidenceFactIds: evidence }).strict(),
-  z.object({ source: z.literal('collection'), query: z.enum(['ids', 'latest-posts', 'related', 'bestselling', 'recently_viewed']), contextKey: key.optional(), evidenceFactIds: evidence }).strict(),
+  z.object({ source: z.literal('current-record'), recordType: z.enum(['product', 'post']), contextKey: key, field: z.enum(['title', 'media', 'rating', 'short-description', 'price', 'attributes', 'content', 'meta', 'purchase', 'reviews', 'navigation', 'notices', 'related-products']), evidenceFactIds: evidence }).strict(),
+  z.object({ source: z.literal('collection'), query: z.enum(['ids', 'latest-posts', 'product-categories', 'related', 'bestselling', 'recently_viewed']), contextKey: key.optional(), evidenceFactIds: evidence }).strict(),
   z.object({ source: z.literal('shared-resource'), resourceType: z.enum(['content-block', 'page-context']), resourceKey: key, evidenceFactIds: evidence }).strict(),
 ]);
 export const componentModelSchema = z.object({
@@ -28,6 +28,7 @@ const recordFields: Record<string, string> = {
   wd_single_product_content: 'content', wd_single_product_tabs: 'content',
   wd_single_product_additional_info_table: 'attributes', wd_single_product_reviews: 'reviews', wd_single_product_nav: 'navigation',
   wd_wc_notices: 'notices',
+  'woocommerce-product-related': 'related-products',
 };
 const businessActions = new Set(['selection', 'purchase', 'reviews', 'wishlist', 'compare', 'timer']);
 const allowed = new Set<string>(NATIVE44_ALL_TYPES);
@@ -45,7 +46,7 @@ export interface ComponentModelGap { componentKey: string; code: string; require
 /** Same tree, settings and phone plan for every page; provider gaps stay explicit. */
 export function analyzeComponentModel(program: Pick<Native44Program, 'blocks'> & Partial<Pick<Native44Program, 'currentRecord' | 'componentExtension'>>, phone: readonly ModelPhoneSection[] = []) {
   if(program.componentExtension) assertProductExtensionReference(program.componentExtension);
-  const enabled = program.componentExtension ? new Set<string>(EXTENDED_NATIVE_TYPES) : allowed;
+  const enabled = program.componentExtension ? new Set<string>(productExtensionWidgetTypes(program.componentExtension)) : allowed;
   const nodes: Array<{ node: Native44Component; parentKey: string | null; sectionKey: string }> = [];
   const walk = (node: Native44Component, parentKey: string | null, sectionKey: string) => {
     nodes.push({ node, parentKey, sectionKey }); children(node).forEach(child => walk(child, node.key, sectionKey));
@@ -61,7 +62,7 @@ export function analyzeComponentModel(program: Pick<Native44Program, 'blocks'> &
     if (counts.get(node.key) !== 1) gap(node.key, 'duplicate-component', 'One actual component identity per tree node');
     if (!enabled.has(widgetType)) gap(node.key, 'component-not-enabled', widgetType);
     let data: { source: string; field?: string; contextKey?: string; recordType?: string; query?: string } = model.data ??
-      (node.kind === 'native-products' ? { source: 'collection', query: 'ids' } : node.kind === 'native-posts' ? { source: 'collection', query: 'latest-posts' } :
+      (node.kind === 'native-products' ? { source: 'collection', query: 'ids' } : node.kind === 'native-posts' ? { source: 'collection', query: 'latest-posts' } : node.kind === 'native-categories' ? { source: 'collection', query: 'product-categories' } :
         recordFields[widgetType] ? { source: 'current-record', recordType: 'product', contextKey: 'currentRecord', field: recordFields[widgetType] } : { source: 'static' });
     for (const id of [...('evidenceFactIds' in (model.data ?? {}) ? (model.data as { evidenceFactIds: string[] }).evidenceFactIds : []), ...(model.interactions ?? []).flatMap(action => action.evidenceFactIds)]) {
       if (!facts.has(id)) gap(node.key, 'binding-source-owner', id);
@@ -75,9 +76,9 @@ export function analyzeComponentModel(program: Pick<Native44Program, 'blocks'> &
       if (program.currentRecord && (data.recordType !== program.currentRecord.recordType || data.contextKey !== program.currentRecord.contextKey)) gap(node.key, 'record-selection-mismatch', String(data.contextKey));
     }
     if (data.source === 'collection') {
-      const actualQuery = node.kind === 'native-products' ? 'ids' : node.kind === 'native-posts' ? 'latest-posts' : undefined;
+      const actualQuery = node.kind === 'native-products' ? 'ids' : node.kind === 'native-posts' ? 'latest-posts' : node.kind === 'native-categories' ? 'product-categories' : undefined;
       if (actualQuery !== data.query) gap(node.key, 'collection-provider-pending', String(data.query));
-    } else if (node.kind === 'native-products' || node.kind === 'native-posts') gap(node.key, 'collection-role-mismatch', widgetType);
+    } else if (node.kind === 'native-products' || node.kind === 'native-posts' || node.kind === 'native-categories') gap(node.key, 'collection-role-mismatch', widgetType);
     if (data.source === 'shared-resource') gap(node.key, 'resource-provider-pending', 'Task-owned target resource and provider binding required');
     if (Object.hasOwn(settings, '__dynamic__')) gap(node.key, 'dynamic-tag-provider-pending', 'Typed dynamic provider and registered field contract required');
     const interactions = [...model.interactions ?? []];
@@ -89,7 +90,7 @@ export function analyzeComponentModel(program: Pick<Native44Program, 'blocks'> &
       if (action.controllerKey && nodes.some(row => row.node.key === action.controllerKey && row.sectionKey !== sectionKey)) gap(node.key, 'interaction-owner-scope', action.controllerKey);
       if (action.contextKey && data.source === 'static') gap(node.key, 'interaction-context-pending', action.contextKey);
       if ((businessActions.has(action.kind) || action.kind === 'gallery')&&!(program.componentExtension&&program.currentRecord&&(coreProductAdapter(widgetType)?.actions as readonly string[]|undefined)?.includes(action.kind))) gap(node.key, 'interaction-provider-pending', action.kind);
-      if (action.kind === 'disclosure' && !['accordion', 'nested-accordion', 'wd_toggle'].includes(widgetType)) gap(node.key, 'disclosure-controller-pending', 'Registered native controller/target relationship required');
+      if (action.kind === 'disclosure' && !['accordion', 'nested-accordion', 'wd_toggle'].includes(widgetType) && !(node.kind === 'native-categories' && ['on', 'side-hidden'].includes(String(settings.mobile_accordion)))) gap(node.key, 'disclosure-controller-pending', 'Registered native controller/target relationship required');
       if (['purchase', 'reviews'].includes(action.kind)) {
         const identity = `${action.kind}:${action.contextKey ?? data.contextKey ?? 'currentRecord'}`;
         if (uniqueActions.has(identity)) gap(node.key, 'duplicate-business-owner', identity); uniqueActions.add(identity);

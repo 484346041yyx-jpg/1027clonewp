@@ -199,8 +199,13 @@ for (const version of [6, 7, 8] as const) test(`preparation v${version} dispatch
         assert.deepEqual(type.wrapperClasses, capabilities.wrapperClassesByType.heading);
       }
       const result = structuredClone(f.results.find(row => row.jobId === job.jobId)!);
+      if (job.responsibility === 'body') result.sections = structuredClone(f.results.flatMap(row => row.sections ?? []).filter(section => job.sectionKeys.includes(section.key)));
       result.contractHash = job.contractHash; result.sharedHash = job.sharedHash;
-      if (result.header) result.header = structuredClone(f.plan.headerBase);
+      if (result.header) {
+        result.header = structuredClone(packet.headerBase);
+        if (version === 8) assert.deepEqual(result.header!.menuBindingPolicy,{version:1,editorReview:'desktop-and-mobile-reopen'});
+        else assert.equal(result.header!.menuBindingPolicy,undefined);
+      }
       for (const section of result.sections ?? []) { section.responsive = f.responsive.sections.find(row => row.key === section.key); section.fidelity = BODY_FIDELITY_KINDS.map(kind => ({ kind, componentKeys: [section.key], mechanism: 'native', implementation: 'Complete source fields are assigned to the owned native subtree.' })); }
       if (version >= 7) for (const section of result.sections ?? []) {
         const leaf = walkNative44(section.blocks).find(node => node.key === `${section.key}_title`)!;

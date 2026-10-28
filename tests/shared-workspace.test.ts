@@ -54,7 +54,9 @@ test('a WorkBuddy record identity claims and hands off without changing the obse
   assert.equal(after.handoff?.agent, 'workbuddy'); assert.equal(after.lock, null);
   // The record identity never becomes a browser observation identity.
   assert.equal(SOURCE_OBSERVER_TOOLS.includes('workbuddy' as never), false);
-  assert.deepEqual([...SOURCE_OBSERVER_TOOLS], ['cua_repl', 'claude_browser']);
+  // This client identity contract does not freeze the independent observer registry.
+  assert.equal(SOURCE_OBSERVER_TOOLS.includes('cua_repl'), true);
+  assert.equal(SOURCE_OBSERVER_TOOLS.includes('claude_browser'), true);
 });
 
 test('Codex -> Claude -> Codex handoff preserves decisions, checks, changed files and the hash chain', async t => {

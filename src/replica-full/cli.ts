@@ -9,7 +9,8 @@ import { acquireLock } from '../core/files.js';
 import { canonicalFullReplicaJson, FULL_REPLICA_JSON_LIMITS } from './json.js';
 import { fullReplicaHash, validateFullReplicaManifest } from './contract.js';
 import { defaultNativeImagePolicy } from './native-image-policy.js';
-import { rebaseFullReplicaCurrentDraft, reconcileFullReplica, reviseFullReplicaHeaderStyle, reviseFullReplicaLayout, reviseFullReplicaNativeMotion, reviseFullReplicaNavigationReturn, reviseFullReplicaStyle, runFullReplica } from './coordinator.js';
+import { rebaseFullReplicaCurrentDraft, reconcileFullReplica, reviseFullReplicaConfiguratorCatalog, reviseFullReplicaHeaderStyle, reviseFullReplicaLayout, reviseFullReplicaNativeMotion, reviseFullReplicaNavigationReturn, reviseFullReplicaStyle, runFullReplica } from './coordinator.js';
+import { catalogSchema } from '../configurator/contract.js';
 import { containerTreePlanSchema } from './container-tree.js';
 import { fullReplicaDelivery } from './delivery.js';
 import type { FullReplicaDependencies, FullReplicaManifest, FullReplicaRunState } from './types.js';
@@ -37,13 +38,14 @@ export const FULL_REPLICA_HELP = `Full replica: parallel local header/body prepa
   revise-native-motion --run-dir DIR --expected-fingerprint SHA256
   revise-layout --run-dir DIR --plan FILE --expected-fingerprint SHA256
   revise-navigation-return --run-dir DIR --expected-fingerprint SHA256
+  revise-configurator-catalog --run-dir DIR --catalog FILE --package-manifest FILE --expected-fingerprint SHA256
   status --run-dir DIR
 Remote phases: owned Full Width draft -> header resources -> body -> bind -> actual whole-page review -> publish.
 Unknown remote outcomes preserve pending intent and require reconciliation; never blindly rerun.
 Retired component manifests are rejected before target authentication.
 Public scopes in version 5: header-only, footer-only, header-footer; independent resources and an owned preview draft, with no global binding.
 `;
-const specs: Record<string, string[]> = { 'inspect-inquiry':['run-dir','element-id','test-marker'], run: ['manifest', 'run-dir'], resume: ['run-dir'], review: ['run-dir', 'evidence'], publish: ['run-dir'], reconcile: ['run-dir'], 'rebase-current-draft': ['run-dir', 'expected-fingerprint', 'current-body-hash', 'current-document-hash'], 'recover-style':['run-dir'], 'amend-unwritten-body-style':['run-dir','request'], 'revise-style': ['run-dir', 'css', 'expected-fingerprint'], 'revise-header-style': ['run-dir', 'css', 'expected-fingerprint'], 'revise-native-motion': ['run-dir', 'expected-fingerprint'], 'revise-layout': ['run-dir', 'plan', 'expected-fingerprint'], 'revise-navigation-return': ['run-dir', 'expected-fingerprint'], status: ['run-dir'] };
+const specs: Record<string, string[]> = { 'inspect-inquiry':['run-dir','element-id','test-marker'], run: ['manifest', 'run-dir'], resume: ['run-dir'], review: ['run-dir', 'evidence'], publish: ['run-dir'], reconcile: ['run-dir'], 'rebase-current-draft': ['run-dir', 'expected-fingerprint', 'current-body-hash', 'current-document-hash'], 'recover-style':['run-dir'], 'amend-unwritten-body-style':['run-dir','request'], 'revise-style': ['run-dir', 'css', 'expected-fingerprint'], 'revise-header-style': ['run-dir', 'css', 'expected-fingerprint'], 'revise-native-motion': ['run-dir', 'expected-fingerprint'], 'revise-layout': ['run-dir', 'plan', 'expected-fingerprint'], 'revise-navigation-return': ['run-dir', 'expected-fingerprint'], 'revise-configurator-catalog': ['run-dir','catalog','package-manifest','expected-fingerprint'], status: ['run-dir'] };
 export function parseFullReplicaArguments(args: string[]) {
   if (!args.length || args.includes('--help')) return { command: 'help', flags: {} as Record<string, string> };
   const command = args[0]; if (!Object.hasOwn(specs, command)) throw Error('replica_full_cli_unknown_command');
@@ -116,7 +118,7 @@ function serializeRemote(deps: FullReplicaDependencies, acquireRemoteLock: () =>
     const release = await acquireRemoteLock(); try { return await fn(...args); } finally { await release(); }
   };
   if (deps.bindReusedHeader) deps = { ...deps, bindReusedHeader: one(deps.bindReusedHeader.bind(deps)) };
-  return { ...deps, ...(deps.inspectUnwrittenBodyStyle ? { inspectUnwrittenBodyStyle: one(deps.inspectUnwrittenBodyStyle.bind(deps)) } : {}), provisionHeader: one(deps.provisionHeader.bind(deps)), createPage: one(deps.createPage.bind(deps)), saveBody: one(deps.saveBody.bind(deps)), bindHeader: one(deps.bindHeader.bind(deps)), publishPage: one(deps.publishPage.bind(deps)), ...(deps.publishWithoutReview ? { publishWithoutReview: one(deps.publishWithoutReview.bind(deps)) } : {}), ...(deps.reviseStyle ? { reviseStyle: one(deps.reviseStyle.bind(deps)) } : {}), ...(deps.reviseHeaderStyle ? { reviseHeaderStyle: one(deps.reviseHeaderStyle.bind(deps)) } : {}), ...(deps.reviseNativeMotion ? { reviseNativeMotion: one(deps.reviseNativeMotion.bind(deps)) } : {}), ...(deps.reviseLayout ? { reviseLayout: one(deps.reviseLayout.bind(deps)) } : {}), ...(deps.rebaseCurrentDraft ? { rebaseCurrentDraft: one(deps.rebaseCurrentDraft.bind(deps)) } : {}), ...(deps.reviseNavigationReturn ? { reviseNavigationReturn: one(deps.reviseNavigationReturn.bind(deps)) } : {}) };
+  return { ...deps, ...(deps.inspectUnwrittenBodyStyle ? { inspectUnwrittenBodyStyle: one(deps.inspectUnwrittenBodyStyle.bind(deps)) } : {}), provisionHeader: one(deps.provisionHeader.bind(deps)), createPage: one(deps.createPage.bind(deps)), saveBody: one(deps.saveBody.bind(deps)), bindHeader: one(deps.bindHeader.bind(deps)), publishPage: one(deps.publishPage.bind(deps)), ...(deps.publishWithoutReview ? { publishWithoutReview: one(deps.publishWithoutReview.bind(deps)) } : {}), ...(deps.reviseStyle ? { reviseStyle: one(deps.reviseStyle.bind(deps)) } : {}), ...(deps.reviseHeaderStyle ? { reviseHeaderStyle: one(deps.reviseHeaderStyle.bind(deps)) } : {}), ...(deps.reviseNativeMotion ? { reviseNativeMotion: one(deps.reviseNativeMotion.bind(deps)) } : {}), ...(deps.reviseLayout ? { reviseLayout: one(deps.reviseLayout.bind(deps)) } : {}), ...(deps.rebaseCurrentDraft ? { rebaseCurrentDraft: one(deps.rebaseCurrentDraft.bind(deps)) } : {}), ...(deps.reviseNavigationReturn ? { reviseNavigationReturn: one(deps.reviseNavigationReturn.bind(deps)) } : {}), ...(deps.reviseConfiguratorCatalog ? { reviseConfiguratorCatalog: one(deps.reviseConfiguratorCatalog.bind(deps)) } : {}) };
 }
 /** Read-only: the sibling preparation state only labels stages, it never
  * authorizes a write and a missing or malformed file simply yields no label. */
@@ -136,9 +138,10 @@ async function readPreparationProgress(directory: string): Promise<PreparationPr
 export async function runFullReplicaCLI(args: string[], services: FullReplicaCLIServices = realServices): Promise<unknown> {
   const { command, flags } = parseFullReplicaArguments(args);
   if (command === 'help') return { help: FULL_REPLICA_HELP, remoteWrites: 0 };
-  if (['run','resume','status','reconcile'].includes(command)) {
+  if (['run','resume','status','reconcile','publish','revise-style','revise-layout'].includes(command)) {
     const filename=command==='run'?flags.manifest:path.join(flags['run-dir'],'manifest.json');
     const input=await jsonFile(filename);
+    if((await import('./popup-contract.js')).isPopupReplica(input))return (await import('./popup-scope.js')).runPopupReplica(input,{runDirectory:flags['run-dir'],command:command==='publish'?'activate':command==='resume'?'run':command==='revise-style'?'style':command==='revise-layout'?'behavior':command as 'run'|'status'|'reconcile',cssPath:flags.css,expectedHash:flags['expected-fingerprint'],planPath:flags.plan});
     if(isPublicReplica(input))return runPublicReplica(input,{manifestPath:filename,runDirectory:flags['run-dir'],command:command as 'run'|'resume'|'status'|'reconcile'});
   }
   if (command !== 'status') await assertWorkspaceAccess(ROOT);
@@ -152,7 +155,7 @@ export async function runFullReplicaCLI(args: string[], services: FullReplicaCLI
     const newProgram=JSON.parse(newProgramBytes.toString('utf8'));
     if(Array.isArray(newProgram.blocks)&&!newProgram.inquiryPolicy)throw Error('replica_full_cli_new_inquiry_policy_required_use_preparation');
   if (manifest.headerProvider === 'component') throw Error('replica_full_retired_entry');
-    manifest = validateFullReplicaManifest({ ...manifest, nativeImagePolicy: manifest.nativeImagePolicy ?? defaultNativeImagePolicy(), editorCompletionPolicy: manifest.editorCompletionPolicy ?? defaultEditorCompletionPolicy() });
+    manifest = validateFullReplicaManifest({ ...manifest, ...(manifest.header ? { header: { ...manifest.header, plan: { ...manifest.header.plan, menuBindingPolicy: manifest.header.plan.menuBindingPolicy ?? (await import('../woodmart-header/generic/menu-binding.js')).defaultMenuBindingPolicy() } } } : {}), nativeImagePolicy: manifest.nativeImagePolicy ?? defaultNativeImagePolicy(), editorCompletionPolicy: manifest.editorCompletionPolicy ?? defaultEditorCompletionPolicy() });
     await mkdir(directory); await newFile(path.join(directory, 'manifest.json'), manifest);
     state = { version: 1, kind: 'clonewp-full-replica-run', taskId: manifest.taskId, runId: manifest.runId, manifestHash: fullReplicaHash(manifest), status: 'preparing', revision: 0, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), pending: null, checkpoints: {}, review: null };
     await writeState(directory, state);
@@ -161,7 +164,7 @@ export async function runFullReplicaCLI(args: string[], services: FullReplicaCLI
     state = await jsonFile(path.join(directory, 'state.json')) as FullReplicaRunState;
     if (state.manifestHash !== fullReplicaHash(manifest) || state.taskId !== manifest.taskId || state.runId !== manifest.runId) throw Error('replica_full_cli_run_identity_conflict');
     if (command === 'status') return { ...await deliverState(state), authority: 'local-confirmed-checkpoints', remoteWrites: 0, userProgress: fullReplicaUserProgress(state, await readPreparationProgress(directory)) };
-    if(command==='recover-style'&&(!state.pending||state.pending.phase!=='body'||state.checkpoints.body||state.checkpoints.bound))throw Error('replica_full_style_recovery_pending_body_required');
+    if(command==='recover-style'&&(!state.pending||!(state.pending.phase==='body'&&!state.checkpoints.body&&!state.checkpoints.bound||state.pending.phase==='style-revision'&&!!state.checkpoints.bound&&!state.checkpoints.published)))throw Error('replica_full_style_recovery_pending_body_required');
     if (state.pending && !['reconcile','recover-style','rebase-current-draft'].includes(command)) throw Error('replica_full_reconciliation_required');
     if (!state.pending && command === 'reconcile') throw Error('replica_full_reconciliation_not_pending');
     if (command === 'publish' && (!state.checkpoints.bound || !manifest.reviewSkipPolicy && state.review?.decision !== 'approved')) throw Error('replica_full_review_required');
@@ -183,7 +186,7 @@ export async function runFullReplicaCLI(args: string[], services: FullReplicaCLI
   try {
     const amendment = command === 'amend-unwritten-body-style' ? await readUnwrittenBodyStyleRequest(flags.request, manifest, state!, directory) : state?.bodyStyleAmendment ? await loadBodyStyleAmendment(directory, state.bodyStyleAmendment, manifest) : undefined;
     raw = await services.createDependencies({ ...(amendment ? { bodyStyleAmendment: amendment } : {}), root: ROOT, manifestPath: path.join(directory, 'manifest.json'), runDirectory: directory, manifest, ...(command==='recover-style'?{recoverInterruptedStyle:true}:{}) });
-    const deps = serializeRemote({ ...wrapFullReplicaDependencies(raw, timing), writeState: next => writeState(directory, next) }, services.acquireRemoteLock);
+    const deps = serializeRemote({ ...wrapFullReplicaDependencies(raw, timing), writeState: next => writeState(directory, next) }, services.acquireRemoteLock ?? (async () => acquireLock(ROOT, await (await import('../workspace/operation-resources.js')).runResources(ROOT, manifest.runId))));
     if (command === 'inspect-inquiry') { const bound=state?.checkpoints.bound;if(!bound || !deps.inspectInquirySubmission)throw Error('replica_full_cli_inquiry_bound_required');return delivered({status:'observed',authority:'fresh-owned-native-submission',remoteWrites:0,value:await deps.inspectInquirySubmission(bound,flags['element-id'],flags['test-marker'])}); }
     if (command === 'amend-unwritten-body-style') return delivered(await installBodyStyleAmendment({ directory, lockId, manifest, state: state!, amendment: amendment!, dependencies: deps, writeState: next => writeState(directory, next) }));
     if (['reconcile','recover-style'].includes(command)) return delivered(await deliverState(await reconcileFullReplica(manifest, deps, state!)));
@@ -191,6 +194,20 @@ export async function runFullReplicaCLI(args: string[], services: FullReplicaCLI
     if (command === 'revise-native-motion') return delivered(await deliverState(await reviseFullReplicaNativeMotion(manifest, deps, state!, flags['expected-fingerprint'])));
     if (command === 'revise-layout') { const file = await checkedPath(flags.plan), info = await lstat(file); if (!info.isFile() || info.size > 64 * 1024) throw Error('replica_full_cli_layout_invalid'); containerTreePlanSchema.parse(await jsonFile(file)); const plan = { path: file, sha256: createHash('sha256').update(await readFile(file)).digest('hex') }; return delivered(await deliverState(await reviseFullReplicaLayout(manifest, deps, state!, plan, flags['expected-fingerprint']))); }
     if (command === 'revise-navigation-return') return delivered(await deliverState(await reviseFullReplicaNavigationReturn(manifest, deps, state!, flags['expected-fingerprint'])));
+    if (command === 'revise-configurator-catalog') {
+      const catalog = catalogSchema.parse(await jsonFile(flags.catalog));
+      const packageFile = await checkedPath(flags['package-manifest']);
+      const packageBytes = await readFile(packageFile), packageValue = await jsonFile(packageFile) as { version?: unknown; kind?: unknown; files?: unknown };
+      const rows = packageValue.files;
+      if (packageValue.version !== 1 || packageValue.kind !== 'clonewp-configurator-package' || !Array.isArray(rows) || rows.length !== 3 ||
+          new Set(rows.map((row: any) => row?.path)).size !== 3 ||
+          rows.some((row: any) => !['runtime.js','style.css','clonewp-bottle-configurator.php'].includes(row?.path) ||
+            !/^[a-f0-9]{64}$/.test(row?.sha256 ?? '') || !Number.isSafeInteger(row?.bytes) || row.bytes < 1))
+        throw Error('replica_full_cli_configurator_package_invalid');
+      const packageManifest = { path: packageFile, sha256: createHash('sha256').update(packageBytes).digest('hex') };
+      return delivered(await deliverState(await reviseFullReplicaConfiguratorCatalog(manifest, deps, state!, catalog,
+        packageManifest, flags['expected-fingerprint'])));
+    }
     if (['revise-style', 'revise-header-style'].includes(command)) { const file = await checkedPath(flags.css), info = await lstat(file); if (!info.isFile() || info.size > 1024 * 1024) throw Error('replica_full_cli_css_invalid'); const css = { path: file, sha256: createHash('sha256').update(await readFile(file)).digest('hex') }, revise = command === 'revise-header-style' ? reviseFullReplicaHeaderStyle : reviseFullReplicaStyle; return delivered(await deliverState(await revise(manifest, deps, state!, css, flags['expected-fingerprint']))); }
     const reviewInput = command === 'review' ? await jsonFile(flags.evidence) : undefined;
     const result = await runFullReplica(manifest, deps, { ...(state ? { state } : {}), ...(reviewInput === undefined ? {} : { reviewInput }), publish: command === 'publish' });

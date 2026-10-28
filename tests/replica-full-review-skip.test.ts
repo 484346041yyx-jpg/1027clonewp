@@ -19,7 +19,7 @@ const perfumePolicy = taskReviewSkipPolicySchema.parse({version:1,kind:'clonewp-
 const cosmeticPolicy = taskReviewSkipPolicySchema.parse({version:1,kind:'clonewp-task-review-skip',taskId:'huaqi-cosmetic-20261024-body',runId:'huaqi-cosmetic-20261024-body',authorization:{source:'current-user-explicit-instruction',instruction:'完成第一、二步后直接发布，跳过第三步检查',reason:'暴露第二步实施问题'},scope:['visual','interaction','editor-completion']});
 function manifest(experiment = policy) {
  const old = legacyManifest(), origin = 'https://vapeversse.com';
- const sourceUrl = {'huaqi-about-20261023-body':'https://www.huaqipackage.com/about-huaqi','huaqi-perfume-20261024-body':'https://www.huaqipackage.com/custom-perfume-bottle','huaqi-cosmetic-20261024-body':'https://www.huaqipackage.com/custom-cosmetic--skincare-packing'}[experiment.taskId];
+ const sourceUrl = {'huaqi-about-20261023-body':'https://www.huaqipackage.com/about-huaqi','huaqi-perfume-20261024-body':'https://www.huaqipackage.com/custom-perfume-bottle','huaqi-cosmetic-20261024-body':'https://www.huaqipackage.com/custom-cosmetic--skincare-packing','huaqi-product-layout-jiangubottle-20261028':'https://www.huaqipackage.com/special-shaped-empty-glass-perfume-bottle-with-metal-cap'}[experiment.taskId];
  return validateFullReplicaManifest({...old, taskId:experiment.taskId,runId:experiment.runId,sourceUrl,targetOrigin:origin,reviewSkipPolicy:experiment,reusedHeader:{...old.reusedHeader!,headerId:'header_39589520821341414',editUrl:origin+'/wp-admin/admin.php?page=xts_header_builder#/builder/header_39589520821341414',menus:[],blocks:[]}});
 }
 function fixture(experiment = policy) {

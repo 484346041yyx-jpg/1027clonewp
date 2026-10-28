@@ -122,7 +122,7 @@ test('new v8 dispatch snapshots the guide in body packets and rejects omitted ap
     assert.deepEqual(frozenPlan.bodyBase.inquiryPolicy,{version:1,kind:'clonewp-inquiry-default',mode:'submit-save-email',testing:'user-managed',exceptions:[]});
     const job = buildPreparationJobs(frozenPlan).find(row => row.responsibility === 'body')!;
     await startPreparationJob(f.preparationDirectory, job.jobId);
-    const result: PreparationJobResult = { version: 1, kind: 'clonewp-preparation-result', taskId: job.taskId, runId: job.runId, jobId: job.jobId, contractHash: job.contractHash, sharedHash: job.sharedHash, sections: f.results.find(row => row.jobId === job.jobId)!.sections };
+    const result: PreparationJobResult = { version: 1, kind: 'clonewp-preparation-result', taskId: job.taskId, runId: job.runId, jobId: job.jobId, contractHash: job.contractHash, sharedHash: job.sharedHash, sections: structuredClone(f.results.flatMap(row => row.sections ?? []).filter(section => job.sectionKeys.includes(section.key))) };
     await assert.rejects(() => completePreparationJob(f.preparationDirectory, job.jobId, path.join(f.preparationDirectory, 'jobs', job.jobId, 'result.json')), /ENOENT/);
     await f.writeResult(job.jobId, result);
     await assert.rejects(() => completePreparationJob(f.preparationDirectory, job.jobId, path.join(f.preparationDirectory, 'jobs', job.jobId, 'result.json')), /component_guidance_review/);

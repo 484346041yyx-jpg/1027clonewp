@@ -679,6 +679,21 @@ async function useInquiry(f:Awaited<ReturnType<typeof fixture>>){
  await useTargetSubmissions(f);
  f.schema.controls.submit_actions.options={...(f.schema.controls.submit_actions.options as object),email:'Email'};
  for(const id of INQUIRY_EMAIL_CONTROLS){const control=loaded.components.form.controls.find(c=>c.id===id);assert.ok(control,'Research must contain '+id);assert.ok(control.type);f.schema.controls[id]={type:control.type,...(control.valueDomain?.options?.length?{options:Object.fromEntries(control.valueDomain.options.map(o=>[String(o.value),String(o.value)]))}:{}),...(control.defaultValue!==undefined?{default:control.defaultValue}:{}),...(control.type==='select2'?{multiple:true}:{})};}
+ // Model the native Reply-To select and its labeled same-form email option.
+ // This synthetic fixture stays explicit; it is not evidence from a live site.
+ f.schema.controls.email_reply_to={type:'select',default:'',options:{'':''},render_type:'none',condition:{submit_actions:'email'}};
+ (f.node.widgetSettings.form_fields as any[])[0].field_label='Email';
+ for(const [index,item] of f.packets.entries()){
+  const packet=item.packet as any,snapshotId=packet.snapshot.id,inputId='inquiry-email-'+index,labelId='inquiry-label-'+index;
+  packet.nodes['email-'+index].attributes.id=inputId;
+  packet.nodes[labelId]={id:labelId,tag:'label',parentId:'form-'+index,attributes:{for:inputId},text:'Email'};
+  packet.nodes['form-'+index].childIds.push(labelId);
+  const ref=await f.put('inquiry-packet-'+index+'.json',packet);
+  for(const fact of Object.values(f.source.facts) as any[])if(fact.snapshotId===snapshotId)fact.evidence=ref;
+  f.appearanceRows[index]={packet:ref,nodes:Object.values(packet.nodes)} as any;
+ }
+ f.program.sourceFacts=await f.put('inquiry-source.json',f.source);
+ f.node.pendingForm!.appearance=await f.put('inquiry-appearance.json',{kind:'native44-visible-source-form-appearance-extraction',rows:f.appearanceRows});
  const registration=await f.put('inquiry-registration.json',{mode:'legacy-verified',legacySchemas:{form:f.schema},versions:{elementor:'synthetic',elementorPro:'synthetic'},sourceProof:{schemaErrors:{}}});
  f.node.pendingForm!.registered={capabilities:registration,schemaHash:native44RegisteredSchemaHash(f.schema)};
  const configuration=await f.put('inquiry-configuration.json',inquiryConfig);f.program.inquiryPolicy={...defaultInquiryPolicy(),configuration};

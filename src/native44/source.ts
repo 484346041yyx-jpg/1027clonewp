@@ -362,7 +362,7 @@ export async function prepareNative44Reference(url: string, options: PrepareRefe
   const identity = await native44KnowledgeIdentity(root);
   return { version: 2 as const, workflow: 'block-replication' as const, mode: 'replica' as const, executionStrategy: NATIVE44_STRATEGY, replicationProfile: DESKTOP_BROWSER_PROFILE, editorNaming: NATIVE44_NATIVE_EDITOR_NAMING, reviewWorkflow: NATIVE44_WHOLE_PAGE_REVIEW_WORKFLOW, visualAuditVersion: 2 as const, articleListPolicy: NATIVE44_ARTICLE_LIST_POLICY, goalProfile: 'component-reference-v1' as const, selectionRulesHash: NATIVE44_SELECTION_RULES_HASH, url, status: 'awaiting-browser-observation' as const, ...identity, requiredViewports: native44ProfileViewports(DESKTOP_BROWSER_PROFILE), observationFile: NATIVE44_BROWSER_OBSERVATION_FILE, requiredBrowserSidecarVersion: 3 as const, captureValidationScope: 'capture-consistency-only' as const, nextAction: 'Agent first reuses the exact connected source tab, then runs browser:preflight --recover with autoOpen:true when needed. Sidecar version 3 records the actual user-opened-browser or agent-opened-browser provenance and hashed capture transactions for both desktop snapshots. Import with --observed. This preparation step made no source or target request.' };
 }
-export async function prepareObservedNative44Reference(url: string, directory: string, options: { root?: string } = {}) {
+export async function prepareObservedNative44Reference(url: string, directory: string, options: { root?: string; jobId?: string } = {}) {
   await assertPublicUrl(url);
   const root = path.resolve(options.root ?? process.cwd());
   await native44KnowledgeIdentity(root);

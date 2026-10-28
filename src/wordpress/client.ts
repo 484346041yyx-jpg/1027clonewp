@@ -14,6 +14,9 @@ import { findGeneratedHtmlProof } from '../replica-v2/html.js';
 import { nativeCheckpointPHP } from './checkpoint.js';
 import { capabilityPayloadReturnPHP, decodeCapabilityPayload } from './capability-payload.js';
 import { targetPostsReadPHP } from './posts.js';
+import { targetCategoriesReadPHP, parseTargetCategoriesObservation } from './categories.js';
+import type { TargetCategoriesEvidence, TargetCategoriesQueryInput } from './categories-contract.js';
+import { normalizeRelatedProductsQuery, targetRelatedProductsReadPHP, parseRelatedProductsSnapshot, type RelatedProductsQueryInput, type RelatedProductsSnapshot } from './related-products.js';
 import { targetProductReadPHP } from './product.js';
 import { parseTargetProductSnapshot, targetProductId, type TargetProductSnapshot } from './product-contract.js';
 import { productRuntimeReadPHP, productRuntimeCapability, type ProductRuntimeCapability, type ProductRuntimeObservation } from './current-product-runtime.js';
@@ -22,8 +25,8 @@ import { assertTargetPostsEvidence, normalizeTargetPostsQuery, type TargetPostsE
 import { assertOwnedPublishedSnapshot } from './publication-contract.js';
 import type { GeneratedHtmlProof } from '../replica-v2/types.js';
 import { NATIVE44_ALL_TYPES, EXTENDED_NATIVE_TYPES, assertAllowedWidget, assertKnownNativeWidget } from '../native44/catalog.js';
-import { assertProductExtensionReference } from '../native44/product-extension.js';
-import { validateRegisteredChildren } from '../planning/plan.js';
+import { assertProductExtensionReference, productExtensionWidgetTypes } from '../native44/product-extension.js';
+import { validateRegisteredChildren, validateRegisteredSettings } from '../planning/plan.js';
 import { assertNative44Compilation, assertNative44PendingFormCompilation } from '../native44/compiler.js';
 import type { Native44Compiled } from '../native44/types.js';
 import { assertNative44RevisionDelta } from '../native44/revision-snapshot.js';
@@ -47,7 +50,7 @@ const assetImportFailures = new WeakMap<object, AssetImportCheckpoint>();
 /** Process-local provenance: persisted or fabricated errors cannot authorize a retry. */
 export function getAssetImportFailure(error: unknown): AssetImportCheckpoint | undefined { const checkpoint = error && typeof error === 'object' ? assetImportFailures.get(error) : undefined; return checkpoint ? { ...checkpoint } : undefined; }
 function stagingPath(path: string, runId: string, digest: string): string { return `wp-content/uploads/clonewp-import/${runId}/${digest.slice(0, 16)}-${basename(path).replace(/[^a-zA-Z0-9._-]/g, '_')}`; }
-const comparisonTree = (nodes: ElementorElement[]): unknown => nodes.map(node => ({
+export const comparisonTree = (nodes: ElementorElement[]): unknown => nodes.map(node => ({
   id: node.id, elType: node.elType, ...(node.widgetType ? { widgetType: node.widgetType } : {}),
   settings: Array.isArray(node.settings) && !node.settings.length ? {} : node.settings,
   isInner: Boolean(node.isInner), elements: comparisonTree(node.elements ?? []),
@@ -88,7 +91,7 @@ export class WordPressClient {
     if (options.allowedWidgetTypes && !this.native44) throw new WordPressError('component_policy_conflict', 'A component allowlist requires the explicit native44 strategy.');
     if (this.native44) {
       if(options.componentExtension)assertProductExtensionReference(options.componentExtension);
-      const expected = options.componentExtension ? EXTENDED_NATIVE_TYPES : NATIVE44_ALL_TYPES;
+      const expected = productExtensionWidgetTypes(options.componentExtension);
       const types = options.allowedWidgetTypes ?? expected;
       types.forEach(type=>options.componentExtension?assertKnownNativeWidget(type):assertAllowedWidget(type));
       if (types.length !== expected.length || new Set(types).size !== expected.length || expected.some(type=>!types.includes(type))) throw new WordPressError('component_policy_conflict', options.componentExtension?'Native components require the exact qualified additive extension.':'Native44 requires the exact fixed 44 component identities.');
@@ -261,6 +264,14 @@ return $catalog;`);
   /** Read real published target articles without changing posts, media, settings or queries. */
   async verifyCurrentProductRuntimeSupport():Promise<void> {
     await this.php("if(!post_type_exists('woodmart_layout')||!class_exists('XTS\\\\Modules\\\\Layouts\\\\Single_Product')||!method_exists('XTS\\\\Modules\\\\Layouts\\\\Single_Product','setup_postdata')){throw new RuntimeException('native_product_template_provider_missing');}return true;");
+  }
+  /** Bounded public product_cat hierarchy; does not mutate terms or order metadata. */
+  async readTargetCategories(query: TargetCategoriesQueryInput): Promise<TargetCategoriesEvidence> {
+    return parseTargetCategoriesObservation(await this.php(targetCategoriesReadPHP(query)), query, this.origin);
+  }
+  async readTargetRelatedProducts(productId: number, input: RelatedProductsQueryInput): Promise<RelatedProductsSnapshot> {
+    const query = normalizeRelatedProductsQuery(input), value = await this.php(targetRelatedProductsReadPHP(productId, query));
+    return parseRelatedProductsSnapshot({ version: 1, provider: 'target-woocommerce-related-v1', targetOrigin: this.origin, readAt: new Date().toISOString(), query, ...(value as Record<string, unknown>) }, this.origin, productId, query);
   }
   async readCurrentProductRuntime(pageId:number,runId:string,productId:number,contextKey='currentProduct'):Promise<ProductRuntimeCapability> {
     const value=await this.php(productRuntimeReadPHP(pageId,runId,productId,contextKey));
@@ -453,7 +464,18 @@ return ['pageId'=>(int)$id,'editUrl'=>$doc->get_edit_url(),'status'=>get_post_st
           if (key === '_title') throw new WordPressError('navigator_alias_rejected', 'Navigator aliases (_title) are not allowed; use native component names.');
           const control = schema.controls[key];
           if (!control) throw new WordPressError('unknown_control', `Control ${key} is not registered for ${type}.`);
-          if (['select', 'choose'].includes(control.type) && control.options && (typeof value !== 'string' || (value !== '' && !(value in control.options)))) throw new WordPressError('invalid_control_value', `Control ${key} has an unsupported value.`);
+          if (['select', 'choose'].includes(control.type) && control.options && (typeof value !== 'string' || (value !== '' && !(value in control.options)))) {
+            // Elementor Pro populates this one selector from the form's email fields in the editor.
+            // Keep the PHP registry strict for every other selector and reuse the contextual validator.
+            let dynamicReplyTo = false;
+            if (type === 'form' && key === 'email_reply_to') {
+              try {
+                validateRegisteredSettings(type, node.settings, schema, { onlyControls: new Set([key]) });
+                dynamicReplyTo = true;
+              } catch { /* Unsupported dynamic values still fail below. */ }
+            }
+            if (!dynamicReplyTo) throw new WordPressError('invalid_control_value', `Control ${key} has an unsupported value.`);
+          }
           if (!(type === 'html' && key === 'html') && typeof value === 'string' && /<\s*(script|style|iframe)|\bon\w+\s*=|javascript\s*:/i.test(value)) throw new WordPressError('unsafe_content', 'Active code is not accepted as Elementor content.');
         }
         if(node.elType==='widget'&&(node.elements??[]).length){

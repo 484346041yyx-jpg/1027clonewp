@@ -11,6 +11,11 @@ import type { Native44StyleVariableConsumer, Native44StyleWrapperClassProof } fr
 import type { ComponentModel } from './component-model.js';
 import type { CurrentProductSelection, CurrentProductProvider } from './current-product.js';
 import type { ProductRuntimeCapability } from '../wordpress/current-product-runtime.js';
+import type { TargetCategoriesQueryInput } from '../wordpress/categories-contract.js';
+import type { TargetCategoriesProvider } from './native-categories.js';
+import type { RelatedProductsQueryInput } from '../wordpress/related-products.js';
+import type { RelatedProductsProvider, NativeRelatedProductBinding } from './native-related-products.js';
+import type { NativeRelatedProductQualification } from './related-product-extension.js';
 
 export const NATIVE44_STRATEGY = 'native44-css-handoff' as const;
 export const NATIVE44_NATIVE_EDITOR_NAMING = 'native-translated-v1' as const;
@@ -33,7 +38,9 @@ export interface Native44Products extends Native44Base { kind: 'native-products'
 /** A live latest-posts query; observed IDs are proof of a read, never a frozen include list. */
 export interface Native44PostsQuery { itemsPerPage: number; orderby: 'date'; order: 'desc'; offset?: number; categoryIds?: number[]; tagIds?: number[]; evidence: string[]; }
 export interface Native44Posts extends Native44Base { kind: 'native-posts'; widgetType: 'wd_blog'; widgetSettings: Record<string, unknown>; query: Native44PostsQuery; }
-export type Native44Component = Native44Native | Native44Composite | Native44Html | Native44Carousel | Native44Products | Native44Posts;
+export interface Native44Categories extends Native44Base { kind: 'native-categories'; widgetType: 'wd_product_categories'; widgetSettings: Record<string, unknown>; query: TargetCategoriesQueryInput & { evidence: string[] }; }
+export interface Native44RelatedProducts extends Native44Base { kind: 'native-related-products'; widgetType: 'woocommerce-product-related'; widgetSettings: Record<string, unknown>; query: RelatedProductsQueryInput; }
+export type Native44Component = Native44Native | Native44Composite | Native44Html | Native44Carousel | Native44Products | Native44Posts | Native44Categories | Native44RelatedProducts;
 export interface Native44Program {
   inquiryPolicy?: import('./inquiry-form.js').InquiryPolicy;
   componentExtension?: FileRef;
@@ -70,6 +77,11 @@ export interface Native44PostQueryReceipt {
   componentKey: string; elementId: string; widgetType: 'wd_blog'; provider: 'target-wordpress-posts';
   targetOrigin: string; query: Native44PostsQuery; observedPostIds: number[]; evidence: string[]; settings: Record<string, unknown>;
 }
+export interface Native44CategoryQueryReceipt {
+  componentKey: string; elementId: string; widgetType: 'wd_product_categories'; provider: 'target-woocommerce-categories-v1';
+  targetOrigin: string; query: TargetCategoriesQueryInput; observedTermIds: number[]; evidence: string[];
+  nativeSelection: 'observed-root-and-descendant-ids'; observationSha256: string; settings: Record<string, unknown>; renderedVerified: false;
+}
 export interface Native44Compiled {
   currentProductBinding?: { productId: number; contextKey: string; targetOrigin: string; pageId: number; runId: string };
   replicationProfile?: Native44ReplicationProfile;
@@ -80,6 +92,8 @@ export interface Native44Compiled {
   sectionIds: string[]; sections: Array<{ key: string; targetId: string; elementIds: string[] }>;
   usedTypes: string[]; htmlProofs: GeneratedHtmlProof[]; bindings: BindingV2[]; queryReceipts: Native44QueryReceipt[];
   postQueryReceipts?: Native44PostQueryReceipt[];
+  categoryQueryReceipts?: Native44CategoryQueryReceipt[];
+  relatedProductBindings?: NativeRelatedProductBinding[];
   moduleClasses: Record<string, string>;
   /** Actual emitted widget IDs; consumers must not guess a compiler suffix. */
   widgetTargets: Record<string, string>;
@@ -93,6 +107,9 @@ export interface Native44Compiled {
 export interface Native44CompileOptions {
   schemas: Record<string, LegacySchema>; assets: ImportedAssetV2[]; catalog?: TargetCatalogEvidence;
   posts?: TargetPostsEvidence[];
+  categories?: readonly TargetCategoriesProvider[];
+  relatedProducts?: readonly RelatedProductsProvider[];
+  relatedQualification?: NativeRelatedProductQualification;
   currentProduct?: CurrentProductProvider;
   currentProductRuntime?: ProductRuntimeCapability;
   targetOrigin?: string;

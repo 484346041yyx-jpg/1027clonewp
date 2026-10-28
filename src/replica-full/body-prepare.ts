@@ -120,7 +120,7 @@ function headerNodes(packet: ObservationPacketV2): Set<string> {
   const roots = new Set(packet.regions.filter(region => {
     if (!/^(?:header|banner|site-header|main-header)$/i.test(region.role.trim())) return false;
     const node = packet.nodes[region.nodeId];
-    return /(?:^|[-_])(?:header|banner|nav)(?:$|[-_])/i.test(region.id) ||
+    return /(?:^|[-_])(?:header|banner|nav|navigation|topbar)(?:$|[-_])/i.test(region.id) ||
       node?.tag.toLowerCase() === 'header' || node?.attributes.role?.toLowerCase() === 'banner' ||
       /(?:^|[-_])(?:header|banner)(?:$|[-_])/i.test(node?.attributes.class ?? '');
   }).map(region => region.nodeId));
@@ -310,7 +310,18 @@ export function compileActualBody(body: FullReplicaPreparedBody, schemas: Record
 export function resolveActualBodyStyles(body: FullReplicaPreparedBody, schemas: Record<string, LegacySchema>) {
   assertActualPreparedBody(body);
   const payload = body.payload;
-  return resolveNative44Styles(actualBodyStyleInput(body, schemas));
+  const resolved = resolveNative44Styles(actualBodyStyleInput(body, schemas));
+  // This gallery option is registered only for left-side thumbnails. The
+  // authoring program can retain its original intent, while the effective
+  // native payload omits an inactive value for bottom thumbnails.
+  for (const node of walkNative44(resolved.program.blocks)) {
+    if (node.kind === 'native' && node.widgetType === 'wd_single_product_gallery'
+      && node.widgetSettings.thumbnails_position === 'bottom'
+      && node.widgetSettings.thumbnails_wrap_in_mobile_devices === 'no') {
+      delete node.widgetSettings.thumbnails_wrap_in_mobile_devices;
+    }
+  }
+  return resolved;
 }
 export function actualBodyStyleInput(body: FullReplicaPreparedBody & { payload: ActualBodyPayload }, schemas: Record<string, LegacySchema>): Parameters<typeof resolveNative44Styles>[0] {
   assertActualPreparedBody(body);
@@ -319,7 +330,7 @@ export function actualBodyStyleInput(body: FullReplicaPreparedBody & { payload: 
 }
 export async function prepareActualBodyPendingForms(body: FullReplicaPreparedBody, schemas: Record<string, LegacySchema>) {
   assertActualPreparedBody(body);
-  const pendingForms = await prepareNative44PendingFormCapabilities({root: ROOT, program: body.payload.baseProgram ?? body.payload.program});
+  const pendingForms = await prepareNative44PendingFormCapabilities({root: ROOT, program: body.payload.baseProgram ?? body.payload.program,css:body.payload.css});
   const proof = await prepareNative44StyleInputProof(body, schemas);
   return (await resolvePendingFormStyles(actualBodyStyleInput(body, schemas), pendingForms, proof)).pendingForms;
 }

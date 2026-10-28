@@ -8,6 +8,7 @@ import { compileHeaderMenuContent, prepareHeaderMenuContentLocal, type HeaderMen
 import { assertNative44Compilation } from '../../native44/compiler.js';
 import type { Native44Compiled } from '../../native44/types.js';
 import type { ImportedAssetV2 } from '../../replica-v2/types.js';
+import { assertHeaderMenuParameterShape } from './menu-binding.js';
 
 export interface HeaderModuleIdentity { moduleKey: string; owner: HeaderOwner; targetOrigin: string; headerId: string }
 export interface HeaderPageObservation { pageId: number; postType: string; status: string; template: string; runId: string; bodyHash: string; headerId: string | null; snapshotHash: string }
@@ -55,7 +56,7 @@ export function validateHeaderModuleIdentity(input: HeaderModuleIdentity): Heade
 /** Fixed local server helper, never source PHP supplied by a website or plan. */
 export class WordPressHeaderModuleDriver implements HeaderModuleDriver {
   private readonly contentProofs = new Map<string, { compiled: Native44Compiled; identityHash: string; payloadHash: string }>();
-  constructor(private readonly transport: HeaderDriverTransport, private readonly contentClient?: HeaderMenuContentClient) {}
+  constructor(private readonly transport: HeaderDriverTransport, private readonly contentClient?: HeaderMenuContentClient, private readonly menuBindingVersion?: 1) {}
   async inspectMenuContentContract(identity: HeaderModuleIdentity): Promise<{ fingerprint: string }> {
     const code = await this.code(identity, { action: 'inspect-menu-content' });
     const contract = this.unwrap<{ fingerprint: string }>(await this.transport.readPHP({ name: 'whb-module.menu-content-contract', code, trustedLocalCode: true }));
@@ -73,7 +74,7 @@ export class WordPressHeaderModuleDriver implements HeaderModuleDriver {
   private async code(identityInput: HeaderModuleIdentity, data: Record<string, unknown>): Promise<string> {
     const identity = validateHeaderModuleIdentity(identityInput);
     if (headerTargetOrigin(this.transport.origin) !== identity.targetOrigin) fail('target_mismatch');
-    const payload = canonicalHeaderJson({ identity, ...data });
+    const payload = canonicalHeaderJson({ identity, ...data, ...(this.menuBindingVersion ? { menuBindingVersion: this.menuBindingVersion } : {}) });
     const helper = await readFile(new URL('./wordpress.php', import.meta.url), 'utf8');
     return `$input=json_decode(base64_decode('${Buffer.from(payload, 'utf8').toString('base64')}'),true);\n${helper}`;
   }
@@ -94,6 +95,7 @@ export class WordPressHeaderModuleDriver implements HeaderModuleDriver {
     const requestHash = headerJsonHash(request.payload);
     if (!request.payload || typeof request.payload !== 'object' || Array.isArray(request.payload)) fail('mutation_payload_invalid');
     const payload = request.payload as Record<string, unknown>;
+    if (this.menuBindingVersion && request.action === 'header') assertHeaderMenuParameterShape(payload.raw as WhbRawHeader);
     if (request.action === 'menu-content') {
       const proof = this.contentProofs.get(String(payload.key));
       if (!proof || proof.identityHash !== headerJsonHash(identity) || proof.payloadHash !== headerJsonHash(payload)) fail('menu_content_compiler_proof_required');

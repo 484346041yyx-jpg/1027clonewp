@@ -1,4 +1,6 @@
 import {CORE_SINGLE_PRODUCT_TYPES} from './catalog.js';
+import { relatedProductsQuerySchema } from '../wordpress/related-products.js';
+import { isRelatedProductExtension } from './product-extension.js';
 import { z } from 'zod';
 import { parseFragment } from 'parse5';
 import { assertAllowedWidget, NATIVE44_CATALOG_HASH } from './catalog.js';
@@ -22,6 +24,7 @@ const settings = z.record(z.string(), z.unknown());
 const resource = z.object({ kind: z.enum(['categories','brands','posts','menu','sidebar','form','page-context','wishlist','compare']), settingPath: z.string().optional(), ids: z.array(z.union([z.number().int().positive(), z.string().min(1)])).min(1), targetOrigin: z.string().url(), evidence: z.array(z.string().min(1)).min(1) }).strict();
 const query = z.object({ ids: z.array(z.number().int().positive()).min(1).max(200), evidence: z.array(z.string().min(1)).min(1), allowOverlap: z.boolean().optional() }).strict();
 const postsQuery = z.object({ itemsPerPage:z.number().int().min(1).max(100),orderby:z.literal('date'),order:z.literal('desc'),offset:z.number().int().min(0).max(10000).optional(),categoryIds:z.array(z.number().int().positive()).max(100).optional(),tagIds:z.array(z.number().int().positive()).max(100).optional(),evidence:z.array(z.string().min(1)).min(1) }).strict();
+const categoriesQuery = z.object({ rootIds: z.array(z.number().int().positive()).min(1).max(100), hideEmpty: z.boolean(), includeChildren: z.literal(true), orderby: z.literal('menu_order'), order: z.literal('ASC'), evidence: z.array(z.string().min(1)).min(1) }).strict();
 const base = { key, model: componentModelSchema.optional(), settings: settings.optional(), sourceFactIds: z.array(z.string().min(1)).optional(), styleBindings: z.array(styleBindingSchema).min(1).max(500).optional(), nativeStyleSettings: z.array(nativeStyleSettingSchema).min(1).max(2000).optional(), role: z.enum(['heading','text','image','button','link','card','layout','carousel','product','navigation','form','decoration','other']).optional(), editorTitle: z.string().trim().min(1).max(120).regex(/^[^<>\u0000-\u001f]+$/).optional() };
 const component: z.ZodType<Native44Component> = z.lazy(() => z.discriminatedUnion('kind', [
   z.object({ ...base, kind: z.literal('native'), widgetType: z.string(), widgetSettings: settings, children: z.array(component).optional(), resources: z.array(resource).optional(), pendingForm: native44PendingFormSchema.optional() }).strict(),
@@ -29,6 +32,8 @@ const component: z.ZodType<Native44Component> = z.lazy(() => z.discriminatedUnio
   z.object({ ...base, kind: z.literal('native-carousel'), widgetType: z.enum(['nested-carousel','wd_nested_carousel','slides','wd_banner_carousel','wd_infobox_carousel','wd_testimonials']), widgetSettings: settings, slides: z.array(component).min(1).max(100).optional() }).strict(),
   z.object({ ...base, kind: z.literal('native-products'), widgetType: z.enum(['wd_products','woocommerce-products','wd_products_tabs']), widgetSettings: settings, query: query.optional(), tabs: z.array(z.object({ key, title: z.string().min(1), settings: settings.optional(), query }).strict()).min(1).max(100).optional() }).strict(),
   z.object({ ...base, kind:z.literal('native-posts'),widgetType:z.literal('wd_blog'),widgetSettings:settings,query:postsQuery }).strict(),
+  z.object({ ...base, kind:z.literal('native-categories'),widgetType:z.literal('wd_product_categories'),widgetSettings:settings,query:categoriesQuery }).strict(),
+  z.object({ ...base, kind:z.literal('native-related-products'),widgetType:z.literal('woocommerce-product-related'),widgetSettings:settings,query:relatedProductsQuerySchema }).strict(),
   z.object({ ...base, kind: z.literal('html-static'), template: z.string().min(1).max(500000), css: z.string().max(300000), responsiveCss: z.string().max(300000).optional(), contentRole: z.enum(['marketing','navigation','category','service','decoration','footer']).optional(),
     slots: z.object({ text: z.record(key,z.string()), media: z.record(key,z.object({ assetKey:key, alt:z.string().optional(), responsive:z.array(z.object({assetKey:key,media:z.string().min(1)}).strict()).optional() }).strict()), links:z.record(key,z.object({url:z.string().min(1),isExternal:z.boolean().optional(),title:z.string().optional()}).strict()) }).strict(),
     exception: z.object({ reason:z.enum(['unsupported-content-model','unsupported-local-semantics']),summary:z.string().min(20),candidates:z.array(z.object({widgetType:z.string().min(1),limitation:z.string().min(20),evidence:z.array(ref).min(1)}).strict()).min(1) }).strict(),
@@ -90,6 +95,11 @@ export function validateNative44Program(input: unknown): Native44Program {
       for(const ids of [node.query.categoryIds??[],node.query.tagIds??[]])if(new Set(ids).size!==ids.length)throw Error(`Duplicate target post taxonomy IDs: ${node.key}`);
       normalizeTargetPostsQuery(node.query);
     }
+    if (node.kind === 'native-categories') {
+      if (!desktop || new Set(node.query.rootIds).size !== node.query.rootIds.length) throw Error(`Native categories require unique target roots in the desktop typed adapter: ${node.key}`);
+    }
+    if ('widgetType' in node && node.widgetType === 'woocommerce-product-related' && (node.kind !== 'native-related-products' || !desktop || !isRelatedProductExtension(program.componentExtension) || !program.currentRecord || node.query.contextKey !== program.currentRecord.contextKey || node.model?.data?.source !== 'current-record' || node.model.data.field !== 'related-products')) throw Error('native_related_product_requires_qualified_typed_context');
+    if (node.kind === 'native-related-products' && (node.query.excludeIds?.length || node.query.limit > 20 || Number(node.widgetSettings.posts_per_page) !== node.query.limit)) throw Error('native_related_product_query_not_native');
     if(node.kind==='html-static'){
       if(['heading','text','image','button','link','card'].includes(node.role??''))throw new Error(`Ordinary ${node.role} content must use editable native controls: ${node.key}`);
       node.exception.candidates.forEach(candidate=>{assertAllowedWidget(candidate.widgetType);if(candidate.widgetType==='html')throw new Error('HTML cannot justify itself as a native candidate');if(/^(?:font|color|colour|spacing|size|margin|padding|styling|样式|尺寸|字体|间距|颜色)(?:\b|差异)/i.test(candidate.limitation.trim()))throw new Error('A styling difference cannot justify an HTML exception');});

@@ -136,7 +136,10 @@ test('version 3 owned import relocates immutable receipts and validates them aft
     await copyFile(path.resolve(import.meta.dirname, '../data/native44/index.json'), path.join(root, 'data', 'native44', 'index.json')); await copySystemReleaseFixture(root);
     await mkdir(path.join(root, 'config'), { recursive: true }); await writeFile(path.join(root, 'config', 'project.json'), JSON.stringify({ pageStatus: 'publish' }));
     await writeFile(path.join(root, 'config', 'credentials.local.json'), 'Credentials must not be read by source intake');
-    const { binding } = await fixture(directory), job = await prepareObservedNative44Reference(url, directory, { root });
+    const jobId = 'reference-v2-native-owned-import';
+    const { binding } = await fixture(directory), job = await prepareObservedNative44Reference(url, directory, { root, jobId });
+    assert.equal(job.jobId, jobId); assert.equal(job.jobDir, path.join(root, 'references', jobId));
+    await assert.rejects(prepareObservedNative44Reference(url, directory, { root, jobId }), { code: 'EEXIST' });
     assert.equal(job.finalDeliveryPolicy?.desiredPageStatus, 'publish'); assert.equal(job.finalDeliveryPolicy?.constructionPageStatus, 'draft');
     assert.deepEqual(JSON.parse(await readFile(path.join(job.jobDir, 'job.json'), 'utf8')).finalDeliveryPolicy, job.finalDeliveryPolicy);
     await writeFile(path.join(root, 'config', 'project.json'), JSON.stringify({ pageStatus: 'draft' }));

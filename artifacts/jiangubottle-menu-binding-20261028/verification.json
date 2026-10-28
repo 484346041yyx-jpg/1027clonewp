@@ -1,0 +1,19 @@
+{
+  "site": "jiangubottle.com",
+  "headerId": "header_196552",
+  "name": "默认页眉",
+  "bindings": 8,
+  "desktopEditor": 4,
+  "mobileEditor": 4,
+  "remoteMutations": 1,
+  "exactSavedReadback": true,
+  "menuContentLinksAndMetadataUnchanged": true,
+  "otherHeaderAndThemeSettingsUnchanged": true,
+  "desktopWidth": 1920,
+  "mobileWidth": 390,
+  "mobileNavigationOpened": true,
+  "testSiteRequests": 0,
+  "newPages": 0,
+  "newMenus": 0,
+  "newHeaders": 0
+}

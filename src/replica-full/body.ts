@@ -1,3 +1,4 @@
+import { prepareProgramCategories } from '../native44/native-categories.js';
 import { isNativeReplicaSlug } from '../core/replica-url.js';
 import path from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
@@ -11,7 +12,8 @@ import { createHeaderBundle, loadHeaderBundle, withHeaderBundleLock, type Header
 import { validateHeaderModulePlan, modulePlanHash } from '../woodmart-header/generic/contract.js';
 import { compileHeaderModuleStyles } from '../woodmart-header/generic/styles.js';
 import { provisionHeaderModule, checkpointHeaderModule, bindHeaderModulePage, updateHeaderModule, reconcileHeaderModule, compileBundleStyles } from '../woodmart-header/generic/service.js';
-import type { HeaderModuleDriver, HeaderRemoteModule, HeaderModuleIdentity } from '../woodmart-header/generic/wordpress.js';
+import type { HeaderModuleDriver, HeaderRemoteModule, HeaderModuleIdentity, HeaderModuleInspection } from '../woodmart-header/generic/wordpress.js';
+import { verifyHeaderMenuEditorEvidence } from '../woodmart-header/generic/menu-binding.js';
 import { WoodMartHeaderTransport } from '../woodmart-header/transport.js';
 import { WordPressClient } from '../wordpress/client.js';
 import {WordPressConnection} from '../wordpress/connection.js';
@@ -19,7 +21,7 @@ import type { DraftSnapshot, CapabilityReport } from '../wordpress/types.js';
 import { importNative44Media, importNative44SourceFonts, type Native44Asset } from '../native44/media.js';
 import { referencedNative44Assets, usedNative44WidgetTypes } from '../native44/compiler.js';
 import { walkNative44 } from '../native44/types.js';
-import { prepareProgramCurrentProduct, assertCoreProductPageRuntime } from '../native44/current-product.js';
+import { prepareProgramCurrentProduct, prepareProgramRelatedProducts, assertCoreProductPageRuntime } from '../native44/current-product.js';
 import { toNative44CompilerKnowledge } from '../native44/knowledge.js';
 import { validateAssetBytesV2 } from '../assets/validation.js';
 import { validateSourceFontBytes } from '../wordpress/source-font.js';
@@ -52,13 +54,14 @@ import { prepareHeaderMenuContentLocal } from '../woodmart-header/generic/menu-c
 import { verifyFullReplicaVisualReview, verifyFullReplicaPhoneVisualReview } from './visual-review.js';
 import { verifyResponsiveSource } from '../replica-responsive/source.js';
 import { carouselMotionFrameSchema, compareCarouselMotion, verifyPhoneMotionSource } from '../replica-responsive/motion-review.js';
-import { native44ModuleClass } from '../native44/adapters.js';
+import { native44Id, native44ModuleClass } from '../native44/adapters.js';
 import { compileEditorElements } from '../wordpress/editor-serialization.js';
 import { validateRegisteredSettings } from '../planning/plan.js';
 import { applyContainerTreePlan, containerTreePlanSchema, type ContainerTreePlan } from './container-tree.js';
 import { assertRecoveredStyleSettings, assertInterruptedStyleProof, savedStyleSerializationSchemas, type InterruptedStyleProof } from './style-recovery.js';
 import type { FullReplicaManifest, FullReplicaDependencies, FullReplicaPreparedHeader, FullReplicaPreparedBody, FullReplicaPrepared, FullReplicaOperation, FullReplicaHeaderCheckpoint, FullReplicaPageCheckpoint, FullReplicaBodyCheckpoint, FullReplicaBoundCheckpoint, FullReplicaReview, FullReplicaPublishedCheckpoint, FullReplicaFileRef } from './types.js';
 import { WordPressReusedBodyDriver } from './reused-driver.js';
+import { WordPressConfiguratorDriver } from '../configurator/driver.js';
 import { prepareTargetSubmissionFormReview, withoutAuthorizedTargetSubmissionForms } from './target-submissions-review.js';
 import { verifyInquiryReview, inquirySubmissionReviewRequired, assertInquiryElement, type InquiryBackendReader } from './inquiry-review.js';
 
@@ -77,6 +80,38 @@ export function matchesNativeBodyBefore(elements: unknown, settings: Record<stri
   const emptyImage = (value: unknown): value is { id: false | 0; url: ''; size: '' } => !!value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).sort().join(',') === 'id,size,url' && (value as any).url === '' && (value as any).size === '' && ((value as any).id === false || (value as any).id === 0);
   if (!emptyImage(settings.post_featured_image) || !emptyImage(expected.settings.post_featured_image)) return false;
   return documentHashV2(elements as any, { ...settings, post_featured_image: { url: '', id: 0, size: '' } }) === documentHashV2(expected.elements, { ...expected.settings, post_featured_image: { url: '', id: 0, size: '' } });
+}
+/** Check the exact post-save extension and hand the original native tree to native44 review. */
+export function projectConfiguratorReviewElements(elements: unknown[], manifest: FullReplicaManifest): {
+  elements: Array<Record<string, any>>; form?: { formWidgetId: string; summaryField: string; uploadField: string }
+} {
+  const spec = manifest.body.configurator;
+  if (!spec) return { elements: elements as Array<Record<string, any>> };
+  if (!Array.isArray(elements)) fail('configurator_review_tree');
+  const copy = structuredClone(elements) as Array<Record<string, any>>;
+  const all: Array<Record<string, any>> = [];
+  const visit = (rows: Array<Record<string, any>>) => { for (const row of rows) {
+    if (!row || typeof row !== 'object' || !Array.isArray(row.elements)) fail('configurator_review_tree');
+    all.push(row); visit(row.elements);
+  } }; visit(copy);
+  const slotId = native44Id(manifest.taskId, spec.slotComponentKey), widgetId = native44Id(manifest.taskId, spec.widgetKey);
+  const formId = native44Id(manifest.taskId, spec.formComponentKey);
+  const one = (id: string) => { const rows = all.filter(row => row.id === id); if (rows.length !== 1) fail('configurator_review_identity'); return rows[0]; };
+  const slot = one(slotId), widget = one(widgetId), form = one(formId);
+  if (slot.elType !== 'container' || slot.elements.length < 2 || slot.elements.at(-1) !== widget ||
+      widget.elType !== 'widget' || widget.widgetType !== spec.widgetType || widget.elements.length !== 0 ||
+      all.filter(row => row.widgetType === spec.widgetType).length !== 1 || form.elType !== 'widget' || form.widgetType !== 'form' ||
+      widget.settings?.form_widget !== formId || widget.settings?.summary_field !== 'configuration' || widget.settings?.upload_field !== 'logo' ||
+      !Array.isArray(form.settings?.form_fields) || form.settings.form_fields.length < 3) fail('configurator_review_identity');
+  const fields = form.settings.form_fields as Array<Record<string, unknown>>;
+  const rowId = (name: string) => digest(`native-form-field\u0000${formId}:${name}`).slice(0, 7);
+  const summary = { _id: rowId('configuration'), custom_id: 'configuration', field_type: 'hidden', field_label: 'Bottle configuration', required: '', width: '100' };
+  const upload = { _id: rowId('logo'), custom_id: 'logo', field_type: 'upload', field_label: 'Logo', required: '', width: '100',
+    file_types: 'png,jpg,jpeg,webp', file_sizes: 5, allow_multiple_upload: '', attachment_type: 'link' };
+  if (dataHash(fields.at(-2)) !== dataHash(summary) || dataHash(fields.at(-1)) !== dataHash(upload) ||
+      fields.slice(0, -2).some(field => ['configuration','logo'].includes(String(field.custom_id)))) fail('configurator_review_fields');
+  slot.elements.pop(); form.settings.form_fields = fields.slice(0, -2);
+  return { elements: copy, form: { formWidgetId: formId, summaryField: 'configuration', uploadField: 'logo' } };
 }
 function fail(code: string): never { throw Error(`replica_full_body_driver_${code}`); }
 const fileRef = z.object({ path: z.string().min(1), sha256: z.string().regex(/^[a-f0-9]{64}$/) }).strict();
@@ -133,8 +168,8 @@ function assertPreparedHeader(header: FullReplicaPreparedHeader, manifest: FullR
 }
 export interface FullReplicaRemoteServices {
   responsiveTarget?: ResponsiveTarget;
-  client: Pick<WordPressClient, 'createDraft' | 'discoverCapabilities' | 'snapshotDraft' | 'buildDraft' | 'verifyImportedAssets' | 'importAsset' | 'inspectPendingAsset' | 'readTargetPosts' | 'readTargetCatalog'> & Partial<Pick<WordPressClient, 'importSourceFont' | 'readTargetProduct' | 'readCurrentProductRuntime'>>;
-  full: FullReplicaDriver; header: HeaderModuleDriver; reused?: WordPressReusedBodyDriver; close(): Promise<void>;
+  client: Pick<WordPressClient, 'createDraft' | 'discoverCapabilities' | 'snapshotDraft' | 'buildDraft' | 'verifyImportedAssets' | 'importAsset' | 'inspectPendingAsset' | 'readTargetPosts' | 'readTargetCatalog'> & Partial<Pick<WordPressClient, 'importSourceFont' | 'readTargetProduct' | 'readCurrentProductRuntime' | 'readTargetCategories' | 'readTargetRelatedProducts'>>;
+  full: FullReplicaDriver; header: HeaderModuleDriver; reused?: WordPressReusedBodyDriver; configuratorTransport?: WoodMartHeaderTransport; close(): Promise<void>;
 }
 function bodyFontAssetKeys(payload: Pick<ActualBodyPayload, 'program' | 'css'>): string[] {
   const nativeKeys = referencedNative44Assets(payload.program); return fullPageCSSAssetKeys(payload.css).filter(key => !nativeKeys.has(key));
@@ -166,7 +201,7 @@ export async function createFullReplicaDependencies(options: FullReplicaFactoryO
       if (manifest.responsive) {
         try { responsiveTarget = await assertResponsiveTarget(transport, manifest.responsive.mobileMaxWidth); } catch (error) { await session.close(); throw error; }
       }
-      return { client, ...(responsiveTarget ? { responsiveTarget } : {}), ...(manifest.headerProvider === 'reused-woodmart-header' ? { reused: new WordPressReusedBodyDriver(transport, manifest) } : {}), full: new WordPressFullReplicaDriver(transport, manifest.currentRecord), header: new FullReplicaHeaderModuleDriver(transport, client,manifest.currentRecord), close: async () => {try{await session.close();}catch{fail('connection_close_unconfirmed');}} };
+      return { client, ...(responsiveTarget ? { responsiveTarget } : {}), ...(manifest.headerProvider === 'reused-woodmart-header' ? { reused: new WordPressReusedBodyDriver(transport, manifest) } : {}), ...(manifest.body.configurator ? { configuratorTransport: transport } : {}), full: new WordPressFullReplicaDriver(transport, manifest.currentRecord), header: new FullReplicaHeaderModuleDriver(transport, client,manifest.currentRecord,manifest.header?.plan.menuBindingPolicy?.version), close: async () => {try{await session.close();}catch{fail('connection_close_unconfirmed');}} };
     })();
   };
   const operationFile = async (operation: FullReplicaOperation, label: string, value: unknown): Promise<FullReplicaFileRef> => {
@@ -180,7 +215,7 @@ export async function createFullReplicaDependencies(options: FullReplicaFactoryO
   };
   if (manifest.headerProvider === 'reused-woodmart-header') {
     const { createReusedBodyDependencies } = await import('./reused-body.js');
-    return createReusedBodyDependencies({ manifest, runDirectory, bodyStyleAmendment: options.bodyStyleAmendment, remote, operationFile, readBound, assetManifest, close: async () => { closed = true; if (remotePromise) await (await remotePromise).close(); } });
+    return createReusedBodyDependencies({ manifest, runDirectory, bodyStyleAmendment: options.bodyStyleAmendment, recoverInterruptedStyle: options.recoverInterruptedStyle, remote, operationFile, readBound, assetManifest, close: async () => { closed = true; if (remotePromise) await (await remotePromise).close(); } });
   }
   const bundle = async (): Promise<HeaderBundle> => { const loaded = await loadHeaderBundle(manifest.header!.bundleDirectory); await assertEffectiveHeaderPlan(manifest, runDirectory, loaded); const receipt = JSON.parse(await readFile(await checkedPath(path.join(loaded.directory, 'full-replica.json')), 'utf8')); if (receipt.manifestHash !== fullReplicaHash(manifest) || dataHash(receipt.identity) !== dataHash(loaded.state.identity)) fail('bundle_not_current_task'); return loaded; };
   const initializeBundle = async (): Promise<HeaderBundle> => {
@@ -280,11 +315,13 @@ export async function createFullReplicaDependencies(options: FullReplicaFactoryO
       }
       const required = [...new Set([...referencedNative44Assets(payload.program), ...fullPageCSSAssetKeys(payload.css)])], manifestAssets = await assetManifest(payload.assetsManifest, path.dirname(payload.assetsManifestPath), required, bodyFontAssetKeys(payload));
       const assets = await importFullReplicaBodyAssets({ client: services.client, root: ROOT, runDir: path.join(runDirectory, 'body-media'), jobDir: path.dirname(payload.assetsManifestPath), runId: manifest.runId, pageId: page.pageId, manifest: manifestAssets, required });
+      const categories = await prepareProgramCategories(services.client, payload.program, manifest.targetOrigin, async (_query, observed) => (await operationFile(operation, 'target-categories', observed)).path);
+      const relatedProducts = await prepareProgramRelatedProducts(services.client, payload.program, manifest.targetOrigin, async (_query, observed) => operationFile(operation, 'target-related-products', observed));
       const posts: TargetPostsEvidence[] = [];
       for (const node of walkNative44(payload.program.blocks)) if (node.kind === 'native-posts') { const observed = await services.client.readTargetPosts(node.query), evidence = await operationFile(operation, `target-posts-${node.key}`, observed); observed.evidence = [evidence.path]; posts.push(observed); }
       let catalog: TargetCatalogEvidence | undefined;
       if (walkNative44(payload.program.blocks).some(node => node.kind === 'native-products')) { const observed = await services.client.readTargetCatalog(200), evidence = await operationFile(operation, 'target-products', observed); catalog = { targetOrigin: observed.targetOrigin, products: observed.products, evidence: [evidence.path] }; }
-      const pendingForms = await prepareActualBodyPendingForms(body, capabilities.legacySchemas), compiled = compileActualBody(body, capabilities.legacySchemas, assets, { pendingForms, ...(currentRecord ? { currentProduct: currentRecord.provider,currentProductRuntime:currentRecord.runtime } : {}), ...(posts.length ? { posts } : {}), ...(catalog ? { catalog } : {}) });
+      const pendingForms = await prepareActualBodyPendingForms(body, capabilities.legacySchemas), compiled = compileActualBody(body, capabilities.legacySchemas, assets, { pendingForms, ...(relatedProducts.length ? { relatedProducts, relatedQualification: payload.knowledge.extension?.relatedQualification } : {}), ...(categories.length ? { categories } : {}), ...(currentRecord ? { currentProduct: currentRecord.provider,currentProductRuntime:currentRecord.runtime } : {}), ...(posts.length ? { posts } : {}), ...(catalog ? { catalog } : {}) });
       const css = compileFullPageCSS(resolved.css, page.pageId, assets, manifest.runId) + (manifest.responsive ? responsivePageShellCSS(page.pageId) + responsiveHeaderPageCSS(manifest.header!.plan, page.pageId, local.state.identity.headerId) : ''), expectedCurrent = await services.client.snapshotDraft(page.pageId);
       if (!matchesNativeBodyBefore(current.elements, current.settings, expectedCurrent)) fail('body_before_changed');
       await operationFile(operation, 'body-save-intent', { beforeFullHash: before.hash, protectedHash: before.header.snapshot.globalHash, expectedDocumentHash: expectedCurrent.hash, program: manifest.body.program, cssInput: manifest.body.css, composition: compiled.composition, css, ...(payload.program.styleResolutionVersion ? { styleResolution: { receipts: resolved.receipts, renderedVerified: false } } : {}), sourceUnitIds: body.sourceUnitIds, ...(manifest.body.navigationForms ? { navigationReturn: NAVIGATION_RETURN_VERSION } : {}) });
@@ -330,7 +367,7 @@ export async function createFullReplicaDependencies(options: FullReplicaFactoryO
     async verifyReview(review, bound) {
       validateFullReplicaReview(review, manifest, bound);
       const local = await bundle(), services = await remote(), fresh = await services.full.inspect(local.state.identity); assertBound(fresh, bound);
-      await verifyFullReplicaReviewEvidence(review, bound, manifest, fresh.page!.elements,services.full.readInquirySubmission?.bind(services.full));
+      await verifyFullReplicaReviewEvidence(review, bound, manifest, fresh.page!.elements,services.full.readInquirySubmission?.bind(services.full),fresh.header);
       reviewBarrier.remember(review, bound, fresh);
     },
     async publishPage(bound, review, operation) {
@@ -572,7 +609,7 @@ export async function createFullReplicaDependencies(options: FullReplicaFactoryO
         // Discovery/claim can fail before the first body proof is written. An empty
         // operation directory is recoverable only under the same strict before
         // snapshot and confirmed-media checks, never as evidence of a completed save.
-        if (!names.some(name => name.startsWith(prefix + 'body-save-intent-')) && (names.length === 0 || registered.length === 1 && names.every(name => name.startsWith(prefix + 'registered-components-') || name.startsWith(prefix + 'target-posts-') || name.startsWith(prefix + 'target-products-'))) && page.bodyHash === checkpoints.page.bodyHash && !page.elements.length && page.headerId === null && page.title === manifest.title && isNativeReplicaSlug(manifest.slug, page.slug) && page.settings.template === 'elementor_header_footer' && page.settings.hide_title === 'yes' && (page.settings.custom_css === undefined || page.settings.custom_css === '')) {
+        if (!names.some(name => name.startsWith(prefix + 'body-save-intent-')) && (names.length === 0 || registered.length === 1 && names.every(name => ['registered-components','target-posts','target-products','target-current-product','target-categories','target-related-products'].some(label => name.startsWith(prefix + label + '-')))) && page.bodyHash === checkpoints.page.bodyHash && !page.elements.length && page.headerId === null && page.title === manifest.title && isNativeReplicaSlug(manifest.slug, page.slug) && page.settings.template === 'elementor_header_footer' && page.settings.hide_title === 'yes' && (page.settings.custom_css === undefined || page.settings.custom_css === '')) {
           if (registered.length) {
             const registration = JSON.parse(await readFile(await checkedPath(path.join(directory, registered[0])), 'utf8'));
             if (registration.version !== 1 || registration.kind !== 'clonewp-full-replica-operation' || dataHash(registration.operation) !== dataHash(operation)) return { status: 'conflict' };
@@ -709,21 +746,28 @@ export async function createFullReplicaDependencies(options: FullReplicaFactoryO
 const browserDOM = z.object({ version: z.literal(1), kind: z.literal('clonewp-full-replica-browser-dom'), pageId: z.number().int().positive(), url: z.url(), observedAt: z.string(), viewport: z.object({ width: z.number().int().positive(), height: z.number().int().positive() }).strict(), html: z.string().min(1).max(12 * 1024 * 1024) }).strict();
 const interactionState = z.object({ version: z.literal(1), kind: z.literal('clonewp-full-replica-interaction-state'), pageId: z.number().int().positive(), fingerprint: z.string().regex(/^[a-f0-9]{64}$/), width: z.number().int().positive(), height: z.number().int().positive(), selector: z.string().min(1), observedAt: z.string(), state: z.record(z.string(), z.union([z.string(), z.number().finite(), z.boolean(), z.null()])), motion: carouselMotionFrameSchema.optional(), screenshot: fileRef.optional() }).strict();
 /** Evidence is deliberately independent from a caller's pass/count booleans. */
-export async function verifyFullReplicaReviewEvidence(review: FullReplicaReview, bound: FullReplicaBoundCheckpoint, manifest: FullReplicaManifest, currentElements?: unknown[], inquiryBackend?:InquiryBackendReader): Promise<void> {
+export async function verifyFullReplicaReviewEvidence(review: FullReplicaReview, bound: FullReplicaBoundCheckpoint, manifest: FullReplicaManifest, currentElements?: unknown[], inquiryBackend?:InquiryBackendReader, headerInspection?:HeaderModuleInspection): Promise<void> {
   return withVerifiedEvidenceReader(ROOT, async reader => {
   if (!Number.isFinite(Date.parse(review.observedAt)) || Math.abs(Date.now() - Date.parse(review.observedAt)) > 60 * 60 * 1000) fail('review_not_current');
   const file = await readBound(review.reviewerEvidence), evidence = JSON.parse(file.bytes.toString('utf8'));
   if (evidence.version !== 1 || evidence.kind !== 'clonewp-full-replica-review-evidence' || evidence.taskId !== manifest.taskId || evidence.runId !== manifest.runId || evidence.pageId !== bound.pageId || evidence.fingerprint !== fullReplicaFingerprint(bound) || !Array.isArray(evidence.viewports) || evidence.viewports.length !== requiredReplicaViewports(manifest.responsive).length) fail('review_evidence_identity');
+  if (manifest.header?.plan.menuBindingPolicy && review.decision === 'approved') {
+    if (!headerInspection?.snapshot.module?.header) fail('review_header_menu_readback_required');
+    await verifyHeaderMenuEditorEvidence({ plan: manifest.header.plan, headerId: bound.headerId, taskId: manifest.taskId, runId: manifest.runId, fingerprint: review.fingerprint, headerHash: bound.headerHash, observedAt: review.observedAt, references: evidence.headerMenuSelections, base: path.dirname(file.filename), read: readBound, saved: { raw: headerInspection.snapshot.module.header, contract: headerInspection.contract, resources: headerInspection.resources } });
+  }
   const visualProgramFile = await readBound(manifest.body.program), visualProgramRaw = JSON.parse(visualProgramFile.bytes.toString('utf8'));
   const visualAuditRequired = review.decision === 'approved' && [1, 2, 3].includes(visualProgramRaw?.visualAuditVersion);
   if (manifest.version === 4 && visualProgramRaw?.visualAuditVersion !== 3) fail('review_phone_visual_audit_required');
   const visualProgram = visualAuditRequired ? validateNative44Program(visualProgramRaw) : null;
   const submissionBase = Array.isArray(visualProgramRaw?.blocks) && walkNative44(visualProgramRaw.blocks).some(node => node.kind === 'native' && [3,4].includes(node.pendingForm?.version ?? 0)) ? validateNative44Program(visualProgramRaw) : null;
   const submissionProgram = submissionBase && manifest.responsive ? prepareResponsiveBody(submissionBase, manifest.responsive, '').program : submissionBase;
-  const submissionAuthorization = submissionProgram ? await prepareTargetSubmissionFormReview({ root: ROOT, program: submissionProgram, pageId: bound.pageId, currentElements, read: readBound }) : null;
+  const widthLayoutRequired=submissionProgram&&walkNative44(submissionProgram.blocks).some(node=>node.kind==='native'&&node.pendingForm&&node.pendingForm.version!==1&&node.pendingForm.widthLayout);
+  const configuratorProjection = manifest.body.configurator ? projectConfiguratorReviewElements(currentElements ?? [], manifest) : null;
+  const submissionAuthorization = submissionProgram ? await prepareTargetSubmissionFormReview({ root: ROOT, program: submissionProgram, ...(widthLayoutRequired?{css:(await readBound(manifest.body.css)).bytes.toString('utf8')}:{}),pageId: bound.pageId,
+    currentElements, read: readBound, ...(configuratorProjection?.form ? { configurator: configuratorProjection.form } : {}) }) : null;
   if (submissionProgram && review.decision === 'approved' && inquirySubmissionReviewRequired(submissionProgram,evidence.inquiryForms)) await verifyInquiryReview({program:submissionProgram,manifest,bound,review,evidence:evidence.inquiryForms,base:path.dirname(file.filename),read:readBound,backend:inquiryBackend});
   const phonePackets = manifest.version === 4 && review.decision === 'approved' && manifest.responsive
-    ? await verifyResponsiveSource(manifest.responsive, manifest, readBound) : [];
+    ? await verifyResponsiveSource((({ sections: _sections, ...source }) => source)(manifest.responsive), manifest, readBound) : [];
   const motionRows = manifest.version === 4 && review.decision === 'approved' && manifest.responsive && visualProgram
     ? await verifyPhoneMotionSource({ taskId: manifest.taskId, sourceUrl: manifest.sourceUrl, plan: manifest.responsive, program: visualProgram, packets: phonePackets, read: readBound }) : [];
   const responsiveDOM = new Map<string, string>();
@@ -756,6 +800,10 @@ export async function verifyFullReplicaReviewEvidence(review: FullReplicaReview,
     else if (remainingActiveForms.length) fail('review_active_pending_form');
     const interactionFile = await readBound(row.interactions, path.dirname(file.filename)), interactions = JSON.parse(interactionFile.bytes.toString('utf8'));
     if (interactions.version !== 1 || interactions.kind !== 'clonewp-full-replica-interactions' || interactions.pageId !== bound.pageId || interactions.fingerprint !== fullReplicaFingerprint(bound) || interactions.width !== view.width || interactions.height !== view.height || typeof interactions.reviewSummary !== 'string' || interactions.reviewSummary.trim().length < 20 || !Array.isArray(interactions.actions) || !interactions.actions.length) fail('review_interactions_evidence');
+    const configuratorActions = manifest.body.configurator ? ['bottle','pump','cap','decoration','logo-text','reset','quote-ready'] : [];
+    const configuratorWidgetId = manifest.body.configurator ? native44Id(manifest.taskId, manifest.body.configurator.widgetKey) : '';
+    const configuratorSelector = `.elementor-${bound.pageId} .elementor-element-${configuratorWidgetId} .cwp-bottle-configurator`;
+    if (configuratorActions.some(key => interactions.actions.filter((action: any) => action.key === `configurator:${key}`).length !== 1)) fail('review_configurator_interaction_missing');
     if (manifest.responsive && view.width <= manifest.responsive.mobileMaxWidth) {
       const hasSubmenus = manifest.reusedHeader?.hasSubmenus ?? manifest.header!.plan.menus.some(m => m.items.some(i => i.parentKey !== null));
       const required = ['mobile-menu-open', 'mobile-menu-close', ...(hasSubmenus ? ['mobile-submenu'] : [])];
@@ -779,6 +827,21 @@ export async function verifyFullReplicaReviewEvidence(review: FullReplicaReview,
         if (states[0].state.expanded !== closing || states[1].state.expanded !== !closing) fail('review_mobile_menu_state');
       }
       if (action.expectedOutcome === 'inert' && (states[1].state.inert !== true || states[1].state.submissionRequests !== 0)) fail('review_pending_form_submission_unproven');
+      if (typeof action.key === 'string' && action.key.startsWith('configurator:')) {
+        const key = action.key.slice('configurator:'.length);
+        if (!configuratorActions.includes(key) || (key === 'quote-ready' ? action.kind !== 'form' : !['form','navigation'].includes(action.kind)) ||
+            action.expectedOutcome !== 'changed' ||
+            !(action.selector === configuratorSelector || action.selector.startsWith(`${configuratorSelector} `)) ||
+            states.some(state => state.state.submissionRequests !== 0)) fail('review_configurator_interaction');
+        const beforeState = states[0].state, afterState = states[1].state;
+        const property = ({ bottle: 'bottle', pump: 'pump', cap: 'cap', decoration: 'decoration', 'logo-text': 'logoText' } as Record<string,string>)[key];
+        if (property && (typeof afterState[property] !== 'string' || !afterState[property] ||
+            afterState[property] === beforeState[property])) fail('review_configurator_interaction');
+        if (key === 'logo-text' && afterState.logoMode !== 'text') fail('review_configurator_interaction');
+        if (key === 'reset' && (beforeState.hasSelection !== true || afterState.hasSelection !== false)) fail('review_configurator_interaction');
+        if (key === 'quote-ready' && (beforeState.quoteReady !== false || afterState.quoteReady !== true ||
+            typeof afterState.summaryLength !== 'number' || afterState.summaryLength < 20)) fail('review_configurator_interaction');
+      }
       const motion = motionRows.find(item => item.width === view.width && item.height === view.height && action.key === `carousel-motion:${item.componentKey}`);
       if (motion) {
         if (action.kind !== 'carousel' || action.selector !== `.elementor-${bound.pageId} .${native44ModuleClass(motion.componentKey)}` || !states[0].screenshot || !states[1].screenshot || !states[0].motion || !states[1].motion) fail('review_carousel_motion_evidence');

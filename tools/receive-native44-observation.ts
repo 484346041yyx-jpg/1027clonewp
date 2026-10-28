@@ -4,16 +4,18 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
 import sharp from 'sharp';
+import { transform } from 'esbuild';
 import { validateObservationPacketV2, observationCountsV2, type ObservationManifestV2 } from '../src/replica-v2/observation.js';
 import { ensureDiskSpaceV2 } from '../src/replica-v2/journal.js';
 import { validateSceneInventoryV2 } from '../src/replica-v2/scene-inventory.js';
 const project = 'D:/cloneWP', taskId = process.argv[2], options = process.argv.slice(3);
 if (!taskId || !/^[a-zA-Z][a-zA-Z0-9_-]{1,90}$/.test(taskId)) throw Error('A bounded current task ID is required');
-let port = 0, requestedStartedAt: string | undefined, revision: 'final' | undefined;
+let port = 0, requestedStartedAt: string | undefined, revision: 'final' | undefined, sourceUrl = 'https://www.petsupermarket.com/';
 for (let index = 0; index < options.length; index++) {
   if (options[index] === '--port') { port = Number(options[++index]); if (!Number.isInteger(port) || port < 1 || port > 65535) throw Error('A valid --port is required'); }
   else if (options[index] === '--collection-started-at') { requestedStartedAt = options[++index]; if (!requestedStartedAt || !Number.isFinite(Date.parse(requestedStartedAt))) throw Error('An ISO --collection-started-at is required'); requestedStartedAt = new Date(requestedStartedAt).toISOString(); }
   else if (options[index] === '--revision') { if (options[++index] !== 'final') throw Error('Only the explicit current-task final observation revision is supported'); revision = 'final'; }
+  else if (options[index] === '--source-url') { const url = new URL(options[++index]); if (url.protocol !== 'https:' || url.username || url.password || url.hash || /(?:token|nonce|secret|password)=/i.test(url.search)) throw Error('A public HTTPS source is required'); sourceUrl = url.href; }
   else throw Error(`Unknown option: ${options[index]}`);
 }
 const directory = path.join(project, 'references', `${taskId}${revision ? `-${revision}` : ''}-observation`);
@@ -22,11 +24,11 @@ const hash = (value: string | Uint8Array) => createHash('sha256').update(value).
 const escape = (value: string) => value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 async function previousJson(name: string): Promise<any | undefined> { try { return JSON.parse(await readFile(path.join(directory, name), 'utf8')); } catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined; throw error; } }
 const previousCollection = await previousJson('collection.json');
-if (previousCollection && (previousCollection.taskId !== taskId || previousCollection.sourceUrl !== 'https://www.petsupermarket.com/' || !Number.isFinite(Date.parse(previousCollection.collectionStartedAt)))) throw Error('Existing collection identity is invalid');
+if (previousCollection && (previousCollection.taskId !== taskId || previousCollection.sourceUrl !== sourceUrl || !Number.isFinite(Date.parse(previousCollection.collectionStartedAt)))) throw Error('Existing collection identity is invalid');
 if (previousCollection && requestedStartedAt && previousCollection.collectionStartedAt !== requestedStartedAt) throw Error('Requested collection start differs from the existing current-task collection');
 const collectedAt = previousCollection?.collectionStartedAt ?? requestedStartedAt ?? new Date().toISOString();
-let manifest: ObservationManifestV2 = await previousJson('observation-manifest.json') ?? { version: 2, kind: 'observation-manifest', sourceUrl: 'https://www.petsupermarket.com/', provenance: { method: 'user-opened-browser', observer: 'cua_repl', browser: 'chrome' }, packets: [], screenshots: [], sceneInventories: [] };
-if (manifest.version !== 2 || manifest.kind !== 'observation-manifest' || manifest.sourceUrl !== 'https://www.petsupermarket.com/' || !Array.isArray(manifest.packets) || !Array.isArray(manifest.screenshots) || manifest.sceneInventories !== undefined && !Array.isArray(manifest.sceneInventories)) throw Error('Existing manifest is invalid');
+let manifest: ObservationManifestV2 = await previousJson('observation-manifest.json') ?? { version: 2, kind: 'observation-manifest', sourceUrl, provenance: { method: 'user-opened-browser', observer: 'cua_repl', browser: 'chrome' }, packets: [], screenshots: [], sceneInventories: [] };
+if (manifest.version !== 2 || manifest.kind !== 'observation-manifest' || manifest.sourceUrl !== sourceUrl || !Array.isArray(manifest.packets) || !Array.isArray(manifest.screenshots) || manifest.sceneInventories !== undefined && !Array.isArray(manifest.sceneInventories)) throw Error('Existing manifest is invalid');
 for (const ref of [...manifest.packets, ...manifest.screenshots, ...manifest.sceneInventories ?? []]) {
   const file = path.resolve(directory, ref.path), relative = path.relative(directory, file);
   if (relative.startsWith('..') || path.isAbsolute(relative) || hash(await readFile(file)) !== ref.sha256) throw Error('Existing manifest evidence failed path/hash validation');
@@ -35,7 +37,7 @@ await writeFile(path.join(directory,'collection.json'),JSON.stringify({taskId,..
 interface Transfer { snapshotId: string; totalParts: number; encoding: 'json' | 'gzip-base64' | 'lzw16-base64'; parts: Map<number, string>; bytes: number }
 const transfers = new Map<string, Transfer>();
 let queuedSave: Promise<void> = Promise.resolve();
-const snapshotAllowed = (value: unknown): value is string => typeof value === 'string' && /^(?:desktop|narrow|tablet|mobile)-current$/.test(value);
+const snapshotAllowed = (value: unknown): value is string => typeof value === 'string' && /^(?:desktop|narrow|tablet|mobile|phone-narrow)-current$/.test(value);
 /** Transport-only LZW: initial bytes 0..255, clear 256, next 257; little-endian Uint16 codes. */
 function decodeLzw16(bytes: Buffer): Buffer {
   if (!bytes.length || bytes.length % 2) throw Error('LZW transport requires complete little-endian Uint16 codes');
@@ -80,6 +82,11 @@ async function saveObservation(body: any): Promise<string> {
     const inventoryName=`${body.snapshotId}-scene.json`, inventoryJson=JSON.stringify(inventory)+'\n'; await writeFile(path.join(directory,inventoryName),inventoryJson); next.sceneInventories!.push({path:inventoryName,sha256:hash(inventoryJson),snapshotId:body.snapshotId});
     next.screenshots.push({path:screenshot.path,sha256:screenshot.sha256,snapshotId:body.snapshotId});
     if (body.renderEvidence) { body.renderEvidence.screenshotHash=screenshot.sha256; await writeFile(path.join(directory,`${body.snapshotId}-render.json`),JSON.stringify(body.renderEvidence)+'\n'); }
+    if (body.sourceMetadata !== undefined) {
+      const text = JSON.stringify(body.sourceMetadata);
+      if (!body.sourceMetadata || body.sourceMetadata.url !== manifest.sourceUrl || Buffer.byteLength(text) > 2_000_000) throw Error('Invalid source metadata');
+      await writeFile(path.join(directory,`${body.snapshotId}-metadata.json`),text+'\n');
+    }
     await writeFile(path.join(directory,'observation-manifest.json'),JSON.stringify(next,null,2)+'\n');
     manifest = next;
     return body.snapshotId;
@@ -90,9 +97,13 @@ const server = createServer(async (request, response) => {
     const collector = await readFile(path.join(project,'src/replica-v2/collect.browser.js'),'utf8');
     const renderStart = collector.indexOf('async function collectSourceRenderEvidenceV2('), renderEnd = collector.indexOf('/** Independent whole-body denominator',renderStart);
     const renderSource = renderStart >= 0 ? collector.slice(renderStart,renderEnd > renderStart ? renderEnd : undefined) : '';
+    const inventoryStart = collector.indexOf('function collectSceneInventoryV2(');
+    const selectorStart = collector.indexOf('function sceneSelectorV2('), selectorEnd = collector.indexOf('function collectCarouselDOMStateV2(',selectorStart);
+    const observationMin = (await transform(`var collectReplica=async function(options){${collector.slice(0,renderStart)};return collectObservationV2(options)}`,{minify:true})).code;
+    const inventoryMin = (await transform(`var collectInventory=function(options){${collector.slice(selectorStart,selectorEnd)}${collector.slice(inventoryStart)};return collectSceneInventoryV2(options)}`,{minify:true})).code;
     const query = new URL(request.url,origin).searchParams;
     const status = query.has('saved') ? `Saved ${query.get('saved')}` : query.has('received') ? `Received ${query.get('received')}` : `Ready; saved snapshots ${manifest.screenshots.length}`;
-    response.writeHead(200, {'content-type':'text/html; charset=utf-8','cache-control':'no-store'}).end(`<title>Local observation handoff</title><h1>Local observation handoff</h1><p id="status">${escape(status)}</p><pre id="collector-source" hidden>${escape(collector)}</pre><pre id="source-render" hidden>${escape(renderSource)}</pre><form method="post" action="/save"><label for="payload">Observation payload</label><textarea id="payload" name="payload"></textarea><button type="submit">Save observation</button></form>`); return;
+    response.writeHead(200, {'content-type':'text/html; charset=utf-8','cache-control':'no-store'}).end(`<title>Local observation handoff</title><h1>Local observation handoff</h1><p id="status">${escape(status)}</p><pre id="collector-source" hidden>${escape(collector)}</pre><pre id="observation-min" hidden>${escape(observationMin)}</pre><pre id="inventory-min" hidden>${escape(inventoryMin)}</pre><pre id="source-render" hidden>${escape(renderSource)}</pre><form method="post" action="/save"><label for="payload">Observation payload</label><textarea id="payload" name="payload"></textarea><button type="submit">Save observation</button></form>`); return;
   }
   if (request.method !== 'POST' || request.url !== '/save' || request.headers.origin !== origin) { response.writeHead(403).end(); return; }
   try {

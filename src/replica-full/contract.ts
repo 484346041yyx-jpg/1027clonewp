@@ -18,6 +18,16 @@ import { assertProductExtensionReference } from '../native44/product-extension.j
 const key = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$/);
 const sha = z.string().regex(/^[a-f0-9]{64}$/);
 export const FullReplicaFileRefSchema = z.object({ path: z.string().min(1).max(4096), sha256: sha }).strict();
+export const configuratorSpecSchema = z.object({
+  version: z.literal(1), kind: z.literal('clonewp-bottle-configurator'), widgetType: z.literal('clonewp_bottle_configurator'),
+  sourceUrl: z.string().url(), sourceUnitIds: z.array(z.string().min(1).max(240)).min(1).max(100), sourceFactIds: z.array(z.string().min(1).max(240)).min(1).max(2000),
+  slotComponentKey: key, formComponentKey: key, widgetKey: key,
+  catalogTemplate: FullReplicaFileRefSchema, imageManifest: FullReplicaFileRefSchema,
+  mediaKeys: z.array(z.string().regex(/^[A-Za-z][A-Za-z0-9_-]{0,119}$/)).min(1).max(200),
+  sourceEvidence: z.array(FullReplicaFileRefSchema).min(1).max(30),
+  packageManifest: FullReplicaFileRefSchema, registrationEvidence: FullReplicaFileRefSchema,
+  packageFiles: z.object({ php: sha, js: sha, css: sha }).strict(),
+}).strict();
 const unit = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,239}$/);
 const partition = sourcePartitionSchema;
 const resourceURL = z.url().refine(value => { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) && !url.username && !url.password && !/(?:token|nonce|password|authorization|secret|signature|session)=/i.test(url.search); });
@@ -39,7 +49,7 @@ const manifestSchema = z.object({
   sourceEvidence: FullReplicaFileRefSchema,
   sourcePartition: partition,
   header: z.object({ plan: z.unknown(), bundleDirectory: z.string().min(1).max(4096), assets: FullReplicaFileRefSchema }).strict().optional(),
-  body: z.object({ program: FullReplicaFileRefSchema, css: FullReplicaFileRefSchema, sourceUnits: FullReplicaFileRefSchema, navigationForms: z.array(navigationFormSpecSchema).min(1).max(4).optional() }).strict(),
+  body: z.object({ program: FullReplicaFileRefSchema, css: FullReplicaFileRefSchema, sourceUnits: FullReplicaFileRefSchema, navigationForms: z.array(navigationFormSpecSchema).min(1).max(4).optional(), configurator: configuratorSpecSchema.optional() }).strict(),
 }).strict();
 function fail(code: string): never { throw Error(`replica_full_${code}`); }
 export function fullReplicaHash(value: unknown): string { return fullReplicaJsonHash(value); }
@@ -56,6 +66,13 @@ export function validateFullReplicaManifest(input: unknown): FullReplicaManifest
   if (parsed.body.navigationForms) {
     parsed.body.navigationForms = parseNavigationForms(parsed.body.navigationForms, parsed.sourceUrl);
     if (parsed.headerProvider === 'component' || parsed.body.navigationForms.some(form => form.sourceUnitIds.some(id => !parsed.sourcePartition.bodyUnits.includes(id)))) fail('navigation_form_scope');
+  }
+  if (parsed.body.configurator) {
+    const c = parsed.body.configurator;
+    if (parsed.version !== 4 || parsed.pageScope !== 'body-only' || c.sourceUrl !== parsed.sourceUrl ||
+      new Set(c.sourceUnitIds).size !== c.sourceUnitIds.length || c.sourceUnitIds.some(id => !parsed.sourcePartition.bodyUnits.includes(id)) ||
+      new Set(c.sourceFactIds).size !== c.sourceFactIds.length || new Set(c.mediaKeys).size !== c.mediaKeys.length ||
+      new Set([c.slotComponentKey,c.formComponentKey,c.widgetKey]).size !== 3 || parsed.body.navigationForms?.some(f => f.slotComponentKey === c.slotComponentKey)) fail('configurator_scope');
   }
   assertPageScope(parsed, 4);
   if (parsed.pageScope === 'body-only' && !parsed.reusedHeader?.footerHash || parsed.pageScope === undefined && parsed.reusedHeader?.footerHash) fail('footer_scope_contract');

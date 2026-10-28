@@ -1,0 +1,698 @@
+[
+  {
+    "device": "desktop",
+    "component": "emailDesktop",
+    "read": {
+      "buttons": [
+        {
+          "cls": "whb-icon-button whb-clone-btn xts-i-check-all",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-remove-btn xts-i-trash",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存页眉"
+        },
+        {
+          "cls": "whb-button whb-settings-button xts-bordered-btn xts-color-primary whb-frontend-editor xts-i-header-builder-front",
+          "text": "前端编辑器"
+        },
+        {
+          "cls": "whb-button xts-i-export xts-bordered-btn xts-color-default",
+          "text": "Export"
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存"
+        }
+      ],
+      "options": [
+        {
+          "selected": false,
+          "text": "选择",
+          "value": ""
+        },
+        {
+          "selected": false,
+          "text": "主导航",
+          "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+        },
+        {
+          "selected": false,
+          "text": "询价按钮",
+          "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+        },
+        {
+          "selected": false,
+          "text": "语言切换",
+          "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+        },
+        {
+          "selected": true,
+          "text": "顶部邮箱",
+          "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+        }
+      ],
+      "selected": [
+        "顶部邮箱"
+      ],
+      "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+    }
+  },
+  {
+    "device": "desktop",
+    "component": "languageDesktop",
+    "read": {
+      "buttons": [
+        {
+          "cls": "whb-icon-button whb-clone-btn xts-i-check-all",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-remove-btn xts-i-trash",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存页眉"
+        },
+        {
+          "cls": "whb-button whb-settings-button xts-bordered-btn xts-color-primary whb-frontend-editor xts-i-header-builder-front",
+          "text": "前端编辑器"
+        },
+        {
+          "cls": "whb-button xts-i-export xts-bordered-btn xts-color-default",
+          "text": "Export"
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存"
+        }
+      ],
+      "options": [
+        {
+          "selected": false,
+          "text": "选择",
+          "value": ""
+        },
+        {
+          "selected": false,
+          "text": "主导航",
+          "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+        },
+        {
+          "selected": false,
+          "text": "询价按钮",
+          "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+        },
+        {
+          "selected": true,
+          "text": "语言切换",
+          "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+        },
+        {
+          "selected": false,
+          "text": "顶部邮箱",
+          "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+        }
+      ],
+      "selected": [
+        "语言切换"
+      ],
+      "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+    }
+  },
+  {
+    "device": "desktop",
+    "component": "navDesktop",
+    "read": {
+      "buttons": [
+        {
+          "cls": "whb-icon-button whb-clone-btn xts-i-check-all",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-remove-btn xts-i-trash",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存页眉"
+        },
+        {
+          "cls": "whb-button whb-settings-button xts-bordered-btn xts-color-primary whb-frontend-editor xts-i-header-builder-front",
+          "text": "前端编辑器"
+        },
+        {
+          "cls": "whb-button xts-i-export xts-bordered-btn xts-color-default",
+          "text": "Export"
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存"
+        }
+      ],
+      "options": [
+        {
+          "selected": false,
+          "text": "选择",
+          "value": ""
+        },
+        {
+          "selected": true,
+          "text": "主导航",
+          "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+        },
+        {
+          "selected": false,
+          "text": "询价按钮",
+          "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+        },
+        {
+          "selected": false,
+          "text": "语言切换",
+          "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+        },
+        {
+          "selected": false,
+          "text": "顶部邮箱",
+          "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+        }
+      ],
+      "selected": [
+        "主导航"
+      ],
+      "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+    }
+  },
+  {
+    "device": "desktop",
+    "component": "quoteDesktop",
+    "read": {
+      "buttons": [
+        {
+          "cls": "whb-icon-button whb-clone-btn xts-i-check-all",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-remove-btn xts-i-trash",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存页眉"
+        },
+        {
+          "cls": "whb-button whb-settings-button xts-bordered-btn xts-color-primary whb-frontend-editor xts-i-header-builder-front",
+          "text": "前端编辑器"
+        },
+        {
+          "cls": "whb-button xts-i-export xts-bordered-btn xts-color-default",
+          "text": "Export"
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存"
+        }
+      ],
+      "options": [
+        {
+          "selected": false,
+          "text": "选择",
+          "value": ""
+        },
+        {
+          "selected": false,
+          "text": "主导航",
+          "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+        },
+        {
+          "selected": true,
+          "text": "询价按钮",
+          "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+        },
+        {
+          "selected": false,
+          "text": "语言切换",
+          "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+        },
+        {
+          "selected": false,
+          "text": "顶部邮箱",
+          "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+        }
+      ],
+      "selected": [
+        "询价按钮"
+      ],
+      "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+    }
+  },
+  {
+    "device": "mobile",
+    "component": "emailMobile",
+    "read": {
+      "buttons": [
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-clone-btn xts-i-check-all",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-remove-btn xts-i-trash",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存页眉"
+        },
+        {
+          "cls": "whb-button whb-settings-button xts-bordered-btn xts-color-primary whb-frontend-editor xts-i-header-builder-front",
+          "text": "前端编辑器"
+        },
+        {
+          "cls": "whb-button xts-i-export xts-bordered-btn xts-color-default",
+          "text": "Export"
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存"
+        }
+      ],
+      "options": [
+        {
+          "selected": false,
+          "text": "选择",
+          "value": ""
+        },
+        {
+          "selected": false,
+          "text": "主导航",
+          "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+        },
+        {
+          "selected": false,
+          "text": "询价按钮",
+          "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+        },
+        {
+          "selected": false,
+          "text": "语言切换",
+          "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+        },
+        {
+          "selected": true,
+          "text": "顶部邮箱",
+          "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+        }
+      ],
+      "selected": [
+        "顶部邮箱"
+      ],
+      "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+    }
+  },
+  {
+    "device": "mobile",
+    "component": "languageMobile",
+    "read": {
+      "buttons": [
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-clone-btn xts-i-check-all",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-remove-btn xts-i-trash",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存页眉"
+        },
+        {
+          "cls": "whb-button whb-settings-button xts-bordered-btn xts-color-primary whb-frontend-editor xts-i-header-builder-front",
+          "text": "前端编辑器"
+        },
+        {
+          "cls": "whb-button xts-i-export xts-bordered-btn xts-color-default",
+          "text": "Export"
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存"
+        }
+      ],
+      "options": [
+        {
+          "selected": false,
+          "text": "选择",
+          "value": ""
+        },
+        {
+          "selected": false,
+          "text": "主导航",
+          "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+        },
+        {
+          "selected": false,
+          "text": "询价按钮",
+          "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+        },
+        {
+          "selected": true,
+          "text": "语言切换",
+          "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+        },
+        {
+          "selected": false,
+          "text": "顶部邮箱",
+          "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+        }
+      ],
+      "selected": [
+        "语言切换"
+      ],
+      "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+    }
+  },
+  {
+    "device": "mobile",
+    "component": "quoteMobile",
+    "read": {
+      "buttons": [
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-clone-btn xts-i-check-all",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-remove-btn xts-i-trash",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存页眉"
+        },
+        {
+          "cls": "whb-button whb-settings-button xts-bordered-btn xts-color-primary whb-frontend-editor xts-i-header-builder-front",
+          "text": "前端编辑器"
+        },
+        {
+          "cls": "whb-button xts-i-export xts-bordered-btn xts-color-default",
+          "text": "Export"
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存"
+        }
+      ],
+      "options": [
+        {
+          "selected": false,
+          "text": "选择",
+          "value": ""
+        },
+        {
+          "selected": false,
+          "text": "主导航",
+          "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+        },
+        {
+          "selected": true,
+          "text": "询价按钮",
+          "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+        },
+        {
+          "selected": false,
+          "text": "语言切换",
+          "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+        },
+        {
+          "selected": false,
+          "text": "顶部邮箱",
+          "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+        }
+      ],
+      "selected": [
+        "询价按钮"
+      ],
+      "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+    }
+  },
+  {
+    "device": "mobile",
+    "component": "navMobile",
+    "read": {
+      "buttons": [
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-clone-btn xts-i-check-all",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-remove-btn xts-i-trash",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-add-btn xts-i-add",
+          "text": ""
+        },
+        {
+          "cls": "whb-icon-button whb-edit-btn xts-i-edit-write",
+          "text": ""
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存页眉"
+        },
+        {
+          "cls": "whb-button whb-settings-button xts-bordered-btn xts-color-primary whb-frontend-editor xts-i-header-builder-front",
+          "text": "前端编辑器"
+        },
+        {
+          "cls": "whb-button xts-i-export xts-bordered-btn xts-color-default",
+          "text": "Export"
+        },
+        {
+          "cls": "whb-button xts-btn xts-color-primary xts-i-save",
+          "text": "保存"
+        }
+      ],
+      "options": [
+        {
+          "selected": false,
+          "text": "选择",
+          "value": ""
+        },
+        {
+          "selected": true,
+          "text": "主导航",
+          "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+        },
+        {
+          "selected": false,
+          "text": "询价按钮",
+          "value": "%e8%af%a2%e4%bb%b7%e6%8c%89%e9%92%ae"
+        },
+        {
+          "selected": false,
+          "text": "语言切换",
+          "value": "%e8%af%ad%e8%a8%80%e5%88%87%e6%8d%a2"
+        },
+        {
+          "selected": false,
+          "text": "顶部邮箱",
+          "value": "%e9%a1%b6%e9%83%a8%e9%82%ae%e7%ae%b1"
+        }
+      ],
+      "selected": [
+        "主导航"
+      ],
+      "value": "%e4%b8%bb%e5%af%bc%e8%88%aa"
+    }
+  }
+]

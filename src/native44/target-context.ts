@@ -8,10 +8,12 @@ import { validateNative44Selection } from './selection.js';
 import { walkNative44 } from './types.js';
 import type { ValidatedTaskInput } from './local-task.js';
 import { normalizeTargetPostsQuery, targetPostsQueryKey, type TargetPostsEvidence } from '../wordpress/posts-contract.js';
-import { prepareProgramCurrentProduct } from './current-product.js';
+import { prepareProgramCurrentProduct, prepareProgramRelatedProducts } from './current-product.js';
+import { normalizeTargetCategoriesQuery, targetCategoriesQueryKey } from '../wordpress/categories-contract.js';
+import { readCurrentCategoriesProvider, type TargetCategoriesProvider } from './native-categories.js';
 
 /** Platform preparation cannot create a page, import media or save a document. */
-export type Native44TargetReader = Pick<WordPressClient, 'preflight' | 'discoverCapabilities' | 'readTargetCatalog'> & Partial<Pick<WordPressClient, 'readTargetPosts' | 'readTargetProduct'>>;
+export type Native44TargetReader = Pick<WordPressClient, 'preflight' | 'discoverCapabilities' | 'readTargetCatalog'> & Partial<Pick<WordPressClient, 'readTargetPosts' | 'readTargetProduct' | 'readTargetCategories' | 'readTargetRelatedProducts'>>;
 export class Native44TargetContextError extends Error {
   constructor(message: string, readonly environment: Native44EnvironmentCheck) { super(message); }
 }
@@ -43,9 +45,16 @@ export async function prepareTargetContext(client: Native44TargetReader, input: 
     posts = [];
     for (const query of postQueries.values()) posts.push(await retryReadV2(() => client.readTargetPosts!(query)));
   }
+  const categoryQueries = new Map(walkNative44(input.program.blocks).filter(node => node.kind === 'native-categories').map(node => [targetCategoriesQueryKey(node.query), normalizeTargetCategoriesQuery(node.query)]));
+  const categories: TargetCategoriesProvider[] = [];
+  for (const query of categoryQueries.values()) {
+    if (!client.readTargetCategories) throw Error('target_categories_reader_missing');
+    categories.push(await readCurrentCategoriesProvider({ readTargetCategories: q => client.readTargetCategories!(q) }, query, targetUrl));
+  }
+  const relatedProducts = await prepareProgramRelatedProducts(client, input.program, targetUrl);
   // The execution layer persists the observed catalog before invoking the
   // compiler preflight. A read alone is not a durable query-evidence reference.
   const record = await prepareProgramCurrentProduct({ readTargetProduct: id => { if (!client.readTargetProduct) throw Error('target_current_product_reader_missing'); return client.readTargetProduct(id); } }, input.program, { targetOrigin: targetUrl, schemas: capabilities.legacySchemas, controlsByWidget: knowledge.controlsByWidget });
-  return { preflight, capabilities, environment, knowledge, catalog, posts, currentProduct: record?.provider, productBindings: record?.bindings };
+  return { preflight, capabilities, environment, knowledge, catalog, posts, ...(categories.length ? { categories } : {}), ...(relatedProducts.length ? { relatedProducts, relatedQualification: input.knowledge.extension?.relatedQualification } : {}), currentProduct: record?.provider, productBindings: record?.bindings };
 }
 export type TargetContext = Awaited<ReturnType<typeof prepareTargetContext>>;

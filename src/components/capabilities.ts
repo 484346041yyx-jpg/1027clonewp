@@ -38,6 +38,8 @@ export const NATIVE44_ADAPTER_SOURCE_PATHS = [
   'src/native44/publication.ts', 'src/native44/publication-cli.ts', 'src/wordpress/publication-contract.ts',
   'src/core/delivery-policy.ts', 'src/core/config.ts',
   'src/replica-full/json.ts', 'src/replica-full/body-prepare.ts',
+  'src/native44/native-categories.ts','src/wordpress/categories-contract.ts','src/wordpress/categories.ts',
+  'src/native44/native-related-products.ts','src/native44/related-product-extension.ts','src/wordpress/related-products.ts',
   'src/native44/current-product.ts','src/native44/product-extension.ts','src/wordpress/current-product-runtime.ts','src/wordpress/native-product-preview.ts','src/wordpress/native-product-request.ts','src/wordpress/product-contract.ts','src/wordpress/product.ts',
   'src/native44/style-resolution-v2.ts', 'src/replica-responsive/style-settings.ts', 'src/replica-responsive/body.ts',
 ] as const;
@@ -46,12 +48,12 @@ export async function componentAdapterDeclarations(root: string, extension?:File
   const ref=extension===null?undefined:extension??await currentProductExtension(root);const extra=ref?await readProductExtension(ref,root):undefined;const types=[...NATIVE44_ALL_TYPES,...(extra?.index.types??[])];
   const unavailableDependencies = Object.fromEntries(NATIVE44_ALL_TYPES.flatMap(type => {
     const dependencies = native44ResourceDependencies(type);
-    return dependencies.length && type !== 'wd_blog' ? [[type, dependencies]] : [];
+    return dependencies.length && type !== 'wd_blog' && type !== 'wd_product_categories' ? [[type, dependencies]] : [];
   }));
   const implemented = [...new Set(NATIVE44_ALL_TYPES.map(type => native44Usage(type).contentModel))].filter(value => value !== 'resource-query') as ExecutionAdapterDeclaration['implemented'];
   return [{
     id: 'native44-desktop-v1', executionStrategy: 'native44-css-handoff', replicationProfile: 'desktop-browser-v1',
-    widgetTypes: types, implemented, resourceAdapters: ['target-woocommerce-products', 'target-wordpress-posts',...(extra?['target-woocommerce-current-product','woodmart-native-single-product-template']:[])],
+    widgetTypes: types, implemented, resourceAdapters: ['target-woocommerce-products', 'target-wordpress-posts','target-woocommerce-product-categories',...(extra?['target-woocommerce-current-product','woodmart-native-single-product-template']:[]),...(extra?.relatedQualification?['target-woocommerce-related-products']:[])],
     unavailableDependencies, writeBoundary: 'owned-draft-page-only',
     sourceRefs: await Promise.all(NATIVE44_ADAPTER_SOURCE_PATHS.map(name => componentFileRef(root, name))),
   }];

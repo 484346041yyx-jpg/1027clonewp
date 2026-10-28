@@ -1,3 +1,4 @@
+import { runResources } from '../workspace/operation-resources.js';
 import path from 'node:path';
 import { readFile, realpath, stat, mkdir, writeFile } from 'node:fs/promises';
 import { acquireLock, writeJson } from '../core/files.js';
@@ -86,7 +87,7 @@ export async function prepareNative44CurrentCaptureReview(rootInput: string, run
 /** Local-only explicit review import. Prepare fully before creating records;
  * then persist the exact checked bytes and perform actual readback before CAS. */
 export async function importNative44CurrentCaptureReview(rootInput: string, runId: string, input: unknown) {
-  const root = await realpath(rootInput), prepared = await prepareCurrentCaptureReview(root, runId, input), unlock = await acquireLock(root);
+  const root = await realpath(rootInput), prepared = await prepareCurrentCaptureReview(root, runId, input), unlock = await acquireLock(root, await runResources(root, runId));
   try {
     const { runDir, pointerFile, beforeBytes, candidate, request } = prepared;
     if (!(await readFile(pointerFile)).equals(beforeBytes)) fail('parent_pointer_changed');

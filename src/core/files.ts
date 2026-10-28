@@ -2,6 +2,8 @@ import { mkdir, readFile, writeFile, rename, open, unlink } from 'node:fs/promis
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { assertWorkspaceAccess } from '../workspace/service.js';
+import { hash } from '../workspace/files.js';
+import { inspectResourceWorkspace, resourceOwner, withResourceLock } from '../workspace/resources.js';
 
 export async function writeJson(file: string, data: unknown) {
   await mkdir(path.dirname(file), { recursive: true });
@@ -9,8 +11,26 @@ export async function writeJson(file: string, data: unknown) {
   await writeFile(temporary, JSON.stringify(data, null, 2) + '\n', 'utf8');
   await rename(temporary, file);
 }
-export async function acquireLock(root: string) {
+export async function acquireLock(root: string, resources?: string[], options?: { waitMs?: number }) {
   await assertWorkspaceAccess(root);
+  const owner = await resourceOwner(root, process.env.CLONEWP_WORKSPACE_TOKEN);
+  const scopedState = await inspectResourceWorkspace(root);
+  if (resources || owner || scopedState.tasks.length || scopedState.queue.length) {
+    // Existing clients keep the legacy operation file. Check it before every grant;
+    // never delete or steal an in-flight v1 operation during the transition.
+    const legacyDeadline = Date.now() + (options?.waitMs ?? 120000);
+    const validate = async () => {
+      await assertWorkspaceAccess(root);
+      for (;;) {
+        try { await readFile(path.join(root, '.cache/clone.lock')); }
+        catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return; throw error; }
+        if (Date.now() >= legacyDeadline) throw Error('workspace_legacy_operation_wait_timeout_reconcile_required');
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await assertWorkspaceAccess(root);
+      }
+    };
+    return withResourceLock(root, resources ?? ['task:unscoped'], hash(process.env.CLONEWP_WORKSPACE_TOKEN ?? `pid-${process.pid}`), { ...options, validate });
+  }
   const file = path.join(root, '.cache/clone.lock');
   await mkdir(path.dirname(file), { recursive: true });
   let handle;

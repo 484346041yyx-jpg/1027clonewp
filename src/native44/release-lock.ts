@@ -1,3 +1,4 @@
+import { productExtensionWidgetTypes } from './product-extension.js';
 import path from 'node:path';
 import { readFile, realpath, stat } from 'node:fs/promises';
 import { activeVerifiedEvidenceReader } from '../core/verified-evidence.js';
@@ -7,7 +8,7 @@ import { canonicalV2, hashV2 } from '../replica-v2/journal.js';
 import type { FileRef } from '../replica-v2/types.js';
 import type { SystemRelease } from '../system/contracts.js';
 import { readCurrentRelease, readLearningReleases } from '../components/registry.js';
-import { NATIVE44_ALL_TYPES, EXTENDED_NATIVE_TYPES, NATIVE44_CATALOG_HASH } from './catalog.js';
+import { NATIVE44_CATALOG_HASH } from './catalog.js';
 import { assertProductExtensionReference, readProductExtension } from './product-extension.js';
 import { DESKTOP_BROWSER_PROFILE } from './profile.js';
 import type { Native44Program } from './types.js';
@@ -16,7 +17,7 @@ const hash = z.string().regex(/^[a-f0-9]{64}$/), ref = z.object({ path: z.string
 const releaseSchema = z.object({
   componentExtension: ref.optional(),
   version: z.literal(1), executorId: z.literal('native44'),
-  componentSet: z.object({ id: z.string().min(1), catalog: ref, types: z.array(z.string()).min(44).max(56) }).strict(),
+  componentSet: z.object({ id: z.string().min(1), catalog: ref, types: z.array(z.string()).min(44).max(57) }).strict(),
   knowledge: z.object({ id: z.string().min(1), index: ref, fingerprint: hash, learningRelease: ref.optional() }).strict(),
   selectionRules: z.object({ id: z.string().min(1), sha256: hash, files: z.array(ref).min(1) }).strict(),
   adapters: z.object({ id: z.string().min(1), sha256: hash, files: z.array(ref).min(1) }).strict(),
@@ -49,7 +50,7 @@ export async function readNative44ReleaseLock(root: string, reference: FileRef, 
   const lock = lockSchema.parse(JSON.parse((await verified(root, reference)).toString('utf8')));
   if (expected.taskId && lock.taskId !== expected.taskId || lock.phase === 'draft' && (lock.program || lock.inputs) || lock.phase === 'final' && (!lock.program || !lock.inputs)) throw Error('native44_release_lock_identity_invalid');
   if(lock.release.componentExtension){assertProductExtensionReference(lock.release.componentExtension);await readProductExtension(lock.release.componentExtension,root);}
-  if (lock.release.componentSet.catalog.sha256 !== NATIVE44_CATALOG_HASH || canonicalV2(lock.release.componentSet.types) !== canonicalV2(lock.release.componentExtension?EXTENDED_NATIVE_TYPES:NATIVE44_ALL_TYPES)) throw Error('native44_release_cannot_expand_enabled_components');
+  if (lock.release.componentSet.catalog.sha256 !== NATIVE44_CATALOG_HASH || canonicalV2(lock.release.componentSet.types) !== canonicalV2(productExtensionWidgetTypes(lock.release.componentExtension))) throw Error('native44_release_cannot_expand_enabled_components');
   // Validate both identity and actual executable/source bytes. Self-authored
   // JSON cannot substitute an invented adapter or omit part of its contract.
   for (const file of [lock.release.componentSet.catalog, lock.release.knowledge.index, ...lock.release.selectionRules.files, ...lock.release.adapters.files]) await verified(root, file);
@@ -75,7 +76,7 @@ export async function readNative44HistoricalReleaseEvidence(root: string, refere
   if (!/^[a-zA-Z\d][a-zA-Z\d_-]{0,159}$/.test(expected.taskId) || path.resolve(actualRoot, reference.path) !== path.join(taskDir, 'release-lock.json')) throw Error('native44_release_historical_owner_invalid');
   const lock = lockSchema.parse(JSON.parse((await verified(actualRoot, reference)).toString('utf8')));
   if (lock.phase !== 'final' || lock.taskId !== expected.taskId || !lock.program || !lock.inputs || lock.program.sha256 !== expected.programHash || path.resolve(actualRoot, lock.program.path) !== path.join(taskDir, 'program.json')) throw Error('native44_release_historical_identity_invalid');
-  if (lock.release.componentSet.catalog.sha256 !== NATIVE44_CATALOG_HASH || canonicalV2(lock.release.componentSet.types) !== canonicalV2(lock.release.componentExtension?EXTENDED_NATIVE_TYPES:NATIVE44_ALL_TYPES)) throw Error('native44_release_cannot_expand_enabled_components');
+  if (lock.release.componentSet.catalog.sha256 !== NATIVE44_CATALOG_HASH || canonicalV2(lock.release.componentSet.types) !== canonicalV2(productExtensionWidgetTypes(lock.release.componentExtension))) throw Error('native44_release_cannot_expand_enabled_components');
   if(lock.release.componentExtension)await readProductExtension(lock.release.componentExtension,actualRoot);
   // Validate source-reference ownership before reading any input, including
   // aliases. Historical metadata cannot redirect this reader to configuration.

@@ -293,7 +293,7 @@ export function assertNative44CapabilityProof(requirement: Native44Requirement, 
   if (requirement.dimension === 'behavior' && !['interaction-probe', 'composition-probe'].includes(proof.method)) throw Error(`A registered setting alone is not a verified interaction: ${requirement.id}`);
   return proof;
 }
-export const native44CapabilitySettingsHash = (node: Native44Component): string => native44RequirementsHash({ settings: node.settings ?? {}, widgetSettings: 'widgetSettings' in node ? node.widgetSettings : {}, ...(node.kind === 'native-products' ? { query: node.query, tabs: node.tabs } : node.kind === 'native-posts' ? { query: node.query } : {}) });
+export const native44CapabilitySettingsHash = (node: Native44Component): string => native44RequirementsHash({ settings: node.settings ?? {}, widgetSettings: 'widgetSettings' in node ? node.widgetSettings : {}, ...(node.kind === 'native-products' ? { query: node.query, tabs: node.tabs } : node.kind === 'native-posts' || node.kind === 'native-categories' || node.kind === 'native-related-products' ? { query: node.query } : {}) });
 
 export function createNative44RequirementContract(source: SourceFactsV2, sourceUnits: Native44SourceUnit[], sourceFacts: z.infer<typeof Native44RequirementRefSchema>, taskId: string, options: { goalProfile?: Native44GoalProfile } = {}): Native44RequirementContract {
   const requirements = deriveNative44SourceObligations(source, sourceUnits, options.goalProfile).map((row, index): Native44Requirement => ({

@@ -1,3 +1,4 @@
+import { runResources } from '../workspace/operation-resources.js';
 import path from 'node:path';
 import { mkdir, readFile, realpath, stat, writeFile } from 'node:fs/promises';
 import { z } from 'zod';
@@ -135,7 +136,7 @@ export async function readNative44Publication(rootInput: string, state: Native44
 }
 
 export async function prepareNative44Publication(rootInput: string, input: unknown) {
-  const request = Native44PublicationRequestSchema.parse(input), root = await realpath(rootInput), unlock = await acquireLock(root);
+  const request = Native44PublicationRequestSchema.parse(input), root = await realpath(rootInput), unlock = await acquireLock(root, await runResources(root, request.runId));
   try {
     await ensureDiskSpaceV2(root); const data = await local(root, request.runId); await validateRequest(data, request);
     if (await optional(path.join(data.runDir, 'current-publication.json'))) fail('already_published_use_verify');
@@ -160,7 +161,7 @@ const eligible = (status: OwnedReviewStatus) => status.exists && status.postType
 const widgetTypes = (snapshot: DraftSnapshot) => { const types = new Set<string>(); const visit = (nodes: DraftSnapshot['elements']) => nodes.forEach(node => { types.add(node.elType === 'container' ? 'container' : node.widgetType!); visit(node.elements); }); visit(snapshot.elements); return [...types]; };
 
 export async function applyNative44Publication(rootInput: string, runId: string, operationId: string, deps: Native44PublicationDependencies, mode: 'apply' | 'reconcile' = 'apply') {
-  const root = await realpath(rootInput), unlock = await acquireLock(root); let remote: Native44PublicationRemote | undefined;
+  const root = await realpath(rootInput), unlock = await acquireLock(root, await runResources(root, runId)); let remote: Native44PublicationRemote | undefined;
   try {
     const freeBytes = await ensureDiskSpaceV2(root), data = await local(root, runId), folder = operationPath(data.runDir, operationId);
     if (await realpath(folder) !== folder) fail('operation_alias');

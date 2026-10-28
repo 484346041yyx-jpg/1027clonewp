@@ -5,7 +5,7 @@ import { performance } from 'node:perf_hooks';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 const ROOT = 'D:/cloneWP';
-export const PREPARATION_PHASE_STAGES = ['source-observation', 'shared-planning', 'material-preparation', 'visual-acceptance'] as const;
+export const PREPARATION_PHASE_STAGES = ['source-observation', 'shared-planning', 'material-preparation', 'visual-acceptance', 'body-production', 'local-merge', 'remote-save', 'batched-repair', 'browser-wait', 'editor-recovery', 'system-development', 'system-testing', 'publication', 'editor-completion'] as const;
 export type PreparationPhaseStage = typeof PREPARATION_PHASE_STAGES[number];
 export type PreparationPhaseEvent = 'start' | 'succeeded' | 'failed' | 'cancelled';
 export interface PreparationPhaseEntry {
@@ -74,6 +74,41 @@ async function readDocument(directory: string): Promise<PreparationPhaseDocument
 /** Missing stages remain absent: no estimates or zero placeholders are created. */
 export async function readPreparationPhases(input: string): Promise<PreparationPhaseDocument | null> {
   return readDocument(await checkedDirectory(input));
+}
+
+function intervalUnion(intervals: Array<[number, number]>): number {
+  const ordered = intervals.slice().sort((a, b) => a[0] - b[0]);
+  let total = 0, start: number | undefined, end = 0;
+  for (const [a, b] of ordered) {
+    if (start === undefined) { start = a; end = b; }
+    else if (a <= end) end = Math.max(end, b);
+    else { total += end - start; start = a; end = b; }
+  }
+  return total + (start === undefined ? 0 : end - start);
+}
+
+/** UTC wall diagnostics, including failures and waits. Missing observations never become zero. */
+export function summarizePreparationPhases(input: PreparationPhaseDocument | null) {
+  if (input === null) return { measured: false, totalWallMs: null, speedup: 'not-measured' as const };
+  const document = validateDocument(input), completed = document.entries.filter(e => e.finishedAt && !e.clockSkewDetected);
+  const intervals = completed.map(e => [Date.parse(e.startedAt), Date.parse(e.finishedAt!)] as [number, number]);
+  const running = document.entries.filter(e => e.status === 'running').map(e => e.marker);
+  const skew = document.entries.filter(e => e.clockSkewDetected).map(e => e.marker);
+  const boundaries = document.entries.flatMap(e => [Date.parse(e.startedAt), ...(e.finishedAt ? [Date.parse(e.finishedAt)] : [])]);
+  const lastObservedSpanMs = boundaries.length ? Math.max(...boundaries) - Math.min(...boundaries) : null;
+  return {
+    measured: true, durationRule: 'wall-span-and-interval-union; never-sum-parallel-or-nested-stages',
+    totalWallMs: running.length || skew.length ? null : lastObservedSpanMs,
+    lastObservedSpanMs, coveredActiveMs: intervalUnion(intervals), runningMarkers: running, clockSkewMarkers: skew,
+    stages: PREPARATION_PHASE_STAGES.map(stage => {
+      const rows = completed.filter(e => e.stage === stage);
+      return { stage, measured: rows.length > 0, activeMs: rows.length ? intervalUnion(rows.map(e => [Date.parse(e.startedAt), Date.parse(e.finishedAt!)])) : null,
+        attempts: document.entries.filter(e => e.stage === stage).length, failures: rows.filter(e => e.status === 'failed').length, cancellations: rows.filter(e => e.status === 'cancelled').length };
+    }),
+    separateDevelopmentStages: ['system-development', 'system-testing'],
+    accounting: 'development-and-production-reported-separately; overlapping-stage-durations-are-not-additive',
+    source: 'cross-command-utc-wall', speedup: 'not-measured', comparableBaselineRequired: true,
+  };
 }
 
 async function acquire(directory: string): Promise<() => Promise<void>> {

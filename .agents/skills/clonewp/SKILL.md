@@ -5,6 +5,10 @@ description: Route cloneWP desktop replica, component learning and project maint
 
 ## 新任务的指令范围（优先于下文的整页默认）
 
+新任务准备合同由中心填写 boundaryTable（version:1, kind:clonewp-section-boundaries），来源哈希绑定 sourceFacts.sha256。每个来源快照为相邻板块记录背景分界、内部留白归属与真实外部间距；styles 只用于中心的外部 margin-top/margin-bottom，包含明确媒体范围和来源事实。代理不得设置根外距或位移；内部 padding 与背景保留。创建和合并均校验，合并生成中心局部 CSS。此字段缺省只用于历史兼容，不给旧合同补字段；新任务规划不得省略。完整视觉、响应式、交互验收仍必需。
+
+新初始化 preparation v8 冻结 `executionPolicy`，按 [统一协调与执行减耗](D:/cloneWP/docs/replica-coordination.md) 执行两个浏览器工作窗口、单中心、按依赖/工作量排队的 `body-N` 工作包、默认三个制作槽（仅极简低工作量正文用一，依赖不足不强拆）、材料复用和整页集中对比/批量返修。普通正文不派页眉组，远端写入串行；双桌面/双手机、交互、原生可编辑性、发布及编辑器重开质量门完整保留。旧冻结任务没有该策略时保持旧分组和哈希，不补默认。
+
 新任务询盘表单按 [通用询盘表单默认要求](D:/cloneWP/docs/inquiry-forms.md) 沿同一 preparation v8 → full v4 默认配置真实原生提交、后台保存和邮件通知。各站字段/样式来自实际来源，收件邮箱来自项目通用或站点专属配置，发件设置按每站自动生成。testing:user-managed：只检查原生设置、可填写性、样式与保存读回，不自动发送测试询盘或测试邮件；实际测试交用户。不要求提交成功或收件证据，不把未测试写成已送达。缺收件邮箱具名报告，旧任务不迁移。
 
 用户明确只复刻截图/指定正文板块时，使用既有 body-only preparation v8 → full v4，并按 docs/replica-command-scope.md 的“指定正文板块”冻结 selection 和 unselectedBodyUnits。完整来源仍取证，只有选中板块进入派工与输出；旧任务不迁移，不启动旧独立组件执行器。
@@ -34,18 +38,18 @@ npm run workspace:start -- --agent <codex|claude|workbuddy> --intent <replica|le
 
 新建复刻的 documents 包含统一通用指南全文及哈希，按它判断组件、查询和容器职责；样本档案只按需查证。新增观察先对照已有规则，重复项合并、字段和参数留档，不按页面或批次凑经验数量。旧任务保持自身冻结知识。
 
-修改前按 AGENTS 和 docs/shared-workspace.md 认领任务锁，令牌只留内存并通过 CLONEWP_WORKSPACE_TOKEN 进程环境传给原写入命令；每五分钟心跳，完成/中断前写交接并释放。过时交接先复核，过期锁不自动抢占，交接记录不授予发布权限。
+修改前按 AGENTS 和 docs/shared-workspace.md 登记任务及资源范围，不同任务并行、相交资源写入排队，令牌只留内存并通过 CLONEWP_WORKSPACE_TOKEN 进程环境传给原写入命令；每五分钟心跳，完成/中断前写交接并释放。过时交接先复核，过期锁不自动抢占，交接记录不授予发布权限。
 
-## 新复刻任务的页眉默认
+## 本次范围的公共资源与并行准备
 
 新任务默认使用既有完整流程的v4合同与响应式v2决策：桌面与手机共同取证，在并行准备前冻结图标/文字布局角色及稳定定位、每个手机宽度的动态产品同屏数量和原生参数、整条手机页眉滚动行为与具名用户覆盖。缺决定先补观察，不交给生成阶段猜测。生成前校验方案、原生参数和编辑器稳定选择器，最后以来源及用户要求对照编辑器和前台的实际布局、数量及滚动/菜单状态。具体数值按网站确定，不把2个产品或固定页眉设为所有网站的通用值。手机实现按职责放在 src/replica-responsive/，不新建入口或另一套流水线；同一WoodMart页眉内独立配置Mobile布局，绑定任务自有菜单，平板沿用桌面。缺真实来源、决策、原生适配或验收即不通过，不能降级绕过。操作格式见 [手机响应式能力](D:/cloneWP/docs/replica-responsive.md)。显式历史v1/v2保持冻结合同，旧页面和代码不自动迁移。
 
 
-新建 replica 默认使用独立 WoodMart 页眉生成器搭配 WordPress 菜单，并先执行 [并行方案准备](D:/cloneWP/docs/parallel-replica-preparation.md)。代理自动形成 `clonewp-replica-preparation` 合同并用 `npm run create:replica -- PREPARATION.json` 生成独立任务包；用户不需要填写JSON或增加技能入口。协调者先冻结真实双桌面和双手机来源、共享字体/宽度/间距/断点及版本适用的原生与兼容条件，再用当前任务的协作工具并发启动页眉/菜单一组、正文最多两组。相关布局、状态和控制依赖必须同组；只有协调者操作共享浏览器、改共享规范并统一合并，准备代理只读冻结材料、只写自己精确结果路径，不认证或写远端，不触碰其它组或全局样式。不要将本地 `Promise.all` 读取已完成方案称为真实模型并行；协作工具缺失或关键兼容未知时在认证前报告阻断，不静默降级。
+新建 replica 先按本次范围执行 [并行方案准备](D:/cloneWP/docs/parallel-replica-preparation.md)。普通正文默认只读复用已核验公共资源；只有明确制作页眉时使用独立 WoodMart 页眉生成器搭配 WordPress 菜单。代理自动生成准备合同与独立任务包，不要求用户填写 JSON。协调者冻结真实双桌面/双手机来源与共同规范后，使用当前协作工具及队列调度实际制作代理；工作包、槽位和返修按统一协调文档，页眉包计入制作槽。相关布局、状态和控制依赖同包，代理只写自己精确输出，不认证或写远端；共享浏览器、规范、合并和实际验收由中心负责。不要把读取成品的 `Promise.all` 称作模型制作并行；能力缺失在认证前具名报告。
 
 新 preparation v6 须在正文派工前为每板块冻结文字换行、素材/卡片数量、视觉分隔、默认状态、交互和动态六项来源检查；不适用也须带证据和理由。两个桌面宽度还须绑定来源截图的可量测文字行数/宽度、板块几何和颜色样式；有可见媒体时核对数量。正文结果逐项对应真实组件与实现机制，合并门拒绝漏项或错误映射；最后仍按这些检查在当前前台验证实际状态。普通样式和常见交互是本流程范围，订阅、库存、处方和结账后台不因此成为复刻承诺。此增强只约束新任务准备，不迁移既有任务；合并后的完整执行合同仍为 v4。
 
-读取 [完整复刻流程](D:/cloneWP/docs/full-replica-workflow.md)；合并输出的 `FULL_MANIFEST.json` 再经 `src/replica-full/` 协调独立页眉模块与原生正文编译器，所有既有质量门保持。远程写入串行执行。正文排除全部来源页眉，避免重复；自动新建本任务页眉及菜单，只绑定自有 Full Width 页面，不改全站默认。先选目标实际支持的原生样式，再补隔离 CSS；整页桌面和手机视觉与交互通过后按任务冻结策略发布，交付资源名称、ID、编辑及预览链接和验证范围。
+读取 [完整复刻流程](D:/cloneWP/docs/full-replica-workflow.md)；合并输出的 `FULL_MANIFEST.json` 再经 `src/replica-full/` 协调本次范围的公共资源与原生正文编译器，所有既有质量门保持。远程写入串行执行。正文排除来源页眉/页面页脚，普通正文只绑定已核验的公共资源；明确包含公共部分时才创建任务自有页眉/菜单，不改全站默认。先选目标实际支持的原生样式，再补隔离 CSS；整页桌面和手机视觉与交互通过后按任务冻结策略发布，交付资源名称、ID、编辑及预览链接和验证范围。
 
 当前仅使用 `npm run create:replica -- PREPARATION.json` 或完整 manifest；自动建站、原创、旧分阶段及独立组件建页入口已移除。当前完整任务续跑与对账保留，旧锁不自动迁移。
 
@@ -57,7 +61,7 @@ npm run workspace:start -- --agent <codex|claude|workbuddy> --intent <replica|le
 
 执行速度按完整复刻流程的“执行速度约束”：同任务来源和未变知识只取一次，页眉/正文复用统一观察；已验证且版本适用的页面壳、字体、页眉换行、原生控件和减少动态效果兼容决定前置，未知组合只做相关只读核实，不为每单新增能力小样。本地素材准备可与各组方案产出重叠，原生设置优先，集中CSS后统一当前版本验收。局部修正先复查影响区域，同构交互选代表和边界状态，保留完整内容核对及最终两桌面质量底线。记录各组实际开始/完成、准备wall time，以及本地、远端、修正和验收阶段耗时；缺测项明确标记，不相加并发耗时虚构总时间或承诺倍数。普通复刻不跑平台全量测试/构建；系统源码修改先专项，冻结后全量各一次。达到验收就交付，不增加无关试验或重复检查。
 
-协调者在取证、共享规划、本地素材和最终视觉阶段开始前，对自有已存在材料目录调用 `replica:prepare phase --directory DIR --stage source-observation|shared-planning|material-preparation|visual-acceptance --event start`，结束用返回marker提交 `succeeded`/`failed`/`cancelled`。最终同时读取材料目录 `phase-events.json`、准备组和远端timings；state未关联外部阶段的“未测量”不能覆盖已记录实测，真正缺测项仍明确未测量。具体命令见并行方案准备说明。
+协调者在实际阶段开始前对自有材料目录调用 `replica:prepare phase`，结束用返回marker提交 `succeeded`/`failed`/`cancelled`；来源、共享规划、素材、制作/合并、远端保存、集中验收/返修、浏览器等待/恢复及发布/编辑器收尾分别记录，代码开发/测试单独计时。精确阶段名见统一协调与并行准备文档。最终读取 `phase-events.json`、`phases.summary`、准备队列及远端timings；重叠区间取并集，缺测如实报告，不用各组之和冒充用户等待。
 
 ## 按意图执行
 
@@ -104,6 +108,13 @@ npm run workspace:start -- --agent <codex|claude|workbuddy> --intent <replica|le
 
 ## 原生单品扩展
 
+新任务自有页眉按 [原生菜单绑定与回显验收](D:/cloneWP/docs/header-menu-binding.md) 冻结 menuBindingPolicy，电脑/手机的 mainmenu 和 menu 均通过目标原生 select 合同绑定实际 slug。保存前、原生保存读回与客户端读回均校验；批准前逐组件重开原生面板，绑定实际选中值、名称和截图证据，缺设备/组件不得通过。普通正文只读复用共享页眉；旧冻结合同不迁移，不能为执行本项而修改已存在的网站资源。
+
 当前已增量启用 12 类原生单品组件：基础 43 Widget＋1 Container 的目录与知识哈希保持不变；新任务可冻结经资格验证的 componentExtension，合计 56 个身份。普通页面及旧任务没有扩展引用时仍严格使用原 44；新增组件须使用任务自有 woodmart_layout / single_product 模板、当前 WooCommerce 商品读取与原生请求运行资格。沿同一 preparation → full → native44 → responsive/验收流程，不安装桥接插件，不把实例商品 ID、价格或手机数值写成默认，不自动设置全站显示条件。
 
 资格及剩余边界见 docs/unified-component-model.md；source-only 学习不能扩大权限。新任务从 readCurrentRelease 读取可用扩展，选择新增组件后显式冻结 componentExtension；native44KnowledgeIdentity 默认仍返回基础身份，只有显式传入扩展时才带入，普通页面不被隐式迁移。单品只改变同一流程的原生保存对象和请求上下文；不创建独立流水线或安装运行插件。
+
+
+## 明确指定的独立弹窗
+
+用户明确制作本次 tomtoc 弹窗时，使用原 create:replica / replica:full 入口的 version 6、preparationVersion 8、popup-only 专用合同，参见 SYSTEM.md 的资源级并发与独立弹窗说明。sourceMode 明确为用户截图与真实 DOM，不伪称关闭状态已有可见来源截图；正文默认规则和旧合同不迁移。原生编译、实际注册、独立资源所有权、资源队列、写前意图、CAS、对账及读回仍需执行。按任务要求只收集到 Elementor 后台，testing:user-managed，不自动提交邮箱。独立预览后完成两桌面/两手机、关闭/键盘/遮罩/重复行为及正常原生编辑核对，再按冻结发布策略启用。

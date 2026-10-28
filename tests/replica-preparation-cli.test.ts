@@ -1,8 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 import { parsePreparationArgs, runPreparationCLI } from '../src/replica-preparation/cli.js';
 import { preparationIOFixture } from './helpers/preparation-io-fixture.js';
+import { claimWorkspace, checkpointWorkspace, inspectWorkspace } from '../src/workspace/service.js';
+
+const ROOT = 'D:/cloneWP';
 
 test('preparation CLI strictly separates dispatcher, worker and coordinator arguments', () => {
   assert.deepEqual(parsePreparationArgs(['compare-presentation', '--directory', 'prepared', '--evidence', 'evidence.json']), { command: 'compare-presentation', directory: 'prepared', evidence: 'evidence.json' });
@@ -12,7 +16,7 @@ test('preparation CLI strictly separates dispatcher, worker and coordinator argu
   assert.deepEqual(parsePreparationArgs(['start', '--directory', 'prepared', '--job', 'body-2']), { command: 'start', directory: 'prepared', job: 'body-2' });
   assert.deepEqual(parsePreparationArgs(['complete', '--job', 'header', '--result', 'result.json', '--directory', 'prepared']), { command: 'complete', directory: 'prepared', job: 'header', result: 'result.json' });
   assert.deepEqual(parsePreparationArgs(['fail', '--directory', 'prepared', '--job', 'body-1']), { command: 'fail', directory: 'prepared', job: 'body-1' });
-  for (const args of [[], ['unknown'], ['dispatch', '--input'], ['dispatch', '--input', '--run-dir', 'run'], ['dispatch', '--input', 'a', '--input', 'b'], ['dispatch', '--input', 'a', '--directory', 'd'], ['start', '--directory', 'd'], ['start', '--directory', 'd', '--job', 'body-3'], ['start', '--directory', 'd', '--job', 'header', '--result', 'result.json'], ['complete', '--directory', 'd', '--job', 'header'], ['fail', '--directory', 'd', '--job', 'header', '--result', 'result.json'], ['merge', '--directory', 'd', '--job', 'header'], ['status', '--directory', 'a', '--directory', 'b'], ['status', '--directory', 'a', '--site', 'target']]) assert.throws(() => parsePreparationArgs(args), /replica_preparation_arguments/);
+  for (const args of [[], ['unknown'], ['dispatch', '--input'], ['dispatch', '--input', '--run-dir', 'run'], ['dispatch', '--input', 'a', '--input', 'b'], ['dispatch', '--input', 'a', '--directory', 'd'], ['start', '--directory', 'd'], ['start', '--directory', 'd', '--job', 'body-0'], ['start', '--directory', 'd', '--job', 'header', '--result', 'result.json'], ['complete', '--directory', 'd', '--job', 'header'], ['fail', '--directory', 'd', '--job', 'header', '--result', 'result.json'], ['merge', '--directory', 'd', '--job', 'header'], ['status', '--directory', 'a', '--directory', 'b'], ['status', '--directory', 'a', '--site', 'target']]) assert.throws(() => parsePreparationArgs(args), /replica_preparation_arguments/);
 });
 
 test('preparation help and invalid commands stay local without opening task evidence', async () => {
@@ -23,6 +27,14 @@ test('preparation help and invalid commands stay local without opening task evid
 
 test('CLI resolves only bound file references, starts independent workers and retains failed-stage time without calling it pure model time', async () => {
   const f = await preparationIOFixture();
+  const taskId = `preparation-cli-${randomUUID()}`;
+  const initial = await inspectWorkspace(ROOT);
+  const owner = await claimWorkspace(ROOT, { agent: 'codex', sessionId: `test-${randomUUID()}`, taskId,
+    resources: [`task:${taskId}`],
+    expectedRevision: initial.revision, expectedFingerprint: initial.fingerprint });
+  const previousToken = process.env.CLONEWP_WORKSPACE_TOKEN;
+  process.env.CLONEWP_WORKSPACE_TOKEN = owner.token;
+  let completed = false;
   try {
     const relativize = (value: unknown): unknown => {
       if (Array.isArray(value)) return value.map(relativize);
@@ -35,7 +47,7 @@ test('CLI resolves only bound file references, starts independent workers and re
     const input = await f.put('preparation.json', relativize(f.plan));
     const dispatched = await runPreparationCLI(['dispatch', '--input', input.path, '--run-dir', f.finalRunDirectory]) as any;
     assert.equal(dispatched.status, 'awaiting-preparation'); assert.equal(dispatched.remoteWrites, 0);
-    await Promise.all(['header', 'body-1', 'body-2'].map(job => runPreparationCLI(['start', '--directory', f.preparationDirectory, '--job', job])));
+    for (const job of ['header', 'body-1', 'body-2']) await runPreparationCLI(['start', '--directory', f.preparationDirectory, '--job', job]);
     const failed = await runPreparationCLI(['fail', '--directory', f.preparationDirectory, '--job', 'body-2']) as any;
     assert.equal(failed.status, 'failed'); assert.equal(failed.measurement, 'utc-wall-agent-start-to-result'); assert.ok(failed.elapsedMs >= 0);
     const status = await runPreparationCLI(['status', '--directory', f.preparationDirectory]) as any;
@@ -56,5 +68,20 @@ test('CLI resolves only bound file references, starts independent workers and re
     const stateAfterRetry = await f.readState();
     assert.equal(stateAfterRetry.jobs.find((job: any) => job.job.jobId === 'header').status, 'running');
     assert.equal(stateAfterRetry.jobs.find((job: any) => job.job.jobId === 'body-2').previousAttempts.length, 1);
-  } finally { await f.cleanup(); }
+    completed = true;
+  } finally {
+    if (previousToken === undefined) delete process.env.CLONEWP_WORKSPACE_TOKEN;
+    else process.env.CLONEWP_WORKSPACE_TOKEN = previousToken;
+    try { await f.cleanup(); }
+    finally {
+      const current = await inspectWorkspace(ROOT);
+      await checkpointWorkspace(ROOT, { token: owner.token, expectedRevision: owner.revision,
+        expectedFingerprint: current.fingerprint, release: true,
+        notes: { goal: 'Exercise the preparation CLI under a real scoped workspace claim',
+          summary: completed ? 'Synthetic local preparation fixture completed' : 'Synthetic local preparation fixture failed',
+          progress: completed ? 'completed' : 'blocked', decisions: [], changes: [],
+          checks: [{ command: 'replica-preparation-cli.test.ts', status: completed ? 'passed' : 'failed' }],
+          openItems: completed ? [] : ['Inspect the failing test assertion.'], nextSteps: completed ? ['No follow-up for this test fixture.'] : ['Review the failing test output.'] } });
+    }
+  }
 });

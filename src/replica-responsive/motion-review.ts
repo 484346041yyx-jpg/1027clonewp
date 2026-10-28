@@ -34,7 +34,7 @@ export function requiredPhoneCarousels(program: Native44Program, plan: Responsiv
     if (section.mode === 'desktop-only') continue;
     const root = program.blocks.find(block => block.key === section.key);
     if (!root) fail(`section_program_missing:${section.key}`);
-    for (const node of walkNative44([root])) if (node.kind === 'native-carousel') entries.set(node.key, { componentKey: node.key, sectionKey: section.key });
+    for (const node of walkNative44([root])) if (node.kind === 'native-carousel' || node.kind === 'native-related-products' || node.kind === 'native' && node.widgetType === 'wd_single_product_gallery') entries.set(node.key, { componentKey: node.key, sectionKey: section.key });
   }
   for (const row of plan.decisions?.carousels ?? []) {
     if (row.presentation === 'grid' || plan.sections.find(section => section.key === row.sectionKey)?.mode === 'desktop-only') continue;

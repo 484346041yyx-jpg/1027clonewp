@@ -1,7 +1,7 @@
 import type { Native44Component, Native44Program } from '../native44/types.js';
 import type { SourceFactsV2 } from '../replica-v2/source.js';
 import type { BodySourceUnits } from '../replica-full/body-prepare.js';
-import type { FullReplicaFileRef, FullReplicaSourcePartition, FullReplicaReusedHeader } from '../replica-full/types.js';
+import type { FullReplicaFileRef, FullReplicaSourcePartition, FullReplicaReusedHeader, FullReplicaConfiguratorSpec } from '../replica-full/types.js';
 import type { HeaderModulePlan } from '../woodmart-header/generic/contract.js';
 import type { NavigationFormSpec } from '../replica-full/navigation-form/index.js';
 import type { ResponsiveSource, ResponsiveSection, ResponsivePlan } from '../replica-responsive/contract.js';
@@ -9,6 +9,7 @@ import type { TaskReviewSkipPolicy } from '../replica-full/review-skip-policy.js
 import type { NativeImagePolicy } from '../replica-full/native-image-policy.js';
 import type { PreparationBuildDiagnostic } from './build-diagnostics.js';
 import type { ComponentGuidanceReview } from './component-guidance.js';
+import type { PreparationExecutionPolicy, PreparationJobId } from './execution-policy.js';
 
 export type PreparationFileRef = FullReplicaFileRef;
 export const PREPARATION_DECISION_KEYS = ['fonts', 'content-width', 'spacing', 'breakpoints', 'native-style'] as const;
@@ -42,9 +43,12 @@ export interface PreparationPlan {
   pageScope?: 'body-only';
   sourcePartition: FullReplicaSourcePartition;
   navigationForms?: NavigationFormSpec[];
+  configurator?: FullReplicaConfiguratorSpec;
   reviewSkipPolicy?: TaskReviewSkipPolicy;
   nativeImagePolicy?: NativeImagePolicy;
   responsive?: ResponsiveSource;
+  boundaryTable?: import('./boundaries.js').BoundaryTable;
+  executionPolicy?: PreparationExecutionPolicy;
   shared: {
     decisions: Array<{ key: string; value: unknown; evidence: PreparationFileRef[] }>;
     compatibility: Array<{ key: typeof PREPARATION_COMPATIBILITY_KEYS[number]; status: 'verified' | 'not-applicable' | 'unresolved'; reason: string; evidence: PreparationFileRef[] }>;
@@ -54,7 +58,7 @@ export interface PreparationPlan {
 }
 export interface PreparationJob {
   version: 1; kind: 'clonewp-preparation-job'; taskId: string; runId: string;
-  jobId: 'header' | 'body-1' | 'body-2'; responsibility: 'header' | 'body';
+  jobId: PreparationJobId; responsibility: 'header' | 'body';
   contractHash: string; sharedHash: string;
   sectionKeys: string[]; sourceUnitIds: string[]; sourceFactIds: string[]; estimatedEffort: number;
 }
@@ -66,6 +70,7 @@ export interface PreparationJobResult {
   componentGuidanceReview?: ComponentGuidanceReview;
   version: 1; kind: 'clonewp-preparation-result'; taskId: string; runId: string;
   jobId: PreparationJob['jobId']; contractHash: string; sharedHash: string;
+  workRevision?: number;
   header?: HeaderModulePlan; sections?: PreparationSectionResult[];
 }
 export interface PreparationMergeInputs { sourceFacts: SourceFactsV2; sourceUnits: BodySourceUnits }
@@ -77,6 +82,7 @@ export interface MergedPreparation {
   header?: HeaderModulePlan; program: Native44Program; css: string; sourceUnits: BodySourceUnits;
   buildDiagnostics: PreparationBuildDiagnostic[];
   navigationForms?: NavigationFormSpec[];
+  configurator?: FullReplicaConfiguratorSpec;
   reviewSkipPolicy?: TaskReviewSkipPolicy;
   nativeImagePolicy?: NativeImagePolicy;
   responsive?: ResponsivePlan;

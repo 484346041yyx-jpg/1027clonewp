@@ -22,11 +22,14 @@ export function verifyPreparationVisualTargets(plan: PreparationPlan, source: So
         const visible = section.sourceFactIds.map(id => source.facts[id]).filter(fact => fact?.snapshotId === snapshot.id && fact.kind === 'media' && fact.value.visible === true);
         if (!visible.length || new Set(ids).size !== ids.length || visible.some(fact => !ids.includes(fact.id)) || ids.some(id => !visible.some(fact => fact.id === id)) || new Set(visible.map(fact => fact.nodeId)).size !== target.count) preparationFail('body_visual_target_items');
       } else if (target.kind === 'geometry') {
-        const fact = facts[0], rect = fact.value.rect as Record<string, number> | undefined;
-        if (fact.kind !== 'layout' || !rect || Object.entries(target.rect).some(([dimension, value]) => !close(rect[dimension], value))) preparationFail('body_visual_target_geometry');
+        const fact = facts[0], rect = (fact.kind === 'layout' ? fact.value.rect : ['text','media'].includes(fact.kind) ? (fact.value.layout as {rect?:Record<string,number>} | undefined)?.rect : undefined) as Record<string, number> | undefined;
+        // A body may contain several section owners in one captured source
+        // region. Text/media facts retain the exact packet layout for their
+        // node, so these measured rectangles are valid visual targets too.
+        if (!rect || Object.entries(target.rect).some(([dimension, value]) => !close(rect[dimension], value))) preparationFail('body_visual_target_geometry');
       } else {
         const fact = facts[0], style = fact.value.style as Record<string, string> | undefined;
-        if (!['layout', 'text'].includes(fact.kind) || !style || style[target.property] !== target.value) preparationFail('body_visual_target_paint');
+        if (!['layout', 'text', 'media'].includes(fact.kind) || !style || style[target.property] !== target.value) preparationFail('body_visual_target_paint');
       }
     }
     for (const snapshot of source.snapshots.filter(item => item.viewport.name.startsWith('desktop'))) {

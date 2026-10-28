@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Reference websites reproduced as native editable Elementor pages",
   "scripts": {
+    "site:config": "tsx src/core/site-cli.ts",
     "build": "node tools/build.mjs",
     "test": "node tools/test.mjs",
     "create": "tsx src/replica-full/entry.ts",

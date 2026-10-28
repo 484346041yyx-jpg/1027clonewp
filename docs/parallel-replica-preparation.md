@@ -4,6 +4,8 @@
 
 这是新复刻任务的默认准备阶段，独立实现位于 `src/replica-preparation/`。它位于真实来源观察与现有完整manifest之间，不改变 `src/native44/` 组件实现或现有远端执行器，也不创建独立技能入口。已有完整manifest、旧组件任务和续跑保持各自冻结入口，不自动迁移。
 
+新初始化 v8 冻结 `executionPolicy`，按 [统一协调与执行减耗](replica-coordination.md) 使用两个浏览器工作窗口、一个中心、有限并发工作包、同任务材料复用、整页集中对比及批量返修。原质量门、发布和编辑器收尾完整保留；不为旧准备记录补字段或重分组。
+
 用户直接提供复刻网站时，由当前代理完成取证、生成准备合同、调度子任务、接收结果及合并。用户不需要填写JSON、选择协作模式或再次提醒默认规则。
 
 ## 先减少返工
@@ -14,7 +16,7 @@
 
 按 [通用三步复刻](three-step-replica.md) 落实前两步。v6 准备包自动附 `productionGuide` v2：各来源宽度的功能区、外层/内容几何、父子分组、排列/对齐候选、间距与宽度比例、隐藏内容和交互所有者。准备者结合截图决定主要容器和内部组，不机械复制 DOM，不接受默认外观。合并后同一指南附真实容器树及内容映射；`build-diagnostics.json` 的关系/对齐/替换提示用于具名处理待办，不因视觉推断增加禁止下一步的关口。安全、身份、结构合同与远端并发保护不放宽。
 
-协调者使用已连接的准确来源标签，新任务使用 preparation v6（合并后仍生成现有 full-replica v4 manifest），一次取得1920×1080、1440×1000及两个手机宽度的来源事实与截图。手机材料进入同一合同的responsive.source，生成前决定进入 `responsive.version:2` 的 `decisions`；正文每组同时负责自己的桌面与手机表现，页眉组同时负责同一WHB的Desktop/Mobile布局。旧任务仍按原冻结范围。一次冻结同任务共享材料，各组复用文件及哈希；不由每组重复操作来源浏览器或各自重抓。
+协调者使用已连接的准确来源标签，新任务使用 preparation v8（继承 v6 的完整来源和样式目标，合并后仍生成现有 full-replica v4 manifest），一次取得1920×1080、1440×1000及两个手机宽度的来源事实与截图。手机材料进入同一合同的responsive.source，生成前决定进入 `responsive.version:2` 的 `decisions`；正文每组同时负责自己的桌面与手机表现，仅当制作范围包含页眉时页眉组负责同一WHB的Desktop/Mobile布局。旧任务仍按原冻结范围。一次冻结同任务共享材料，各组复用文件及哈希；不由每组重复操作来源浏览器或各自重抓。
 
 用户明确要求原样复用既有页眉的 preparation v8 / full v4 任务，使用绑定页眉 ID、共享哈希及真实资源证据的 `reuse-readonly` 决定，不新建或改写共享页眉；仅免除来源页眉几何、滚动策略及页眉专属悬停的等价制作义务。来源原始信息不删除，正文的双端布局、悬停及轮播验证保持，目标仍须核对单一页眉、Logo、菜单实际打开和当前资源指纹。该作用域不适用于自有新页眉，也不迁移旧任务。
 
@@ -37,7 +39,9 @@
 
 ## 并发产出与文件所有权
 
-`clonewp-replica-preparation` 合同生成不可变任务包，真实模型并发由当前任务的原生协作工具调度。分组默认为页眉/菜单一组、正文最多两组。正文按依赖划分：共享布局、状态、轮播控制或展开行为的板块保持同组；不机械按上下半页平分，不为增加并发强拆单个板块。
+`clonewp-replica-preparation` 合同生成不可变任务包，真实模型并发由当前任务的原生协作工具调度。新初始化 v8 的 `executionPolicy` 固定 `browserMode:two-window-single-controller`、`reviewMode:whole-page-batched`、`remoteWrites:serial`、`reuse:task-hash-bound`；`maxWorkers` 为含页眉包的制作槽总数，最多3，中心不计入制作槽。默认按正文区域数量选1/2/3并受真实依赖组数量限制，不创建空闲代理凑数；常规页面通常2个。`targetSectionsPerJob:3` 是分包软目标，预计工作量、连通依赖和复杂区域优先。`body-N` 工作包可多于槽位，空闲代理继续接队列；只有明确制作页眉时才创建 `header` 工作包。没有 `executionPolicy` 的冻结任务仍按历史 `header/body-1/body-2` 规则，不追补默认。
+
+正文按依赖划分：共享布局、状态、轮播控制或展开行为的板块保持同组；不机械按上下半页平分，不为增加并发强拆单个板块。中心独占共享规范及浏览器，合并前检查跨包 CSS、组件身份、正文顺序、边界间距和全部来源覆盖。各组产出是候选方案，不能代替合并后的实际整页验收。
 
 | 角色 | 可做的工作 | 写入边界 |
 | --- | --- | --- |
@@ -47,7 +51,7 @@
 
 准备代理只读共享来源与规范，不读取凭据、不认证或修改WordPress，不操作共享浏览器、不改全局规范/全局样式，不写其它组文件或旧组件代码。每个代理启动前说明文件所有权及协作者存在，禁止撤销他人修改。各正文结果逐项填入 `fidelity` 实现方式及实际组件键；合并时拒绝缺项、跨板块组件、来源事实没有落到所列组件的情况。实现声明不是前台通过证明，后续仍须用浏览器实测。新能力的实现/数据路径与原方案独立；原页面、菜单、组件方案和源码不迁移。
 
-协调者先并发启动各组；每组在开始产出方案前执行 `start`，完成自己的方案后保存精确输出并执行 `complete`。结果身份、共享规范/来源哈希、所属分区及文件引用须通过校验才登记完成。本地持久化的短锁可以排队，不等于模型准备串行；未开始产出的排队不能伪装为已运行。协作工具不可用、身份/范围冲突或缺关键结果时，停在本地并具名报告，禁止静默串行降级或把读取成品的 `Promise.all` 称为方案并行。
+协调者在冻结槽位内启动各组；每组在开始产出方案前登记领取/`start`，完成自己的方案后保存精确输出并执行 `complete`，再由空闲代理领取后续包。结果身份、共享规范/来源哈希、所属分区及文件引用须通过校验才登记完成。本地持久化的短锁可以排队，不等于模型准备串行；未开始产出的排队不能伪装为已运行。协作工具不可用、身份/范围冲突或缺关键结果时，停在本地并具名报告，禁止静默串行降级或把读取成品的 `Promise.all` 称为方案并行。
 
 素材清单在调度前冻结，准备结果只包含页眉或分配板块，不自行新增素材机制。准备代理使用该清单；发现缺少必需资源时登记并返回具名缺口，由协调者按正常流程处理，不擅自添加或替换。协调者负责的本地格式转换/尺寸和文件检查，可在来源与文件所有权确定后与方案准备重叠。同一素材按实际字节及来源证据去重，保留各显示位置；禁止借并发创建重复远端媒体。所有目标站认证、素材上传、草稿/页眉/菜单/样式保存由协调者沿原受保护流程串行执行。
 
@@ -66,6 +70,8 @@
 记录各组的实际开始/完成以及整体并发准备wall time；分别记录本地处理/合并、远端操作、修正和最终验收的实际阶段时间。单命令使用单调时钟；跨代理开始/完成使用UTC时间测量并明确标签，不能冒充同一进程的单调计时。取证、共享规范等由协调者记录；没有测量的阶段标记未测量，不填0或按主观估算补齐。
 
 协调者在取证前，对本任务已存在的 `references/TASK` 材料目录执行 `phase ... --stage source-observation --event start`，保存返回的marker；阶段结束时用该marker提交 `succeeded`，失败或取消也分别提交 `failed`/`cancelled`，保留真实耗时。共享规划、本地素材和最终视觉验收同样分别使用 `shared-planning`、`material-preparation`、`visual-acceptance`。日志只存阶段、UUID和UTC，位于该目录的 `phase-events.json`，不保存来源正文、URL、凭据或错误敏感原文。
+
+新增阶段及实际登记原则见 [统一协调的实测说明](replica-coordination.md#实测与报告)。`phases` 同时返回原始 `timing` 和区间并集 `summary`，不能把可重叠阶段时长相加为总时间；进行中、时钟异常和缺测如实保留。`body-production/local-merge/remote-save/batched-repair/browser-wait/editor-recovery/publication/editor-completion` 按实际事件登记，平台开发/测试单独用 `system-development/system-testing`，不补造历史事件。
 
 ```powershell
 npm run replica:prepare -- phase --directory D:/cloneWP/references/TASK --stage source-observation --event start
@@ -87,14 +93,24 @@ npm run replica:prepare -- phases --directory D:/cloneWP/references/TASK
 npm run create:replica -- D:/cloneWP/references/TASK/preparation.json --run-dir D:/cloneWP/runs/RUN
 ```
 
-返回 `awaiting-preparation` 后，协调者并发启动页眉/菜单及所需正文组，各组执行自己的开始、产出和完成流程。最多使用 `header`、`body-1`、`body-2`，不得创建合同外的额外组。
+返回 `awaiting-preparation` 后，协调者读取实际工作包与并发槽，在当前任务协作工具中启动相应制作代理。新 `executionPolicy` 任务只使用生成的 `body-N` 及本范围实际需要的 `header`，不得凭空创建额外包；无策略的旧冻结任务仍最多 `header`、`body-1`、`body-2`。队列记录不自动创建普通聊天，不授予远端写入权限。
 
 ```powershell
-npm run replica:prepare -- start --directory D:/cloneWP/runs/RUN-preparation --job header
-npm run replica:prepare -- complete --directory D:/cloneWP/runs/RUN-preparation --job header --result D:/cloneWP/runs/RUN-preparation/jobs/header/result.json
+npm run replica:prepare -- next --directory D:/cloneWP/runs/RUN-preparation --worker body-worker-a
+npm run replica:prepare -- complete --directory D:/cloneWP/runs/RUN-preparation --job body-1 --result D:/cloneWP/runs/RUN-preparation/jobs/body-1/result.json
 ```
 
+`next` 使用稳定逻辑 worker ID 原子领取当前可用包；读回的 job、packet、resultPath 和 `workRevision` 才是本轮输出依据，示例 `body-1` 不可代替实际返回身份。中心随后通过当前协作工具启动实际模型制作，空闲 worker 完成后再次 `next`。`start --job JOB [--worker WORKER]` 保留显式领取入口，策略任务仍守总槽位及同 worker 一个运行包。已运行包不会因超时被自动抢占，须确认原制作停止后显式 `fail`。初次结果 `workRevision` 可省略为0，返修结果必须对应新的值。
+
 准备代理遇到不能完成的具名缺口时返回协调者，并用 `fail --directory DIR --job JOB` 保留本组失败阶段及耗时，不填造结果或完成状态；该组失败会阻止统一合并。缺口解决且冻结合同未变时，可对该失败组再次 `start`，旧失败记录保留在 `previousAttempts`，其它完成组不重复准备；合同改变则停止复用旧结果。阶段状态以实际读回为准。
+
+合并前要批量退回候选结果时，中心准备 `version:1, kind:clonewp-preparation-rework, taskId, runId, contractHash, requests:[{jobId,expectedResultSha256,reason}]` 文件。每条 reason 具名描述至少10字符的问题；哈希必须是该包当前结果，整批先校验身份再变更。执行：
+
+```powershell
+npm run replica:prepare -- rework --directory D:/cloneWP/runs/RUN-preparation --evidence D:/cloneWP/references/TASK/rework.json
+```
+
+原结果归档、owner保留且 `workRevision` 增加，`next` 优先让原负责人处理自己的返修；旧版本结果不能覆盖新一轮。同结果哈希的 `complete` 重试按实际已完成状态幂等，不增加重复修订。已经合并的任务拒绝本地 rework，返回 `rework_requires_current_revision`；实际页面问题按协调 `repairPlan` 归组后走现有 revision/CAS，不覆盖旧冻结准备结果或旧 full manifest。
 
 全部必需结果完成后，由协调者统一合并；该步骤继续调用既有完整正文准备质量门，保留真实 `task-native-body-component-plan` v1，不自动填造选型批准或视觉通过。
 
@@ -104,4 +120,4 @@ npm run replica:prepare -- status --directory D:/cloneWP/runs/RUN-preparation
 npm run create:replica -- D:/cloneWP/runs/RUN-preparation/merged-MERGE_ID/full-manifest.json --run-dir D:/cloneWP/runs/RUN
 ```
 
-`status` 输出实际准备阶段耗时和未测量项；远端执行继续使用完整任务自身记录。若输出目录或完整manifest路径与示例不同，使用命令读回的精确路径。旧任务不通过新准备合同重新包装，避免改动冻结程序、资源与通过证据。
+`status` 输出实际准备阶段耗时和未测量项。策略任务还返回 `coordination` 及 `queue` 的实际槽位、running/ready/failed 和领取提示；`activeWallMs` 是运行区间并集，`spanMs` 是首轮开始到最终完成的经过时间，`workerOccupancyMs` 是工作包占用时间之和，不能把后者当用户等待。缺少结束事件的活动包如实显示，失败和旧尝试保留。远端执行继续使用完整任务自身记录；外部 phase 日志也要一起读。若输出目录或完整manifest路径与示例不同，使用命令读回的精确路径。旧任务不通过新准备合同重新包装，避免改动冻结程序、资源与通过证据。

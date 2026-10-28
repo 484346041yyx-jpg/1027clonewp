@@ -5,13 +5,32 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { recordPreparationPhase, readPreparationPhases } from '../src/replica-preparation/phase-events.js';
 import { runPreparationCLI, parsePreparationArgs } from '../src/replica-preparation/cli.js';
+import { claimWorkspace, checkpointWorkspace, inspectWorkspace } from '../src/workspace/service.js';
 
 async function fixture(work: (directory: string) => Promise<void>) {
-  const directory = path.join('D:/cloneWP/references', `phase-events-test-${randomUUID()}`); await mkdir(directory);
-  try { await work(directory); } finally {
-    const resolved = path.resolve(directory);
-    assert.ok(resolved.startsWith(path.resolve('D:/cloneWP/references') + path.sep));
-    await rm(resolved, { recursive: true, force: true });
+  const name = `phase-events-test-${randomUUID()}`, directory = path.join('D:/cloneWP/references', name);
+  const status = await inspectWorkspace('D:/cloneWP');
+  const owner = await claimWorkspace('D:/cloneWP', { agent: 'codex', sessionId: name, taskId: name, expectedRevision: status.revision, expectedFingerprint: status.fingerprint, resources: [`local:references/${name}`] });
+  const originalToken = process.env.CLONEWP_WORKSPACE_TOKEN;
+  process.env.CLONEWP_WORKSPACE_TOKEN = owner.token;
+  try {
+    await mkdir(directory);
+    await work(directory);
+  } finally {
+    try {
+      const resolved = path.resolve(directory);
+      assert.ok(resolved.startsWith(path.resolve('D:/cloneWP/references') + path.sep));
+      await rm(resolved, { recursive: true, force: true });
+    } finally {
+      if (originalToken === undefined) delete process.env.CLONEWP_WORKSPACE_TOKEN;
+      else process.env.CLONEWP_WORKSPACE_TOKEN = originalToken;
+      const current = await inspectWorkspace('D:/cloneWP');
+      await checkpointWorkspace('D:/cloneWP', {
+        token: owner.token, expectedRevision: owner.revision, expectedFingerprint: current.fingerprint,
+        notes: { goal: 'Preparation phase fixture', summary: 'Validated local phase event behavior', progress: 'completed', decisions: [], changes: [], checks: [], openItems: [], nextSteps: ['Continue project testing'] },
+        release: true,
+      });
+    }
   }
 }
 

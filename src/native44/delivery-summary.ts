@@ -1,3 +1,4 @@
+import { runResources } from '../workspace/operation-resources.js';
 import path from 'node:path';
 import { mkdir, readFile, realpath, rename, stat, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
@@ -122,7 +123,7 @@ async function pendingSummary(root: string, runDir: string, generatedAt: string)
  * to a completion call; stdout alone is never a delivery artifact. */
 export async function emitNative44DeliverySummary(rootInput: string, runId: string, options: { expectedState?: Pick<Native44CurrentState, 'taskId' | 'runId' | 'pageId' | 'documentHash'>; remoteObservation?: Native44DeliveryRemoteObservation; pendingReviewCapture?: Native44CurrentRef; lockHeld?: true } = {}) {
   const root = await realpath(rootInput); if (!/^[A-Za-z\d][A-Za-z\d_.-]{0,159}$/.test(runId) || runId.includes('..')) fail('run_invalid');
-  const unlock = options.lockHeld ? undefined : await acquireLock(root);
+  const unlock = options.lockHeld ? undefined : await acquireLock(root, await runResources(root, runId));
   try {
     const originalRun = path.join(root, 'runs', runId), initial = await reuseNative44CurrentStateForDelivery(root, runId, options.expectedState) ?? await readNative44CurrentState(root, originalRun), runDir = path.join(root, 'runs', initial?.runId ?? runId); if (await realpath(runDir) !== runDir) fail('run_alias');
     const pending = !initial ? await pendingSummary(root, runDir, new Date().toISOString()) : undefined;

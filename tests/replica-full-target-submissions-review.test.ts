@@ -66,6 +66,26 @@ test('only factory-authorized database-only forms with exact current models and 
   } finally { await fixtureData.cleanup(); }
 });
 
+test('exact configurator Form extension keeps native submission policy and DOM checks', async () => {
+  const f = await fixture();
+  try {
+    const rowId = (name: string) => hash(`native-form-field\u0000${f.elementId}:${name}`).slice(0, 7);
+    const fields = f.currentElements[0].settings.form_fields;
+    fields.push({ _id: rowId('configuration'), custom_id: 'configuration', field_type: 'hidden', field_label: 'Bottle configuration', required: '', width: '100' });
+    fields.push({ _id: rowId('logo'), custom_id: 'logo', field_type: 'upload', field_label: 'Logo', required: '', width: '100', file_types: 'png,jpg,jpeg,webp', file_sizes: 5, allow_multiple_upload: '', attachment_type: 'link' });
+    const configurator = { formWidgetId: f.elementId, summaryField: 'configuration', uploadField: 'logo' };
+    const authorization = await prepareTargetSubmissionFormReview({ root: ROOT, program: f.program, pageId: f.pageId,
+      currentElements: f.currentElements, read: async (ref, base = ROOT) => { const filename = path.resolve(base, ref.path), bytes = await readFile(filename); return { filename, bytes }; }, configurator });
+    const html = f.html.replace('<button type="submit">', '<input id="form-field-configuration" name="form_fields[configuration]" type="hidden"><input id="form-field-logo" name="form_fields[logo]" type="file"><button type="submit">');
+    assert.deepEqual(withoutAuthorizedTargetSubmissionForms(f.parseForms(html), authorization), []);
+    const bad = f.parseForms(html.replace('name="form_fields[configuration]"', 'name="form_fields[forged]"'));
+    assert.throws(() => withoutAuthorizedTargetSubmissionForms(bad, authorization), /dom_extra_hidden_control/);
+    fields[2].file_sizes = 99;
+    await assert.rejects(() => prepareTargetSubmissionFormReview({ root: ROOT, program: f.program, pageId: f.pageId,
+      currentElements: f.currentElements, read: async (ref, base = ROOT) => { const filename = path.resolve(base, ref.path), bytes = await readFile(filename); return { filename, bytes }; }, configurator }), /configurator_fields/);
+  } finally { await f.cleanup(); }
+});
+
 test('registered non-business paint may be resolved without changing the source-authorized form semantics', async () => {
   const fixtureData = await fixture();
   try {

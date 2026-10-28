@@ -15,6 +15,8 @@ export const HEADER_MODULE_HELP = `Independent WoodMart header modules (no legac
   init --bundle DIR --plan FILE --choice FILE [--media FILE]
   status --bundle DIR
   plan-menu-review --bundle DIR --public-url URL
+  plan-menu-editor-review --bundle DIR
+  verify-menu-editor --bundle DIR --evidence FILE
   inspect --bundle DIR
   provision --bundle DIR
   update-header --bundle DIR
@@ -35,6 +37,8 @@ const COMMAND_FLAGS: Record<string, { required: string[]; optional?: string[] }>
   init: { required: ['bundle', 'plan', 'choice'], optional: ['media'] },
   status: { required: ['bundle'] }, inspect: { required: ['bundle'] }, provision: { required: ['bundle'] },
   'plan-menu-review':{required:['bundle','public-url']},
+  'plan-menu-editor-review':{required:['bundle']},
+  'verify-menu-editor':{required:['bundle','evidence']},
   'update-header': { required: ['bundle'] }, 'update-style': { required: ['bundle'] },
   'update-menu': { required: ['bundle', 'menu'] }, 'create-page': { required: ['bundle', 'title', 'slug'] },
   'update-menu-content': { required: ['bundle', 'content'] },
@@ -81,10 +85,11 @@ function mediaInput(value: unknown): Record<string, number> {
 export async function runHeaderModuleCLI(args: string[]): Promise<unknown> {
   const { command, flags } = parseHeaderModuleArguments(args);
   if (command === 'help') return { help: HEADER_MODULE_HELP, remoteWrites: 0 };
-  if (!['route', 'status', 'plan-menu-review'].includes(command)) await assertWorkspaceAccess('D:/cloneWP');
+  if (!['route', 'status', 'plan-menu-review', 'plan-menu-editor-review', 'verify-menu-editor'].includes(command)) await assertWorkspaceAccess('D:/cloneWP');
   if (command === 'route') return routeReplicaHeaderChoice(await inputJSON(flags.choice));
   if (command === 'init') {
-    const plan = validateHeaderModulePlan(await inputJSON(flags.plan));
+    const input = await inputJSON(flags.plan) as Record<string, unknown>;
+    const plan = validateHeaderModulePlan({ ...input, menuBindingPolicy: input.menuBindingPolicy ?? (await import('./menu-binding.js')).defaultMenuBindingPolicy() });
     const choice = validateReplicaHeaderChoice(await inputJSON(flags.choice));
     if (choice.provider !== 'woodmart-header-builder') throw new Error('woodmart_header_cli_provider_mismatch');
     const media = flags.media ? mediaInput(await inputJSON(flags.media)) : {};
@@ -96,6 +101,11 @@ export async function runHeaderModuleCLI(args: string[]): Promise<unknown> {
     return { status: 'planned', bundle: bundle.directory, identity: bundle.state.identity, planHash: modulePlanHash(plan), independentlyEditable: ['header.json', 'menus.json', 'header.css', 'fonts.json'], remoteWrites: 0 };
   }
   const bundle = await loadHeaderBundle(flags.bundle);
+  if(command==='plan-menu-editor-review') {
+    const { plannedHeaderMenus, HEADER_MENU_SELECT_READER } = await import('./menu-binding.js');
+    const { headerModuleElementId } = await import('./compiler.js');
+    return {status:'needs-browser-evidence',policy:bundle.plan.menuBindingPolicy??null,editorUrl:bundle.plan.targetOrigin+'/wp-admin/admin.php?page=xts_header_builder#/builder/'+bundle.state.identity.headerId,checks:plannedHeaderMenus(bundle.plan).map(slot=>({...slot,elementId:headerModuleElementId(bundle.plan.moduleKey,slot.key)})),readSelect:HEADER_MENU_SELECT_READER,remoteWrites:0};
+  }
   if(command==='plan-menu-review')return{status:'needs-browser-evidence',plans:(await import('./menu-review.js')).headerMenuReviewPlans(bundle,flags['public-url']),remoteWrites:0};
   // The public replica entry always requires the frozen source split. The
   // lower-level service can also be used to author a standalone header only.
@@ -120,9 +130,17 @@ export async function runHeaderModuleCLI(args: string[]): Promise<unknown> {
   const options={targetUrl:config.targetUrl,username:credentials.wp_user,applicationPassword:credentials.wp_app_password,networkRoute:config.wordpressNetworkRoute},session=new WordPressConnection(options);
   const transport = new WoodMartHeaderTransport(options,session);
   const contentClient = bundle.plan.menuContent ? new (await import('../../wordpress/client.js')).WordPressClient({...options, executionStrategy: 'native44-css-handoff' },session) : undefined;
-  const driver = new WordPressHeaderModuleDriver(transport, contentClient);
+  const driver = new WordPressHeaderModuleDriver(transport, contentClient, bundle.plan.menuBindingPolicy?.version);
   try {
     switch (command) {
+      case 'verify-menu-editor': {
+        const observed=await inspectHeaderModule(bundle.directory,driver),module=observed.snapshot.module;
+        if(!bundle.plan.menuBindingPolicy||!module?.header)throw Error('woodmart_header_cli_menu_review_not_ready');
+        const evidence=await inputJSON(flags.evidence) as {observedAt:string;selections:unknown};
+        const {headerJsonHash}=await import('../contract.js'),{verifyHeaderMenuEditorEvidence}=await import('./menu-binding.js'),{readNativeContentRef}=await import('../../native44/content-source.js');
+        await verifyHeaderMenuEditorEvidence({plan:bundle.plan,headerId:bundle.state.identity.headerId,taskId:bundle.plan.owner.ownerId,runId:bundle.plan.owner.runId,fingerprint:headerJsonHash({header:module.header,menus:module.menus}),headerHash:headerJsonHash(module.header),observedAt:evidence.observedAt,references:evidence.selections,base:path.dirname(path.resolve(flags.evidence)),saved:{raw:module.header,contract:observed.contract,resources:observed.resources},read:async(ref,base)=>({bytes:await readNativeContentRef(ref,base),filename:path.resolve(base??ROOT,ref.path)})});
+        return {status:'verified',scope:'native-menu-editor-selections',remoteWrites:0};
+      }
       case 'inspect': return inspectHeaderModule(bundle.directory, driver);
       case 'provision': return provisionHeaderModule(bundle.directory, driver);
       case 'update-header': return updateHeaderModule(bundle.directory, driver, 'header');

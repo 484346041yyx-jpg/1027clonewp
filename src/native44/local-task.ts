@@ -102,7 +102,7 @@ export async function prepareLocalTask(filename: string, projectRoot: string, op
     if (componentPlan.components.some(component => parents.get(component.id) !== component.parentId)) throw Error('Desktop component parent ownership differs from the authored plan');
   }
   for (const planned of componentPlan.components) {
-    const node = components.get(planned.id), renderer = node?.kind === 'html-static' ? 'html' : node?.kind === 'native-carousel' ? 'carousel' : node?.kind === 'native-products' ? 'products' : node?.kind === 'native-posts' ? 'native' : node?.kind;
+    const node = components.get(planned.id), renderer = node?.kind === 'html-static' ? 'html' : node?.kind === 'native-carousel' ? 'carousel' : node?.kind === 'native-products' || node?.kind === 'native-related-products' ? 'products' : node?.kind === 'native-posts' || node?.kind === 'native-categories' ? 'native' : node?.kind;
     if (!node || renderer !== planned.renderer) throw Error(`native44 renderer differs from plan: ${planned.id}`);
     if (node.sourceFactIds?.some(id => !sourceFacts.facts[id])) throw Error(`native44 unknown source fact ${node.key}`);
     if (node.kind === 'html-static') for (const candidate of node.exception.candidates) for (const ref of candidate.evidence) await readRef(root, jobDir, ref);

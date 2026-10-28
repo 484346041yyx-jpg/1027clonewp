@@ -1,3 +1,4 @@
+import { runResources } from '../workspace/operation-resources.js';
 import path from 'node:path';
 import { mkdir, readFile, readdir, realpath, stat, writeFile } from 'node:fs/promises';
 import { z } from 'zod';
@@ -125,7 +126,7 @@ async function validateInputs(root: string, request: Native44RevisionRequest, jo
 /** Preparation is local and reviewable. No target configuration or credential is loaded. */
 async function prepareRevision(rootInput: string, input: unknown) {
   const request = Native44RevisionRequestSchema.parse(input), root = await checkedRoot(rootInput); noSecrets(request);
-  const unlock = await acquireLock(root);
+  const unlock = await acquireLock(root, await runResources(root, request.runId));
   try {
     await ensureDiskSpaceV2(root); const current = await baseline(root, request), inputs = await validateInputs(root, request, current.journal, current.before, current.lock);
     if (await optionalBytes(path.join(current.folder, 'bundle.json'))) fail('operation_already_prepared');
@@ -189,7 +190,7 @@ async function finalize(root: string, data: Awaited<ReturnType<typeof loadBundle
 /** One remote save per explicit apply. Lost replies are reconciled by exact
  * readback; a before-state result authorizes an explicit later retry only. */
 async function applyRevision(rootInput: string, runId: string, operationId: string, deps: Native44RevisionDependencies, mode: 'apply' | 'reconcile' = 'apply') {
-  const root = await checkedRoot(rootInput), unlock = await acquireLock(root);
+  const root = await checkedRoot(rootInput), unlock = await acquireLock(root, await runResources(root, runId));
   let remote: Native44RevisionRemote | undefined;
   try {
     await ensureDiskSpaceV2(root); const data = await loadBundle(root, runId, operationId), parent = await assertParent(root, data);
@@ -226,7 +227,7 @@ async function applyRevision(rootInput: string, runId: string, operationId: stri
 /** Read-only reports are imported by reference after their pixels, hashes and
  * current document identity validate; importing a review never changes a page. */
 async function recordRevisionReview(rootInput: string, runId: string, input: { verification: Native44CurrentRef; visualReview: Native44CurrentRef; acceptanceObservation: Native44CurrentRef }) {
-  const root = await checkedRoot(rootInput), unlock = await acquireLock(root);
+  const root = await checkedRoot(rootInput), unlock = await acquireLock(root, await runResources(root, runId));
   try {
     await ensureDiskSpaceV2(root); const paths = await location(root, runId), old = await optionalBytes(paths.pointerFile); if (!old) fail('current_revision_missing');
     const pointer = JSON.parse(old.toString('utf8')) as Native44CurrentRevisionPointer; if (pointer.version !== 2) fail('review_requires_explicit_v2_revision');

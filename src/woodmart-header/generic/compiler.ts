@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { canonicalHeaderJson, headerTargetOrigin, type HeaderJson } from '../contract.js';
 import type { WhbLayoutNode, WhbParameter, WhbRawHeader } from '../layout.js';
 import { HEADER_COLUMN_POSITIONS, HEADER_ROW_SLOTS, validateHeaderModulePlan, type HeaderColumnPosition, type HeaderModuleElementType, type HeaderRowSlot } from './contract.js';
+import { assertNativeHeaderMenuBindings } from './menu-binding.js';
 
 /** Every type, value domain, default and skeleton ID is captured from the target. */
 export interface NativeHeaderFieldSchema {
@@ -18,6 +19,7 @@ export interface NativeHeaderElementContract { type: string; schema: NativeHeade
 export interface NativeHeaderContract {
   kind: 'clonewp-whb-native-contract';
   version: 1;
+  menuBindingVersion?: 1;
   targetOrigin: string;
   fingerprint: string;
   structure: WhbLayoutNode;
@@ -155,9 +157,10 @@ export function compileHeaderModule(planInput: unknown, headerId: string, contra
         const actual = own(contract.elements, element.type) as NativeHeaderElementContract | undefined;
         if (!actual || typeof actual.type !== 'string' || !actual.type) fail(`element_contract_missing_${element.type}`);
         const bindings: Record<string, HeaderJson> = {};
-        if (element.type === 'mainmenu') {
+        if (element.type === 'mainmenu' || element.type === 'menu') {
           const fields = Object.entries(actual.schema).filter(([, schema]) => schema.resource === 'menu');
           if (fields.length !== 1) fail('menu_field_contract_invalid');
+          if (plan.menuBindingPolicy && (fields[0][0] !== 'menu_id' || fields[0][1].type !== 'select' || fields[0][1].valueType !== 'string')) fail('native_menu_select_required');
           bindings[fields[0][0]] = resources.menus[element.menuKey!].slug;
         }
         const compiled = compileParams(actual.schema, element.params, bindings);
@@ -176,5 +179,6 @@ export function compileHeaderModule(planInput: unknown, headerId: string, contra
   const settings = { ...clone(contract.settings), ...compileParams(contract.settingsSchema, plan.layout.settings) };
   const result: WhbRawHeader = { id: headerId, name: plan.name, structure, settings };
   tree(result.structure);
+  assertNativeHeaderMenuBindings(plan, result, contract, resources, key => headerModuleElementId(plan.moduleKey, key));
   return result;
 }

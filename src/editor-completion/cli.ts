@@ -1,3 +1,4 @@
+import { remoteResource } from '../workspace/operation-resources.js';
 import path from 'node:path';
 import { readFile, realpath, stat } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
@@ -37,7 +38,7 @@ export async function runEditorCompletionCLI(args: string[], rootInput = 'D:/clo
   if (specs[command].some(k => !flags[k])) throw Error('editor_completion_arguments');
   const root = await realpath(rootInput), dir = await editorPath(root, flags['run-dir']), task = await resolveEditorTask(root, dir), scope = task.scope;
   if (command === 'status') return editorCompletionGate(dir, scope, true);
-  const unlock = await acquireLock(root); let transport: WoodMartHeaderTransport | undefined;
+  const unlock = await acquireLock(root, [remoteResource(scope.targetOrigin, 'post', scope.pageId), `local:runs/${scope.runId.toLowerCase()}`]); let transport: WoodMartHeaderTransport | undefined;
   try {
     // Resolve local task, file identities and input sizes before credentials.
     let expected: ReturnType<typeof editorDocumentSchema.parse> | undefined, previous: ReturnType<typeof editorDocumentSchema.parse>[] = [];
@@ -66,10 +67,10 @@ export async function runEditorCompletionCLI(args: string[], rootInput = 'D:/clo
     }
     let driver = injected;
     if (!driver) { const { config, credentials } = await loadConfig(root); if (new URL(config.targetUrl).origin !== scope.targetOrigin) throw Error('editor_completion_target_changed'); transport = new WoodMartHeaderTransport({ targetUrl: config.targetUrl, username: credentials.wp_user, applicationPassword: credentials.wp_app_password, networkRoute:config.wordpressNetworkRoute }); driver = new WordPressEditorCompletion(transport); }
-    if (command === 'prepare') { await requireEditorCompletion(dir, scope.taskId, scope.runId, scope.documentHash); return prepareEditorCompletion(dir, scope, expected!, previous, driver); }
-    if (command === 'verify') return verifyEditorCompletion(dir, scope.documentHash, flags.evidence, driver);
+    if (command === 'prepare') { await requireEditorCompletion(dir, scope.taskId, scope.runId, scope.documentHash); return await prepareEditorCompletion(dir, scope, expected!, previous, driver); }
+    if (command === 'verify') return await verifyEditorCompletion(dir, scope.documentHash, flags.evidence, driver);
     // Each operation directory owns a durable intent. Unknown saves only reconcile.
-    return alignEditorCompletion(dir, scope.documentHash, driver, command === 'reconcile');
+    return await alignEditorCompletion(dir, scope.documentHash, driver, command === 'reconcile');
   } finally { try { await transport?.close(); } finally { await unlock(); } }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) runEditorCompletionCLI(process.argv.slice(2)).then(v => console.log(JSON.stringify(v, null, 2))).catch(e => { console.error(redactor()(e)); process.exitCode = 1; });

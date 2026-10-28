@@ -53,7 +53,7 @@ export function configureInquiryBlocks(blocks: Native44Component[], policy: Inqu
     node.pendingForm = {
       version:4,kind:'native44-inquiry-form-v1',
       sourceControls:previous.version === 1 ? previous.sourceControls.map(row => ({snapshotId:row.snapshotId,fieldFactIds:[row.emailFactId],submitFactId:row.submitFactId})) : previous.sourceControls,
-      appearance:previous.appearance,registered:previous.registered,knowledge:previous.knowledge,
+      appearance:previous.appearance,registered:previous.registered,knowledge:previous.knowledge,...(previous.version!==1&&previous.widthLayout?{widthLayout:previous.widthLayout}:{}),
       configuration:policy.configuration,replyToFieldId:email?.custom_id ?? '',
       decision:{policy:'submit-save-email',taskId,authorization:'project-default'},
     };

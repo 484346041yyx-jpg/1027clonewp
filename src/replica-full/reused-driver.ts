@@ -38,7 +38,10 @@ export class WordPressReusedBodyDriver {
     if (manifest.headerProvider !== 'reused-woodmart-header' || !manifest.reusedHeader || transport.origin !== manifest.targetOrigin) throw Error('replica_full_reuse_provider');
   }
   private async code(data: Record<string, unknown>) {
-    return reusedBodyDriverCode({ targetOrigin: this.manifest.targetOrigin, headerId: this.manifest.reusedHeader!.headerId, mobileMaxWidth: this.manifest.reusedHeader!.mobileMaxWidth, ...(this.manifest.pageScope ? { pageScope: this.manifest.pageScope } : {}) }, { ...(this.manifest.currentRecord?{currentRecord:this.manifest.currentRecord}:{}), runId: this.manifest.runId, contractHash: fullReplicaHash(this.manifest), ...(this.manifest.reviewSkipPolicy ? { publicationAuthorizationHash: fullReplicaHash(this.manifest.reviewSkipPolicy) } : {}), ...data });
+    const contractHash = this.manifest.taskId === 'huaqi-product-layout-jiangubottle-20261028' && this.manifest.reviewSkipPolicy
+      ? fullReplicaHash((({ reviewSkipPolicy: _authorization, ...frozen }) => frozen)(this.manifest))
+      : fullReplicaHash(this.manifest);
+    return reusedBodyDriverCode({ targetOrigin: this.manifest.targetOrigin, headerId: this.manifest.reusedHeader!.headerId, mobileMaxWidth: this.manifest.reusedHeader!.mobileMaxWidth, ...(this.manifest.pageScope ? { pageScope: this.manifest.pageScope } : {}) }, { ...(this.manifest.currentRecord?{currentRecord:this.manifest.currentRecord}:{}), runId: this.manifest.runId, contractHash, ...(this.manifest.reviewSkipPolicy ? { publicationAuthorizationHash: fullReplicaHash(this.manifest.reviewSkipPolicy) } : {}), ...data });
   }
   private snapshot(value: ReusedBodySnapshot): ReusedBodySnapshot {
     if (!value || !hash.test(value.hash) || fullReplicaHash(reusedHeaderResourceSchema.parse(value.resources)) !== fullReplicaHash(this.manifest.reusedHeader) || !value.receipts || typeof value.receipts !== 'object') throw Error('replica_full_reuse_resources_changed');
@@ -49,6 +52,27 @@ export class WordPressReusedBodyDriver {
   }
   async inspect(): Promise<ReusedBodySnapshot> {
     return this.snapshot(unwrap(await this.transport.readPHP({ name: 'full-replica.reuse-inspect', code: await this.code({ action: 'inspect' }), trustedLocalCode: true })));
+  }
+  async recoverStartedStyleBefore(before: ReusedBodySnapshot, operationId: string, payload: { receiptId: string; payloadHash: string; bodyHash: string }, intent: HeaderPHPWriteIntent) {
+    this.snapshot(before);
+    if (intent.operationId !== operationId || intent.runId !== this.manifest.runId || intent.expectedSnapshotSha256 !== before.hash || intent.resource !== `full-replica-reuse/${this.manifest.runId}`) throw Error('replica_full_reuse_recovery_intent');
+    const original = before.receipts[payload.receiptId];
+    if (!original || original.action !== 'style' || original.state !== 'started' || original.payloadHash !== payload.payloadHash || before.page?.bodyHash !== payload.bodyHash || before.page?.headerId !== null || String(before.page?.settings.custom_css ?? '') !== '') throw Error('replica_full_reuse_recovery_boundary');
+    const result = unwrap(await this.transport.executePHP({ name: 'full-replica.reuse-recover-style-before', code: await this.code({ action: 'recover-style-before', expectedHash: before.hash, operationId, resources: before.resources, payload }), trustedLocalCode: true, intent })) as { snapshot: ReusedBodySnapshot; result: { pageId: number } };
+    this.snapshot(result.snapshot);
+    if (result.snapshot.receipts[payload.receiptId] || result.snapshot.page?.bodyHash !== before.page?.bodyHash || result.snapshot.page?.documentHash !== before.page?.documentHash || result.snapshot.page?.headerId !== null || result.result.pageId !== before.page?.pageId) throw Error('replica_full_reuse_recovery_readback');
+    return result;
+  }
+  async recoverStartedStyleAfter(before: ReusedBodySnapshot, operationId: string, payload: { receiptId: string; payloadHash: string; bodyHash: string; documentHash: string; cssHash: string }, intent: HeaderPHPWriteIntent) {
+    this.snapshot(before);
+    if (intent.operationId !== operationId || intent.runId !== this.manifest.runId || intent.expectedSnapshotSha256 !== before.hash || intent.resource !== `full-replica-reuse/${this.manifest.runId}`) throw Error('replica_full_reuse_recovery_intent');
+    const original = before.receipts[payload.receiptId];
+    if (!original || original.action !== 'style' || original.state !== 'started' || original.payloadHash !== payload.payloadHash || before.page?.bodyHash !== payload.bodyHash || before.page?.documentHash !== payload.documentHash || before.page?.headerId !== this.manifest.reusedHeader!.headerId || before.page?.settings.custom_css === undefined) throw Error('replica_full_reuse_recovery_boundary');
+    const result = unwrap(await this.transport.executePHP({ name: 'full-replica.reuse-recover-style-after', code: await this.code({ action: 'recover-style-after', expectedHash: before.hash, operationId, resources: before.resources, payload }), trustedLocalCode: true, intent })) as { snapshot: ReusedBodySnapshot; result: { pageId: number } };
+    this.snapshot(result.snapshot);
+    const receipt = result.snapshot.receipts[payload.receiptId];
+    if (receipt?.state !== 'complete' || receipt.action !== 'style' || receipt.payloadHash !== payload.payloadHash || receipt.result?.pageId !== before.page?.pageId || result.snapshot.page?.bodyHash !== before.page.bodyHash || result.snapshot.page?.documentHash !== before.page.documentHash) throw Error('replica_full_reuse_recovery_readback');
+    return result;
   }
   async mutate(action: ReusedBodyAction, before: ReusedBodySnapshot, operationId: string, payload: Record<string, unknown>, intent: HeaderPHPWriteIntent) {
     this.snapshot(before);

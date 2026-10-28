@@ -13,6 +13,7 @@ import { walkNative44 } from './types.js';
 import type { LegacySchema } from '../wordpress/types.js';
 import { verifySourceFormLiveState } from './source-form-state.js';
 import { INQUIRY_ACTIONS, INQUIRY_EMAIL_CONTROLS, assertInquiryProgram, assertInquirySettings, inquiryConfigurationSchema } from './inquiry-form.js';
+import { prepareFormWidthLayout, formWidthCSSHash } from './form-width-layout.js';
 
 const hashSchema = z.string().regex(/^[a-f0-9]{64}$/);
 const refSchema = z.object({ path: z.string().min(1), sha256: hashSchema }).strict();
@@ -28,6 +29,7 @@ const pendingFormV1Schema = z.object({
 }).strict();
 const pendingFormV2Schema = pendingFormV1Schema.extend({
   version: z.literal(2), kind: z.literal('native44-pending-form-v2'),
+  widthLayout: refSchema.optional(),
   sourceControls: z.array(z.object({ snapshotId: z.string().min(1), fieldFactIds: z.array(z.string().min(1)).min(1).max(30), submitFactId: z.string().min(1), details: refSchema.optional(), stateObservation: refSchema.optional(), presentations: z.array(z.object({fieldFactId:z.string().min(1),presentationFactId:z.string().min(1)}).strict()).optional() }).strict()).length(2),
 }).strict();
 const targetSubmissionsFormSchema = pendingFormV2Schema.omit({ sourceSubmitModel: true }).extend({
@@ -62,7 +64,7 @@ export interface Native44PendingFormBinding {
 /** Opaque: only the verified local factory can create an authorization. */
 export interface PendingFormCapability { readonly kind: 'native44-pending-form-capability'; readonly componentKey: string; }
 export interface PendingFormAttributeAuthorization { readonly kind: 'native44-pending-form-attributes'; readonly elementId: string; }
-interface CapabilityData { validateForm: (widgetType: string, settings: Record<string, unknown>) => Record<string, unknown>; sourceHash: string; strictNode?: PendingFormNode; styleControls?: Native44Control[]; identity: string; node: PendingFormNode; schemaHash: string; receipt: Omit<Native44PendingFormBinding, 'elementId' | 'settingsHash'>; }
+interface CapabilityData { widthLayoutAncestorKeys?:string[]; widthLayoutCSSHash?:string; validateForm: (widgetType: string, settings: Record<string, unknown>) => Record<string, unknown>; sourceHash: string; strictNode?: PendingFormNode; styleControls?: Native44Control[]; identity: string; node: PendingFormNode; schemaHash: string; receipt: Omit<Native44PendingFormBinding, 'elementId' | 'settingsHash'>; }
 const capabilities = new WeakMap<object, CapabilityData>();
 const attributes = new WeakMap<object, { elementId: string; settingsHash: string; schemaHash: string; capability: PendingFormCapability }>();
 const fail = (reason: string): never => { throw Error(`native44_pending_form_${reason}`); };
@@ -81,6 +83,12 @@ const bytesHash = (bytes: Uint8Array) => createHash('sha256').update(bytes).dige
 const same = (a: unknown, b: unknown) => canonical(a) === canonical(b);
 function identity(program: Native44Program, node: PendingFormNode): string {
   return hash({ taskId: program.taskId, sourceUrl: program.sourceUrl, sourceFacts: program.sourceFacts, knowledge: program.knowledge, replicationProfile: program.replicationProfile, requirementProfile: program.requirementProfile, goalProfile: program.goalProfile, ...(program.inquiryPolicy ? {inquiryPolicy:program.inquiryPolicy} : {}), node });
+}
+/** Derive selector ancestry from the actual program tree, never a proof claim. */
+function formAncestorKeys(program:Native44Program,key:string):string[]{
+  const paths:string[][]=[];
+  const visit=(items:any[],parents:string[])=>{for(const item of items){if(item.key===key)paths.push(parents);visit(item.children??item.slides??[],[...parents,item.key]);}};
+  visit(program.blocks,[]);if(paths.length!==1)return fail('width_layout_ancestor_identity');return paths[0];
 }
 /** Explicit candidate syntax alone does not authorize compilation or inert. */
 export function assertNative44PendingFormCandidate(node: PendingFormNode): Native44PendingFormDeclaration {
@@ -151,14 +159,34 @@ function underneath(nodes: Record<string, any>, nodeId: string, owner: string): 
   while (current && !seen.has(current)) { if (current === owner) return true; seen.add(current); current = nodes[current]?.parentId; }
   return false;
 }
-async function verifyV2Source(root: string, source: any, node: PendingFormNode, declaration: z.infer<typeof pendingFormV2Schema> | z.infer<typeof targetSubmissionsFormSchema> | z.infer<typeof inquiryFormSchema>, schema: LegacySchema, appearance: any, claimed: Set<string>): Promise<Ref[]> {
+/** Recover form semantics omitted by the observation attribute projection, only
+ * from an unambiguous control in the separately hash-bound source HTML. */
+export function sourceFormControlSemantics(raw: {tag:string;attributes?:Record<string,string>}, formHTML?:string): {required:boolean;submitLabel?:string} {
+  const attributes=raw.attributes??{};
+  let actual=attributes, htmlText='';
+  if(formHTML){
+    const root=parseFragment(formHTML) as any,matches:any[]=[];
+    const collect=(node:any)=>{const a=Object.fromEntries((node.attrs??[]).map((row:any)=>[row.name,row.value]));if(node.tagName===raw.tag&&['type','name','placeholder','id'].every(key=>(a[key]??null)===(attributes[key]??null)))matches.push({node,attributes:a});for(const child of node.childNodes??[])collect(child);};collect(root);
+    if(matches.length===1){actual=matches[0].attributes;const text=(node:any):string=>node.nodeName==='#text'?node.value:(node.childNodes??[]).map(text).join('');htmlText=text(matches[0].node).trim();}
+  }
+  // notnull is an explicit source validation marker; a placeholder star alone
+  // never establishes requiredness.
+  const required=Object.hasOwn(actual,'required')||Object.hasOwn(actual,'notnull');
+  return {required,...(raw.tag==='input'&&attributes.type==='submit'&&Object.hasOwn(actual,'value')?{submitLabel:actual.value}:raw.tag==='button'&&htmlText?{submitLabel:htmlText}:{})};
+}
+export function sourceFormFieldLabelMatches(field:Record<string,any>,sourceLabel:string,context:{version:number;replyToFieldId?:string;showLabels:unknown}):boolean{
+  if(field.field_label===sourceLabel)return true;
+  return context.version===4&&context.replyToFieldId===field.custom_id&&field.field_type==='email'&&context.showLabels===''&&sourceLabel===''&&/e[-_\s]?mail/i.test(field.placeholder)&&field.field_label===field.placeholder.replace(/\s*\*\s*$/,'').trim();
+}
+async function verifyV2Source(root: string, source: any, node: PendingFormNode, declaration: z.infer<typeof pendingFormV2Schema> | z.infer<typeof targetSubmissionsFormSchema> | z.infer<typeof inquiryFormSchema>, schema: LegacySchema, appearance: any, claimed: Set<string>, css?:string,ancestorKeys?:string[]): Promise<Ref[]> {
   const fields = node.widgetSettings.form_fields as Record<string, any>[];
   const registered = Object.fromEntries(Object.entries(schema.controls.form_fields.fields as object).map(([key,value]: [string,any]) => [value?.name ?? key,value]));
   for (const field of fields) {
     if (!Object.hasOwn(registered.field_type.options ?? {},field.field_type) || !Object.hasOwn(registered.width.options ?? {},field.width) || field.field_type === 'select' && registered.field_options?.type !== 'textarea') fail('v2_registered_field');
     if (field.required === 'true' && registered.required.return_value !== 'true' && !Object.hasOwn(registered.required.options ?? {},'true')) fail('v2_registered_required');
   }
-  const packets: Ref[] = [], dimensions: string[] = [];
+  const widthLayout=declaration.widthLayout?await prepareFormWidthLayout({root,reference:declaration.widthLayout,componentKey:node.key,ancestorKeys,css,fields:fields as Array<{custom_id:string}>,sourceControls:declaration.sourceControls}):undefined;
+  const packets: Ref[] = [...widthLayout?.references??[]], dimensions: string[] = [];
   for (const row of declaration.sourceControls) {
     const snapshot = source.snapshots.find((item: any) => item.id === row.snapshotId);
     if (!snapshot) fail('source_snapshot');
@@ -211,7 +239,7 @@ async function verifyV2Source(root: string, source: any, node: PendingFormNode, 
       if (interactions.length !== 1 || !same(projected,fact.value)) fail('packet_interaction_binding');
       if (index === fields.length) {
         if (!['input','button'].includes(raw.tag) || raw.attributes?.type !== 'submit') fail('packet_controls');
-        const label = raw.tag === 'input' ? raw.attributes.value : raw.text ?? Object.values(packet.texts ?? {}).filter((item: any) => item.nodeId === raw.id).map((item: any) => item.text).join('');
+        const label = sourceFormControlSemantics(raw,details?.formHTML).submitLabel ?? (raw.tag === 'input' ? raw.attributes.value : raw.text ?? Object.values(packet.texts ?? {}).filter((item: any) => item.nodeId === raw.id).map((item: any) => item.text).join(''));
         if (typeof label !== 'string' || label.trim() !== node.widgetSettings.button_text) fail('v2_submit_label');
         continue;
       }
@@ -221,11 +249,16 @@ async function verifyV2Source(root: string, source: any, node: PendingFormNode, 
       if(detailedControls&&detailed?.length!==1)fail('v2_source_details_binding');
       const detailedControl=detailed?.[0];
       const inquiryEmail = declaration.version === 4 && type === 'text' && field.field_type === 'email' && declaration.replyToFieldId === field.custom_id && /e[-_\s]?mail|邮箱|邮件|correo|courriel/i.test(field.custom_id+' '+field.field_label+' '+field.placeholder);
-      if (type !== field.field_type && !inquiryEmail || !['input','textarea','select'].includes(raw.tag) || field.placeholder !== (raw.attributes?.placeholder ?? '') || (field.required === 'true') !== (detailedControl?.required ?? Object.hasOwn(raw.attributes ?? {},'required'))) fail('v2_source_field_content');
+      const required = sourceFormControlSemantics(raw,details?.formHTML).required || detailedControl?.required === true;
+      if (type !== field.field_type && !inquiryEmail || !['input','textarea','select'].includes(raw.tag) || field.placeholder !== (raw.attributes?.placeholder ?? '') || (field.required === 'true') !== required) fail('v2_source_field_content');
       const formRect = liveState?.state.formRect ?? packet.layouts?.[packet.nodes[owner].layoutId]?.rect;
-      if (!formRect || formRect.width <= 0 || Math.abs(rect.width / formRect.width * 100 - Number(field.width)) > 12) fail('v2_source_field_width');
+      const verifiedWidth=widthLayout?.verify(field.custom_id,row.fieldFactIds[index],snapshot.viewport.width,rect.width)??false;
+      if (!formRect || formRect.width <= 0 || Math.abs(rect.width / formRect.width * 100 - Number(field.width)) > 12 && !verifiedWidth) fail('v2_source_field_width');
       const labels = Object.values(packet.nodes).filter((candidate: any) => candidate.tag === 'label' && candidate.attributes?.for === raw.attributes?.id && underneath(packet.nodes,candidate.id,owner)) as any[];
-      if (field.field_label !== (detailedControl?.label ?? labels[0]?.text ?? '').trim() || labels.length > 1) fail('v2_source_field_label');
+      const sourceLabel=(detailedControl?.label ?? labels[0]?.text ?? '').trim();
+      // Native Reply-To options require a label. Keep this metadata invisible
+      // and derive it exactly from the observed Email placeholder.
+      if (!sourceFormFieldLabelMatches(field,sourceLabel,{version:declaration.version,replyToFieldId:declaration.version===4?declaration.replyToFieldId:undefined,showLabels:node.widgetSettings.show_labels}) || labels.length > 1) fail('v2_source_field_label');
       if (type === 'select') {
         const options = Object.values(packet.nodes).filter((candidate: any) => candidate.tag === 'option' && underneath(packet.nodes,candidate.id,raw.id)) as any[];
         if (detailedControl?.options) {if(field.field_options!==detailedControl.options.map((option:any)=>`${option.text}|${option.value}`).join('\n'))fail('v2_source_select_options');continue;}
@@ -244,11 +277,12 @@ async function verifyV2Source(root: string, source: any, node: PendingFormNode, 
     if (stateObservation && liveState) packets.push(stateObservation, liveState.screenshot);
   }
   if (!same(dimensions.sort(),['1440x1000','1920x1080'])) fail('source_desktops');
+  widthLayout?.complete();
   return packets;
 }
 /** All reads are local and hash-bound. A persisted declaration is never a
  * current-process compile permit, nor evidence that the frontend is inert. */
-export async function prepareNative44PendingFormCapabilities(options: { root: string; program: Native44Program }): Promise<PendingFormCapability[]> {
+export async function prepareNative44PendingFormCapabilities(options: { root: string; program: Native44Program; css?:string }): Promise<PendingFormCapability[]> {
   const { root, program } = options;
   const nodes: PendingFormNode[] = [];
   const walk = (items: any[]) => { for (const item of items) { if (item.pendingForm !== undefined) nodes.push(item); walk(item.children ?? item.slides ?? []); } }; walk(program.blocks);
@@ -283,7 +317,7 @@ export async function prepareNative44PendingFormCapabilities(options: { root: st
     const appearance = await boundJSON(root, declaration.appearance);
     if (appearance.kind !== 'native44-visible-source-form-appearance-extraction' || !Array.isArray(appearance.rows)) fail('source_appearance');
     const packets: Ref[] = [], dimensions: string[] = [];
-    if (declaration.version !== 1) packets.push(...await verifyV2Source(root,source,node,declaration,schema,appearance,claimed));
+    if (declaration.version !== 1) packets.push(...await verifyV2Source(root,source,node,declaration,schema,appearance,claimed,options.css,declaration.widthLayout?formAncestorKeys(program,node.key):undefined));
     else {
     for (const row of declaration.sourceControls) {
       const snapshot = source.snapshots.find((snapshot: any) => snapshot.id === row.snapshotId);
@@ -320,13 +354,14 @@ export async function prepareNative44PendingFormCapabilities(options: { root: st
     }
     const receipt: CapabilityData['receipt'] = { version: 1, kind: declaration.version === 4 ? 'native44-inquiry-configured' : declaration.version === 3 ? 'native44-target-submissions-only-configured' : 'native44-pending-form-candidate', ...('sourceSubmitModel' in declaration && declaration.sourceSubmitModel ? { sourceSubmitModel: declaration.sourceSubmitModel } : {}), componentKey: node.key, sourceFacts: structuredClone(program.sourceFacts), sourceControls: structuredClone(declaration.sourceControls), packets: structuredClone(packets), appearance: structuredClone(declaration.appearance), knowledge: structuredClone(declaration.knowledge), registered: structuredClone(declaration.registered), registeredVersions: structuredClone(actual.versions), businessStatus: declaration.version >= 3 ? 'configured' : 'pending', runtimeVerification: declaration.version === 4 && program.inquiryPolicy?.testing === 'user-managed' ? 'user-managed-submission' : declaration.version >= 3 ? 'actual-submission-required' : 'required', submitLabelVerification: 'source-visual-review-required', ...((declaration.version === 3 || declaration.version === 4) ? { decision: structuredClone(declaration.decision) } : {}) };
     const capability: PendingFormCapability = Object.freeze({ kind: 'native44-pending-form-capability', componentKey: node.key });
-    capabilities.set(capability, { identity: identity(program, node), node: structuredClone(node), schemaHash: declaration.registered.schemaHash, validateForm: toNative44CompilerKnowledge(knowledge, {form:schema}).validateSettings, sourceHash: hash(source), styleControls: structuredClone(knowledge.components.form.controls), receipt }); out.push(capability);
+    capabilities.set(capability, { ...(declaration.version!==1&&declaration.widthLayout?{widthLayoutAncestorKeys:formAncestorKeys(program,node.key),widthLayoutCSSHash:formWidthCSSHash(options.css!)}:{}),identity: identity(program, node), node: structuredClone(node), schemaHash: declaration.registered.schemaHash, validateForm: toNative44CompilerKnowledge(knowledge, {form:schema}).validateSettings, sourceHash: hash(source), styleControls: structuredClone(knowledge.components.form.controls), receipt }); out.push(capability);
   }
   return out;
 }
 export function assertNative44PendingFormCapability(program: Native44Program, node: PendingFormNode, schemas: Record<string, LegacySchema>, capability: PendingFormCapability | undefined): void {
   const data = capability && capabilities.get(capability);
   if (!data || data.identity !== identity(program, node) || native44RegisteredSchemaHash(schemas.form) !== data.schemaHash) fail('exact_process_capability_required');
+  if(data!.widthLayoutAncestorKeys&&!same(data!.widthLayoutAncestorKeys,formAncestorKeys(program,node.key)))fail('width_layout_ancestor_changed');
   assertNative44PendingFormCandidate(data!.strictNode ?? node); registeredContract(schemas.form);
 }
 /** Runs the fixed style resolver itself: serialized receipts or arbitrary styled
@@ -361,6 +396,7 @@ export async function resolvePendingFormStyles(input: Parameters<typeof resolveN
     if (!node) fail('style_owner');
     assertNative44PendingFormCapability(input.program, node, input.schemas, permit);
     const data=capabilities.get(permit)!;
+    if(data.widthLayoutCSSHash&&data.widthLayoutCSSHash!==formWidthCSSHash(input.css))fail('width_layout_css_changed');
     if (!proof && (hash(input.source) !== data.sourceHash || !same(input.knowledge.styleControlsByWidget?.form, data.styleControls))) fail('style_source_or_knowledge_changed');
   }
   if (!proof && permits.length) {

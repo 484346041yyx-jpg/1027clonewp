@@ -25,7 +25,7 @@ export const native44SubtreeHash = (node: ElementorElement) => hashV2(canonicalV
  * not become an alternate route for HTML, product queries or shared resources. */
 export function assertNative44CurrentNativeProgram(program: Native44Program): void {
   for (const node of walkNative44(program.blocks)) {
-    if (node.kind === 'html-static' || node.kind === 'native-products' || node.kind === 'native-posts' || 'widgetType' in node && (node.widgetType === 'html' || (NATIVE44_PRODUCT_WIDGETS as readonly string[]).includes(node.widgetType))) fail('fragment_content_rejected');
+    if (node.kind === 'html-static' || node.kind === 'native-products' || node.kind === 'native-posts' || node.kind === 'native-categories' || node.kind === 'native-related-products' || 'widgetType' in node && (node.widgetType === 'html' || (NATIVE44_PRODUCT_WIDGETS as readonly string[]).includes(node.widgetType))) fail('fragment_content_rejected');
     if (node.kind === 'native' && node.resources?.length) fail('fragment_resource_rejected');
   }
 }
@@ -79,7 +79,7 @@ export function assembleNative44CurrentNativeSnapshot(before: DraftSnapshot, com
 export function assertNative44CurrentNativeDelta(before: DraftSnapshot, expected: DraftSnapshot, compiled: Native44Compiled, replacements: Native44CurrentNativeReplacement[], modules: Native44CSSModule[], corrections: Native44CurrentCSSCorrection[], model?: Native44CSSModel): void {
   if (model !== undefined) { if (corrections.length) fail('model_and_raw_corrections_conflict'); assertNative44CurrentNativeModelDelta(before, expected, compiled, replacements, modules, model); return; }
   assertNative44Compilation(compiled, compiled.composition);
-  if (compiled.htmlProofs.length || compiled.queryReceipts.length || compiled.postQueryReceipts?.length) fail('fragment_content_rejected');
+  if (compiled.htmlProofs.length || compiled.queryReceipts.length || compiled.postQueryReceipts?.length || compiled.categoryQueryReceipts?.length || compiled.relatedProductBindings?.length) fail('fragment_content_rejected');
   const assembled = assembleNative44CurrentNativeSnapshot(before, compiled, replacements, modules, corrections);
   if (canonicalV2(assembled) !== canonicalV2(expected)) fail('unexpected_document_delta');
 }

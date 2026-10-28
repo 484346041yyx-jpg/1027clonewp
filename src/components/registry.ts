@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { NATIVE44_ALL_TYPES, NATIVE44_CATALOG_HASH, NATIVE44_REQUIRED_ENVIRONMENT, validateNative44Catalog } from '../native44/catalog.js';
 import { EXTENDED_NATIVE_TYPES } from '../native44/catalog.js';
-import { currentProductExtension, readProductExtension } from '../native44/product-extension.js';
+import { currentProductExtension, readProductExtension, productExtensionWidgetTypes, isRelatedProductExtension } from '../native44/product-extension.js';
 import type { Native44KnowledgeIndex, Native44ComponentKnowledge } from '../native44/knowledge.js';
 import { NATIVE44_SELECTION_RULES_HASH } from '../native44/selection-rules.js';
 import type { SystemRelease } from '../system/contracts.js';
@@ -53,7 +53,7 @@ export async function readCurrentRelease(root = 'D:/cloneWP', options: { learnin
   const adapters = (await componentAdapterDeclarations(root,componentExtension??null))[0];
   return {
     version: 1, executorId: 'native44',...(componentExtension?{componentExtension}:{}),
-    componentSet: { id: componentExtension?'native44-plus-core-product-v1':'native44-v1', catalog: await componentFileRef(root, 'config/native44-component-set.json'), types: [...(componentExtension?EXTENDED_NATIVE_TYPES:NATIVE44_ALL_TYPES)] },
+    componentSet: { id: isRelatedProductExtension(componentExtension)?'native44-plus-core-product-related-v1':componentExtension?'native44-plus-core-product-v1':'native44-v1', catalog: await componentFileRef(root, 'config/native44-component-set.json'), types: [...productExtensionWidgetTypes(componentExtension)] },
     knowledge: { id: `native44-${knowledge.fingerprint}`, index, fingerprint: knowledge.fingerprint, ...(learningRelease ? { learningRelease } : {}) },
     selectionRules: { id: 'desktop-browser-v1', sha256: NATIVE44_SELECTION_RULES_HASH, files: selectionFiles },
     adapters: { id: adapters.id, sha256: componentHash(componentCanonical(adapters.sourceRefs)), files: adapters.sourceRefs },

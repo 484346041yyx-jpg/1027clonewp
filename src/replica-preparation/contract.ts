@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { boundaryTableSchema } from './boundaries.js';
 import { z } from 'zod';
 import { taskReviewSkipPolicySchema, assertTaskReviewSkipScope } from '../replica-full/review-skip-policy.js';
 import { native44ProgramSchema } from '../native44/validate.js';
@@ -8,10 +9,11 @@ import { headerTargetOrigin, canonicalHeaderJson } from '../woodmart-header/cont
 import { validateHeaderModulePlan } from '../woodmart-header/generic/contract.js';
 import { navigationFormSpecSchema, parseNavigationForms } from '../replica-full/navigation-form/index.js';
 import { nativeImagePolicySchema } from '../replica-full/native-image-policy.js';
-import { reusedHeaderResourceSchema } from '../replica-full/contract.js';
+import { configuratorSpecSchema, reusedHeaderResourceSchema } from '../replica-full/contract.js';
 import { assertPageScope, pageScopeSchema, sourcePartitionSchema } from '../replica-full/page-scope.js';
 import { BODY_FIDELITY_KINDS, PREPARATION_COMPATIBILITY_KEYS, PREPARATION_DECISION_KEYS, type PreparationJob, type PreparationJobResult, type PreparationPlan } from './types.js';
 import { componentGuidanceReviewSchema } from './component-guidance.js';
+import { isPreparationJobId, preparationExecutionGroups, preparationExecutionPolicySchema } from './execution-policy.js';
 
 import { responsiveSourceSchema, responsiveSectionSchema } from '../replica-responsive/contract.js';
 import { assertReadonlyHeaderDecisionScope } from '../replica-responsive/decisions.js';
@@ -41,11 +43,14 @@ const planSchema = z.object({
   shared: z.object({ decisions: z.array(z.object({ key, value: z.unknown(), evidence: z.array(ref).min(1).max(100) }).strict()).min(1).max(100), compatibility: z.array(z.object({ key: z.enum(PREPARATION_COMPATIBILITY_KEYS), status: z.enum(['verified', 'not-applicable', 'unresolved']), reason: z.string().trim().min(10).max(2000), evidence: z.array(ref).min(1).max(100) }).strict()).length(PREPARATION_COMPATIBILITY_KEYS.length), css }).strict(),
   sections: z.array(section).min(1).max(2000),
   navigationForms: z.array(navigationFormSpecSchema).min(1).max(4).optional(),
+  configurator: configuratorSpecSchema.optional(),
   reviewSkipPolicy: taskReviewSkipPolicySchema.optional(),
   nativeImagePolicy: nativeImagePolicySchema.optional(),
   responsive: responsiveSourceSchema.optional(),
+  boundaryTable: boundaryTableSchema.optional(),
+  executionPolicy: preparationExecutionPolicySchema.optional(),
 }).strict();
-const resultSchema = z.object({ version: z.literal(1), kind: z.literal('clonewp-preparation-result'), taskId: key, runId: key, jobId: z.enum(['header', 'body-1', 'body-2']), contractHash: hash, sharedHash: hash, header: z.unknown().optional(), componentGuidanceReview: componentGuidanceReviewSchema.optional(), sections: z.array(z.object({ key, blocks: z.array(z.unknown()).min(1).max(1000), css, responsive: responsiveSectionSchema.optional(), fidelity: z.array(fidelityResult).optional() }).strict()).min(1).max(2000).optional() }).strict();
+const resultSchema = z.object({ version: z.literal(1), kind: z.literal('clonewp-preparation-result'), taskId: key, runId: key, jobId: z.string().refine(isPreparationJobId), contractHash: hash, sharedHash: hash, workRevision: z.number().int().nonnegative().optional(), header: z.unknown().optional(), componentGuidanceReview: componentGuidanceReviewSchema.optional(), sections: z.array(z.object({ key, blocks: z.array(z.unknown()).min(1).max(1000), css, responsive: responsiveSectionSchema.optional(), fidelity: z.array(fidelityResult).optional() }).strict()).min(1).max(2000).optional() }).strict();
 export function preparationFail(code: string): never { throw Error(`replica_preparation_${code}`); }
 /** Strict bounded canonical JSON, large enough for independent body fragments. */
 export function preparationJson(input: unknown): string {
@@ -74,6 +79,8 @@ const sameSet = (a: string[], b: string[]) => a.length === b.length && a.every(i
 export function validatePreparationPlan(input: unknown): PreparationPlan {
   try {
     const value = planSchema.parse(clone(input));
+    if (value.executionPolicy && value.version !== 8) preparationFail('execution_policy_version');
+    if (value.boundaryTable && value.version !== 8) preparationFail('boundary_version');
     assertTaskReviewSkipScope(value);
     if (value.version === 1 ? value.responsive !== undefined : !value.responsive || value.responsive.version !== (value.version >= 3 ? 2 : 1)) preparationFail('responsive_version_contract');
     if (value.version >= 4 && value.bodyBase.visualAuditVersion !== 3) preparationFail('phone_visual_audit_required');
@@ -106,6 +113,15 @@ export function validatePreparationPlan(input: unknown): PreparationPlan {
         if (owners.length !== 1 || form.slotComponentKey !== owners[0].key && !form.slotComponentKey.startsWith(owners[0].key + '_')) preparationFail('navigation_form_scope');
       }
     }
+    if (value.configurator) {
+      const c = value.configurator;
+      const owners = value.sections.filter(section => c.sourceUnitIds.every(id => section.sourceUnitIds.includes(id)) && c.sourceFactIds.every(id => section.sourceFactIds.includes(id)));
+      if (value.version !== 8 || value.pageScope !== 'body-only' || c.sourceUrl !== value.sourceUrl || owners.length !== 1 ||
+        ![c.slotComponentKey,c.formComponentKey].every(componentKey => componentKey === owners[0].key || componentKey.startsWith(owners[0].key + '_')) ||
+        new Set([c.slotComponentKey,c.formComponentKey,c.widgetKey]).size !== 3 || new Set(c.sourceUnitIds).size !== c.sourceUnitIds.length ||
+        new Set(c.sourceFactIds).size !== c.sourceFactIds.length || new Set(c.mediaKeys).size !== c.mediaKeys.length ||
+        value.navigationForms?.some(form => form.slotComponentKey === c.slotComponentKey)) preparationFail('configurator_scope');
+    }
     for (const item of value.sections) {
       if (item.phoneSourceOwners && (value.version < 6 || !value.responsive)) preparationFail('phone_source_owners_version');
       unique(item.dependsOn, 'dependency_duplicate');
@@ -130,7 +146,7 @@ export function validatePreparationPlan(input: unknown): PreparationPlan {
   } catch (error) { if (error instanceof Error && error.message.startsWith('replica_preparation_')) throw error; return preparationFail('plan_invalid'); }
 }
 export function preparationSharedHash(input: PreparationPlan): string {
-  const plan = validatePreparationPlan(input); return preparationHash({ taskId: plan.taskId, runId: plan.runId, sourceUrl: plan.sourceUrl, targetOrigin: plan.targetOrigin, sourceEvidence: plan.sourceEvidence, sourceFacts: plan.sourceFacts, sourceUnits: plan.sourceUnits, shared: plan.shared, bodyBase: plan.bodyBase, ...(plan.headerBase ? { headerBase: plan.headerBase } : {}), ...(plan.reusedHeader ? { reusedHeader: plan.reusedHeader } : {}), ...(plan.pageScope ? { pageScope: plan.pageScope } : {}), sourcePartition: plan.sourcePartition, sections: plan.sections, ...(plan.navigationForms ? { navigationForms: plan.navigationForms } : {}), ...(plan.reviewSkipPolicy ? { reviewSkipPolicy: plan.reviewSkipPolicy } : {}), ...(plan.nativeImagePolicy ? { nativeImagePolicy: plan.nativeImagePolicy } : {}), ...(plan.responsive ? { responsive: plan.responsive } : {}) });
+  const plan = validatePreparationPlan(input); return preparationHash({ taskId: plan.taskId, runId: plan.runId, sourceUrl: plan.sourceUrl, targetOrigin: plan.targetOrigin, sourceEvidence: plan.sourceEvidence, sourceFacts: plan.sourceFacts, sourceUnits: plan.sourceUnits, shared: plan.shared, bodyBase: plan.bodyBase, ...(plan.headerBase ? { headerBase: plan.headerBase } : {}), ...(plan.reusedHeader ? { reusedHeader: plan.reusedHeader } : {}), ...(plan.pageScope ? { pageScope: plan.pageScope } : {}), sourcePartition: plan.sourcePartition, sections: plan.sections, ...(plan.boundaryTable ? { boundaryTable: plan.boundaryTable } : {}), ...(plan.executionPolicy ? { executionPolicy: plan.executionPolicy } : {}), ...(plan.navigationForms ? { navigationForms: plan.navigationForms } : {}), ...(plan.configurator ? { configurator: plan.configurator } : {}), ...(plan.reviewSkipPolicy ? { reviewSkipPolicy: plan.reviewSkipPolicy } : {}), ...(plan.nativeImagePolicy ? { nativeImagePolicy: plan.nativeImagePolicy } : {}), ...(plan.responsive ? { responsive: plan.responsive } : {}) });
 }
 /** Keep related dependencies together, then balance independent preparation work. */
 export function buildPreparationJobs(input: PreparationPlan): PreparationJob[] {
@@ -146,6 +162,13 @@ export function buildPreparationJobs(input: PreparationPlan): PreparationJob[] {
   }
   const base = { version: 1 as const, kind: 'clonewp-preparation-job' as const, taskId: plan.taskId, runId: plan.runId, contractHash, sharedHash };
   const result: PreparationJob[] = plan.reusedHeader ? [] : [{ ...base, jobId: 'header', responsibility: 'header', sectionKeys: [], sourceUnitIds: [...plan.sourcePartition.headerUnits], sourceFactIds: [], estimatedEffort: 1 }];
+  if (plan.executionPolicy) {
+    preparationExecutionGroups(plan).forEach((indexes, index) => {
+      const sections = indexes.map(item => plan.sections[item]);
+      result.push({ ...base, jobId: `body-${index + 1}`, responsibility: 'body', sectionKeys: sections.map(item => item.key), sourceUnitIds: sections.flatMap(item => item.sourceUnitIds), sourceFactIds: sections.flatMap(item => item.sourceFactIds), estimatedEffort: sections.reduce((sum, item) => sum + item.estimatedEffort, 0) });
+    });
+    return result;
+  }
   const groups = Array.from({ length: Math.min(2, components.length) }, () => ({ indexes: [] as number[], effort: 0 }));
   const effort = (indexes: number[]) => indexes.reduce((sum, index) => sum + plan.sections[index].estimatedEffort, 0);
   components.sort((a, b) => effort(b) - effort(a) || a[0] - b[0]);
@@ -166,5 +189,5 @@ export function validatePreparationJobResult(input: unknown): PreparationJobResu
 /** Header identity can be allocated before workers without freezing its layout. */
 export function preparationHeaderIdentity(input: PreparationPlan['headerBase']): string {
   const plan = validateHeaderModulePlan(input);
-  return canonicalHeaderJson({ moduleKey: plan.moduleKey, targetOrigin: plan.targetOrigin, owner: plan.owner, name: plan.name, menus: plan.menus.map(menu => ({ key: menu.key, name: menu.name })) });
+  return canonicalHeaderJson({ moduleKey: plan.moduleKey, targetOrigin: plan.targetOrigin, owner: plan.owner, name: plan.name, menus: plan.menus.map(menu => ({ key: menu.key, name: menu.name })), ...(plan.menuBindingPolicy ? { menuBindingPolicy: plan.menuBindingPolicy } : {}) });
 }

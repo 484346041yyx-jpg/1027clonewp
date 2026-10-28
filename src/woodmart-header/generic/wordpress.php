@@ -14,6 +14,8 @@ try {
   $record=get_option($moduleOption,null);
   $assertRecord=static function($value)use($identity){if(!is_array($value)||($value['identity']??null)!==$identity)throw new RuntimeException('hmod_ownership_changed');};
   if($record!==null)$assertRecord($record);
+  $strictMenus=($input['menuBindingVersion']??null)===1||($record['menuBindingVersion']??null)===1;
+  if(isset($input['menuBindingVersion'])&&$input['menuBindingVersion']!==1)throw new RuntimeException('hmod_menu_policy_invalid');
   $dropdownFields=['_menu_item_design','_menu_item_width','_menu_item_height','_menu_item_padding','_menu_item_colorscheme','_menu_item_event','_menu_item_dropdown-ajax'];
   // Optional native Elementor menu blocks use the installed theme's own walker.
   $menuContentContract=static function()use($digest){
@@ -106,16 +108,18 @@ try {
     if($module!==null&&!empty($r['conflicts']))$module['conflicts']=(object)$r['conflicts'];
     return ['module'=>$module,'globalHash'=>$global,'defaultHeaderId'=>(string)get_option('whb_main_header'),'presetReferences'=>$presetRefs,'otherReferences'=>$refs];
   };
-  $nativeContract=static function()use($origin,$digest){
+  $nativeContract=static function()use($origin,$digest,$strictMenus){
     $builder=\XTS\Modules\Header_Builder::get_instance();$args=[];
     foreach($builder->elements->elements_classes as $name=>$object)$args[strtolower($name)]=$object->get_args();
-    $schema=static function($fields,$element=''){
+    if($strictMenus)foreach(['mainmenu','menu'] as $menuType)if(($args[$menuType]['params']['menu_id']['type']??null)!=='select')throw new RuntimeException('hmod_menu_native_select_required');
+    $schema=static function($fields,$element='')use($strictMenus){
       $result=[];foreach($fields as $key=>$f){$type=$f['type']??'';if(in_array($type,['notice','title','divider'],true)||!isset($f['id']))continue;
         // These two select fields are actual native cms_block lookups. Their
         // live options are resources, not part of a frozen control contract.
         $htmlBlockSelect=($element==='htmlblock'&&$key==='block_id')||($element==='search'&&$key==='search_extra_content');
         if($htmlBlockSelect&&$type!=='select')throw new RuntimeException('hmod_html_block_resource_contract_changed');
-        $resource=$type==='image'?'image':(($element==='mainmenu'&&$key==='menu_id')?'menu':($htmlBlockSelect?'html-block':null));
+        $resource=$type==='image'?'image':((in_array($element,$strictMenus?['mainmenu','menu']:['mainmenu'],true)&&$key==='menu_id')?'menu':($htmlBlockSelect?'html-block':null));
+        if($strictMenus&&$resource==='menu'&&$type!=='select')throw new RuntimeException('hmod_menu_native_select_required');
         if(isset($f['callback'])&&$resource===null)continue;
         $valueType=$type==='switcher'?'boolean':($type==='slider'?'number':($type==='image'?'image':(in_array($type,['bg','border','color'],true)?'json':'string')));
         $entry=['type'=>$type,'valueType'=>$valueType];if($resource!==null)$entry['resource']=$resource;
@@ -127,10 +131,11 @@ try {
     };
     $structure=woodmart_get_config('header-sceleton');$normal=function($n)use(&$normal){if(isset($n['content']))$n['content']=array_values(array_map($normal,$n['content']));if(isset($n['params'])&&!$n['params'])$n['params']=(object)[];return $n;};$structure=$normal($structure);
     $columns=[];foreach($structure['content']??[] as $row){$desktop=[];foreach($row['content']??[] as $column){if(empty($column['desktop_only'])||!empty($column['mobile_only']))continue;$classes=preg_split('/\s+/',$column['class']??'');foreach(['left','center','right'] as $position)if(in_array('whb-col-'.$position,$classes,true))$desktop[$position]=$column['id'];}if(count($desktop)!==3)throw new RuntimeException('hmod_skeleton_columns_unsupported');$columns[$row['id']]=$desktop;}
-    $elements=[];foreach(['logo','mainmenu','account','cart','search','space'] as $type){if(!isset($args[$type]))throw new RuntimeException('hmod_element_contract_missing');$elements[$type]=['type'=>$args[$type]['type'],'schema'=>$schema($args[$type]['params']??[],$type)];}
+    $elements=[];foreach(($strictMenus?['logo','mainmenu','menu','account','cart','search','space']:['logo','mainmenu','account','cart','search','space']) as $type){if(!isset($args[$type]))throw new RuntimeException('hmod_element_contract_missing');$elements[$type]=['type'=>$args[$type]['type'],'schema'=>$schema($args[$type]['params']??[],$type)];}
     $settingsFields=woodmart_get_config('header-builder-settings');$settings=[];foreach($settingsFields as $key=>$f){if(isset($f['id'],$f['type'])&&array_key_exists('value',$f))$settings[$key]=['id'=>$f['id'],'type'=>$f['type'],'value'=>$f['value']];}
     if(!isset($args['htmlblock']['params']['block_id']))throw new RuntimeException('hmod_style_element_unavailable');
     $contract=['kind'=>'clonewp-whb-native-contract','version'=>1,'targetOrigin'=>$origin,'structure'=>$structure,'settings'=>(object)$settings,'rowColumns'=>$columns,'rowSchema'=>$schema($args['row']['params']??[],'row'),'settingsSchema'=>$schema($settingsFields,'settings'),'elements'=>$elements,'styleElement'=>['type'=>$args['htmlblock']['type'],'field'=>'block_id','schema'=>$schema($args['htmlblock']['params'],'htmlblock')]];
+    if($strictMenus)$contract['menuBindingVersion']=1;
     $contract['fingerprint']=$digest([$contract,wp_get_theme(get_template())->get('Version')]);
     return $contract;
   };
@@ -219,7 +224,7 @@ try {
       if($record!==null||get_option('whb_'.$headerId,null)!==null||isset(get_option('whb_saved_headers',[])[$headerId]))throw new RuntimeException('hmod_resource_exists');
       $name=$payload['name']??'';if(!is_string($name)||trim($name)===''||strlen($name)>800)throw new RuntimeException('hmod_name_invalid');
       if(($payload['menuContent']??false)===true)$menuContentContract();
-      $record=['identity'=>$identity,'name'=>$name,'menus'=>[],'styleId'=>null,'pages'=>[],'receipts'=>[]];if(!add_option($moduleOption,$record,'','no'))throw new RuntimeException('hmod_reservation_conflict');
+      $record=['identity'=>$identity,'name'=>$name,'menus'=>[],'styleId'=>null,'pages'=>[],'receipts'=>[]];if($strictMenus)$record['menuBindingVersion']=1;if(!add_option($moduleOption,$record,'','no'))throw new RuntimeException('hmod_reservation_conflict');
       if(($payload['menuContent']??false)===true){$record['menuContent']=[];update_option($moduleOption,$record,false);}
     }elseif($record===null)throw new RuntimeException('hmod_reservation_missing');
     $record['receipts'][$operationId]=['action'=>$action,'payloadHash'=>$requestHash,'state'=>'started'];update_option($moduleOption,$record,false);
@@ -267,7 +272,7 @@ try {
       $raw=$payload['raw']??null;if(!is_array($raw)||($raw['id']??'')!==$headerId||!is_string($raw['name']??null)||trim($raw['name'])===''||strlen($raw['name'])>800||preg_match('/[\x00-\x1f\x7f]/',$raw['name'])||!is_array($raw['structure']??null)||!is_array($raw['settings']??null)||empty($record['styleId']))throw new RuntimeException('hmod_header_input_invalid');
       $styleFound=0;$native=$nativeContract();$types=[];foreach($native['elements'] as $definition)$types[$definition['type']]=true;$styleType=$native['styleElement']['type'];
       $elementPrefix='cw-'.substr(hash('sha256',$moduleKey),0,12).'-';
-      $verify=function($node)use(&$verify,&$styleFound,$record,$types,$styleType,$origin,$elementPrefix){$type=$node['type']??'';if(in_array($type,['root','row','column'],true)){foreach($node['content']??[] as $child)$verify($child);return;}if(!str_starts_with($node['id']??'',$elementPrefix))throw new RuntimeException('hmod_element_identity_changed');if($type===$styleType){if((string)($node['params']['block_id']['value']??'')!==(string)$record['styleId'])throw new RuntimeException('hmod_style_binding_changed');$styleFound++;return;}if(!isset($types[$type]))throw new RuntimeException('hmod_header_element_unsupported');foreach($node['params']??[] as $key=>$param){if($key==='menu_id'){$found=false;foreach($record['menus'] as $menuId){$m=wp_get_nav_menu_object($menuId);if($m&&$m->slug===($param['value']??null))$found=true;}if(!$found)throw new RuntimeException('hmod_menu_binding_changed');}if(($param['type']??'')==='image'&&!empty($param['value'])){$id=$param['value']['id']??0;$image=wp_get_attachment_image_src($id,'full');if(!$image||$image[0]!==($param['value']['url']??null)||(int)$image[1]!==($param['value']['width']??null)||(int)$image[2]!==($param['value']['height']??null)||strpos($image[0],$origin.'/')!==0)throw new RuntimeException('hmod_image_binding_changed');}}};$verify($raw['structure']);if($styleFound!==1)throw new RuntimeException('hmod_style_binding_missing');
+      $verify=function($node)use(&$verify,&$styleFound,$record,$types,$styleType,$origin,$elementPrefix,$strictMenus,$native){$type=$node['type']??'';if(in_array($type,['root','row','column'],true)){foreach($node['content']??[] as $child)$verify($child);return;}if(!str_starts_with($node['id']??'',$elementPrefix))throw new RuntimeException('hmod_element_identity_changed');if($type===$styleType){if((string)($node['params']['block_id']['value']??'')!==(string)$record['styleId'])throw new RuntimeException('hmod_style_binding_changed');$styleFound++;return;}if(!isset($types[$type]))throw new RuntimeException('hmod_header_element_unsupported');if($strictMenus){foreach($native['elements'] as $definition)if($definition['type']===$type&&isset($definition['schema']->menu_id)&&$definition['schema']->menu_id['resource']==='menu'){if(!isset($node['params']['menu_id']))throw new RuntimeException('hmod_menu_binding_missing');}}foreach($node['params']??[] as $key=>$param){if($key==='menu_id'){if($strictMenus&&(($param['id']??null)!=='menu_id'||($param['type']??null)!=='select'||!is_string($param['value']??null)))throw new RuntimeException('hmod_menu_native_select_required');$found=false;foreach($record['menus'] as $menuId){$m=wp_get_nav_menu_object($menuId);if($m&&$m->slug===($param['value']??null))$found=true;}if(!$found)throw new RuntimeException('hmod_menu_binding_changed');}if(($param['type']??'')==='image'&&!empty($param['value'])){$id=$param['value']['id']??0;$image=wp_get_attachment_image_src($id,'full');if(!$image||$image[0]!==($param['value']['url']??null)||(int)$image[1]!==($param['value']['width']??null)||(int)$image[2]!==($param['value']['height']??null)||strpos($image[0],$origin.'/')!==0)throw new RuntimeException('hmod_image_binding_changed');}}};$verify($raw['structure']);if($styleFound!==1)throw new RuntimeException('hmod_style_binding_missing');
       $record['name']=$raw['name'];$persist();$builder=\XTS\Modules\Header_Builder::get_instance();if(get_option('whb_'.$headerId,null)===null)$builder->factory->create_new($headerId,$record['name'],$raw['structure'],$raw['settings']);else $builder->factory->update_header($headerId,$record['name'],$raw['structure'],$raw['settings']);
       $builder->list->add_header($headerId,$record['name']);
       // Native save and canonical JSON use different object-key insertion order.
@@ -277,7 +282,7 @@ try {
         elseif(is_object($value)){$properties=get_object_vars($value);ksort($properties,SORT_STRING);$sorted=clone $value;foreach(array_keys($properties) as $key)unset($sorted->$key);foreach($properties as $key=>$child)$sorted->$key=$headerReadbackValue($child);return $sorted;}
         return $value;
       };
-      if($digest($headerReadbackValue(get_option('whb_'.$headerId)))!==$digest($headerReadbackValue($raw)))throw new RuntimeException('hmod_header_readback_failed');$result=['headerId'=>$headerId];
+      if($digest($headerReadbackValue(get_option('whb_'.$headerId)))!==$digest($headerReadbackValue($raw)))throw new RuntimeException('hmod_header_readback_failed');$savedMenuRaw=get_option('whb_'.$headerId);if($strictMenus)$verify($savedMenuRaw['structure']??[]);$result=['headerId'=>$headerId];
     }elseif($action==='create-page'){
       $title=$payload['title']??'';$slug=$payload['slug']??'';if(!is_string($title)||trim($title)===''||strlen($title)>800||!preg_match('/^[a-z0-9][a-z0-9-]{0,159}$/',$slug)||get_page_by_path($slug))throw new RuntimeException('hmod_page_identity_occupied');
       $pageId=wp_insert_post(['post_type'=>'page','post_status'=>'draft','post_title'=>$title,'post_name'=>$slug,'post_content'=>'','meta_input'=>['_clonewp_run_id'=>$owner['runId'],'_clonewp_header_module_owner'=>$ownerToken,'_wp_page_template'=>'elementor_header_footer']],true);if(is_wp_error($pageId))throw new RuntimeException('hmod_page_create_failed');$record['pages'][]=(int)$pageId;$persist();$result=['pageId'=>(int)$pageId];

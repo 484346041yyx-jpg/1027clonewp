@@ -221,7 +221,7 @@ export async function integrateNative44ComparisonResult(root: string, runDir: st
   let exists: string;
   try { exists = await readFile(journalFile, 'utf8'); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false; throw error; }
-  const release = await acquireLock(root);
+  const release = await acquireLock(root, [`local:runs/${manifest.runId.toLowerCase()}`]);
   try {
     const current = await readFile(journalFile, 'utf8'), journal = JSON.parse(current);
     if (current !== exists) throw Error('Comparison journal changed before local delivery bookkeeping; preserved');

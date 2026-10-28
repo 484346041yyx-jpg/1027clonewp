@@ -5,6 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile, readFile, realpath, rm, lstat } from 'node:fs/promises';
 import { HEADER_MODULE_HELP, parseHeaderModuleArguments, runHeaderModuleCLI } from '../src/woodmart-header/generic/cli.js';
 import { createHeaderBundle } from '../src/woodmart-header/generic/bundle.js';
+import { claimWorkspace, checkpointWorkspace, inspectWorkspace } from '../src/workspace/service.js';
 import type { HeaderModulePlan } from '../src/woodmart-header/generic/contract.js';
 
 const plan = (): HeaderModulePlan => ({
@@ -15,15 +16,31 @@ const plan = (): HeaderModulePlan => ({
 });
 const choice = () => ({ version: 1, kind: 'clonewp-replica-header-choice', provider: 'woodmart-header-builder', sourcePartition: { allUnits: ['header', 'body'], headerUnits: ['header'], bodyUnits: ['body'] } });
 async function fixture(fn: (base: string) => Promise<void>): Promise<void> {
-  const root = await realpath('D:/cloneWP'), base = path.join(root, '.cache', `header-cli-${randomUUID()}`); await mkdir(base, { recursive: true });
+  const root = await realpath('D:/cloneWP'), name = `header-cli-${randomUUID()}`, base = path.join(root, '.cache', name);
+  const status = await inspectWorkspace(root);
+  const owner = await claimWorkspace(root, { agent: 'codex', sessionId: name, taskId: name, expectedRevision: status.revision, expectedFingerprint: status.fingerprint, resources: [`local:cache/${name}`] });
+  const originalToken = process.env.CLONEWP_WORKSPACE_TOKEN;
+  process.env.CLONEWP_WORKSPACE_TOKEN = owner.token;
+  await mkdir(base, { recursive: true });
   const originalFetch = globalThis.fetch; let requests = 0;
   globalThis.fetch = async () => { requests++; throw Error('Unexpected network in local header CLI'); };
   try { await fn(base); assert.equal(requests, 0); }
   finally {
     globalThis.fetch = originalFetch;
-    const actual = await realpath(base), relative = path.relative(root, actual);
-    assert.ok(relative && !relative.startsWith('..') && !path.isAbsolute(relative)); assert.equal(actual.toLowerCase(), base.toLowerCase());
-    await rm(actual, { recursive: true, force: true });
+    try {
+      const actual = await realpath(base), relative = path.relative(root, actual);
+      assert.ok(relative && !relative.startsWith('..') && !path.isAbsolute(relative)); assert.equal(actual.toLowerCase(), base.toLowerCase());
+      await rm(actual, { recursive: true, force: true });
+    } finally {
+      if (originalToken === undefined) delete process.env.CLONEWP_WORKSPACE_TOKEN;
+      else process.env.CLONEWP_WORKSPACE_TOKEN = originalToken;
+      const current = await inspectWorkspace(root);
+      await checkpointWorkspace(root, {
+        token: owner.token, expectedRevision: owner.revision, expectedFingerprint: current.fingerprint,
+        notes: { goal: 'Header CLI local fixture', summary: 'Validated local header CLI behavior', progress: 'completed', decisions: [], changes: [], checks: [], openItems: [], nextSteps: ['Continue project testing'] },
+        release: true,
+      });
+    }
   }
 }
 
@@ -62,6 +79,9 @@ test('route, init and status stay purely local and keep independent editable fil
   const initialized = await runHeaderModuleCLI(['init', '--bundle', directory, '--plan', planFile, '--choice', choiceFile]) as { status: string; remoteWrites: number };
   assert.equal(initialized.status, 'planned'); assert.equal(initialized.remoteWrites, 0);
   const beforeHeader = await readFile(path.join(directory, 'header.json')), beforeMenus = await readFile(path.join(directory, 'menus.json'));
+  assert.deepEqual(JSON.parse(beforeHeader.toString()).menuBindingPolicy, {version:1,editorReview:'desktop-and-mobile-reopen'});
+  const editorPlan = await runHeaderModuleCLI(['plan-menu-editor-review','--bundle',directory]) as {status:string;checks:unknown[];remoteWrites:number};
+  assert.equal(editorPlan.status,'needs-browser-evidence');assert.ok(editorPlan.checks.length>0);assert.equal(editorPlan.remoteWrites,0);
   const first = await runHeaderModuleCLI(['status', '--bundle', directory]) as { planHash: string; styleHash: string; remoteWrites: number; visualVerification: string };
   assert.equal(first.remoteWrites, 0); assert.match(first.styleHash, /^[a-f0-9]{64}$/); assert.match(first.visualVerification, /review-required/);
   await writeFile(path.join(directory, 'header.css'), ':header {color:#abc}');
